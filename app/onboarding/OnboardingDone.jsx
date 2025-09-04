@@ -1,21 +1,36 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Path, Svg } from 'react-native-svg';
-
-import ContinueButton from './ContinueButton';
 import { useForm } from './FormProvider';
 
 const { width, height } = Dimensions.get('window');
 
-export default function OnboardingDone({ navigation }) {
+export default function OnboardingDone({ }) {
     const { formData, setFormData } = useForm();
 
-    /*
+
     const handleSubmit = async () => {
         try {
-            const respon
+            const response = await fetch("http://localhost:5000/api/users/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+            if (response.ok) {
+                console.log("Succesfully registered user ", data.firstName);
+                router.push("/onboarding/OnboardingStart");
+
+            }
+        } catch (err) {
+            console.log("Unsucessful");
+            console.log(err);
         }
     };
-    */
+
 
     return (
         <View style={styles.screenContainer}>
@@ -97,7 +112,9 @@ export default function OnboardingDone({ navigation }) {
 
                 </View>
             </View>
-            <ContinueButton nextScreen="Start" onPress={handleSubmit} text="Continue" oppositeColours={false}></ContinueButton>
+            <Pressable onPress={handleSubmit}>
+                <Text> Continue </Text>
+            </Pressable>
         </View>)
 }
 

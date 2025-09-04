@@ -12,18 +12,18 @@ export default function OnboardingStepTwoScreen({ navigation }) {
 
     return (
         <View style={styles.screenContainer}>
-            <OnboardingStep prevPagePath="OnboardingScreen1" number={2} header="What’s Your Email?" description="You’ll need this to log in and receive booking updates."></OnboardingStep>
+            <OnboardingStep prevPagePath="/onboarding/OnboardingStepOneScreen" number={2} header="What’s Your Email?" description="You’ll need this to log in and receive booking updates."></OnboardingStep>
             <View style={styles.inputEmail}>
                 <View style={styles.textField}>
                     <TextInput
                         style={styles.inputText}
                         placeholder="Email address*"
                         value={formData.email}
-                        onChangeText={(text) => setFormData({ ...formData, setEmail: text })}
+                        onChangeText={(text) => setFormData({ ...formData, email: text })}
                     />
                 </View>
             </View>
-            <ContinueButton nextScreen="OnboardingScreen3" text="Continue" oppositeColours={false}></ContinueButton>
+            <ContinueButton nextScreen="/onboarding/OnboardingStepThreeScreen" text="Continue" oppositeColours={false}></ContinueButton>
         </View>
     );
 }

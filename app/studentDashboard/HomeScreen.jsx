@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     plusButton: {
         height: 80,
         width: 80,
-        backgroundColor: "rgba(129, 104, 255, 1)",
+        backgroundColor: "rgba(222, 117, 82, 1)",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
             width: 4,

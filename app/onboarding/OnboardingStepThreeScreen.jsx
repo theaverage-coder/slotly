@@ -12,7 +12,7 @@ export default function OnboardingStepThreeScreen({ navigation }) {
 
     return (
         <View style={styles.screenContainer}>
-            <OnboardingStep prevPagePath="OnboardingScreen2" number={3} header="Create Your Password" description="Protect your account so only you can book your slots"></OnboardingStep>
+            <OnboardingStep prevPagePath="/onboarding/OnboardingStepTwoScreen" number={3} header="Create Your Password" description="Protect your account so only you can book your slots"></OnboardingStep>
             <View style={styles.inputPassword}>
                 <View style={styles.textField}>
                     <TextInput
@@ -23,7 +23,7 @@ export default function OnboardingStepThreeScreen({ navigation }) {
                     />
                 </View>
             </View>
-            <ContinueButton nextScreen="OnboardingScreen4" text="Continue" oppositeColours={false}></ContinueButton>
+            <ContinueButton nextScreen="/onboarding/OnboardingStepFourScreen" text="Continue" oppositeColours={false}></ContinueButton>
         </View>
     );
 }

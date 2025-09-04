@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const asyncHandler = required('express-async-handler')
+const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
 
 // @desc Register new user
-// @route POST /api/users
+// @route POST /api/users/register
 const registerUser = asyncHandler(async (req, res) => {
+    console.log("Received body:", req.body); // Make sure body exists
     const { firstName, lastName, email, password, role } = req.body
 
     if (!firstName || !lastName || !email || !password || !role) {
@@ -33,6 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
         password: hashedPassword,
         role
     })
+    console.log("User saved:", user);
 
     if (user) {
         res.status(201).json({
@@ -50,6 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc Authentic a user
 // @route POST /api/users/login
 const loginUser = asyncHandler(async (req, res) => {
+    console.log("Received body:", req.body); // Make sure body exists
     const { email, password } = req.body
 
     // Check for user email
@@ -57,10 +60,11 @@ const loginUser = asyncHandler(async (req, res) => {
 
     // Check password matches
     if (user && (await bcrypt.compare(password, user.password))) {
-        res.json({
+        res.status(200).json({
             _id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
+            role: user.role,
             token: generateToken(user._id)
         })
     } else {
@@ -84,7 +88,7 @@ const getUser = asyncHandler(async (req, res) => {
 
 // Generate JWT
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' })
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 }
 
 module.exports = {

@@ -1,6 +1,5 @@
 import { Dimensions, StyleSheet, TextInput, View } from 'react-native';
-
-import ContinueButton from './ContinueButton';
+import MyButton from '../components/MyButton';
 import { useForm } from './FormProvider';
 import OnboardingStep from './OnboardingStep';
 
@@ -14,7 +13,7 @@ export default function OnboardingStepOneScreen({ }) {
 
     return (
         <View style={styles.screenContainer}>
-            <OnboardingStep prevPagePath="Start" number={1} header="Let’s Get to Know You!" description="Just your name, no essays, we promise."></OnboardingStep>
+            <OnboardingStep prevPagePath="/onboarding/OnboardingStart" number={1} header="Let’s Get to Know You!" description="Just your name, no essays, we promise."></OnboardingStep>
             <View style={styles.inputNames}>
                 <View style={styles.textField}>
                     <TextInput
@@ -33,7 +32,7 @@ export default function OnboardingStepOneScreen({ }) {
                     />
                 </View>
             </View>
-            <ContinueButton nextScreen="OnboardingScreenTwo" text="Continue" oppositeColours={false}></ContinueButton>
+            <MyButton nextScreen="/onboarding/OnboardingStepTwoScreen" text="Continue" backgroundColor="white" textColor="black" borderWidth={0} borderColor="white"></MyButton>
         </View>
     );
 }
