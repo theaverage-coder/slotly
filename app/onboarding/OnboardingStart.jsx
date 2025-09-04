@@ -115,8 +115,8 @@ export default function OnboardingDefault({ navigation }) {
                 </View>
             </View>
             <View style={styles.createAccountLogin}>
-                <ContinueButton nextScreen="onboarding/OnboardingStepOneScreen" text="Continue" oppositeColours={false}></ContinueButton>
-                <ContinueButton nextScreen="LoginScreen" text="Login" oppositeColours={true}></ContinueButton>
+                <ContinueButton nextScreen="/onboarding/OnboardingStepOneScreen" text="Continue" oppositeColours={false}></ContinueButton>
+                <ContinueButton nextScreen="/onboarding/Login" text="Login" oppositeColours={true}></ContinueButton>
             </View>
         </View>)
 }

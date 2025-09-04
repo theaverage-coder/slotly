@@ -13,7 +13,7 @@ export default function OnboardingStepFourScreen({ navigation }) {
 
     return (
         <View style={styles.screenContainer}>
-            <OnboardingStep prevPagePath="OnboardingScreen3" number={4} header="Choose Your Role!" description="We’ll personalize your experience based on your role."></OnboardingStep>
+            <OnboardingStep prevPagePath="/onboarding/OnboardingStepThreeScreen" number={4} header="Choose Your Role!" description="We’ll personalize your experience based on your role."></OnboardingStep>
             <View style={styles.inputRole}>
                 <Pressable onPress={() => setFormData({ ...formData, role: "s" })} style={[styles.roleOption, (formData.role === "s") && styles.clickedRoleOption]}>
                     <Text style={styles.roleEmoji}>
@@ -23,7 +23,7 @@ export default function OnboardingStepFourScreen({ navigation }) {
                         <Text style={styles.inputText}>
                             {`Student`}
                         </Text>
-                        <Svg style={styles.circle} width="20" height="21" viewBox="0 0 20 21" fill={role === "s" ? 'white' : 'none'} >
+                        <Svg style={styles.circle} width="20" height="21" viewBox="0 0 20 21" fill={formData.role === "s" ? 'white' : 'none'} >
                             <Circle cx="10" cy="10.2305" r="9.5" stroke="white" />
                         </Svg>
                     </View>
@@ -36,13 +36,13 @@ export default function OnboardingStepFourScreen({ navigation }) {
                         <Text style={styles.inputText}>
                             {`Teacher`}
                         </Text>
-                        <Svg style={styles.circle} width="20" height="21" viewBox="0 0 20 21" fill={role === "t" ? 'white' : 'none'}>
+                        <Svg style={styles.circle} width="20" height="21" viewBox="0 0 20 21" fill={formData.role === "t" ? 'white' : 'none'}>
                             <Circle cx="10" cy="10.2305" r="9.5" stroke="white" />
                         </Svg>
                     </View>
                 </Pressable>
             </View>
-            <ContinueButton nextScreen="OnboardingDone" text="Continue" oppositeColours={false}></ContinueButton>
+            <ContinueButton nextScreen="/onboarding/OnboardingDone" text="Continue" oppositeColours={false}></ContinueButton>
         </View>
     );
 }

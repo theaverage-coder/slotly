@@ -1,17 +1,18 @@
-import { useNavigation } from "@react-navigation/native";
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
 export default function ContinueButton({ nextScreen, text, oppositeColours }) {
-    const navigation = useNavigation();
+    const router = useRouter();
+
     return (
         <View style={styles.buttonContainer}>
-            <Button onPress={() => navigation.navigate({ nextScreen })} style={[styles.continueButton, oppositeColours && styles.oppositeButton]}>
+            <Pressable onPress={() => router.push((nextScreen))} style={[styles.continueButton, oppositeColours && styles.oppositeButton]}>
                 <Text style={[styles.continueText, oppositeColours && styles.oppositeText]}>
                     {text}
                 </Text>
-            </Button>
+            </Pressable>
         </View>
     );
 }
