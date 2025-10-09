@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
-//const { registerUser, loginUser, getUser } = require('../controllers/userController')
-//const { protect } = require('../middleware/authMiddleware')
+const { addCourse, joinCourse, getCourses } = require('../controllers/courseController');
 
-
+router.post('/addCourse', addCourse);
+router.post('/joinCourse', joinCourse);
+router.post('/getCourses', getCourses)
 
 module.exports = router
