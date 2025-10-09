@@ -49,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 })
 
-// @desc Authentic a user
+// @desc Authenticate a user
 // @route POST /api/users/login
 const loginUser = asyncHandler(async (req, res) => {
     console.log("Received body:", req.body); // Make sure body exists
@@ -61,9 +61,10 @@ const loginUser = asyncHandler(async (req, res) => {
     // Check password matches
     if (user && (await bcrypt.compare(password, user.password))) {
         res.status(200).json({
-            _id: user.id,
+            _id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
+            email: user.email,
             role: user.role,
             token: generateToken(user._id)
         })

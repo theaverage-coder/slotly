@@ -5,7 +5,7 @@ const Stack = createNativeStackNavigator();
 export default function Index() {
 
   return (
-    <Redirect href="/onboarding/OnboardingStart" />
+    <Redirect href="./OnboardingStart" />
     //<MainLayout></MainLayout>
   );
 }
