@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Path, Svg } from 'react-native-svg';
-import MyButton from '../../components/MyButton';
+import MyButton from '../../../components/MyButton';
 import MyCalendar from './MyCalendar';
 
 export default function ScheduleScreen() {

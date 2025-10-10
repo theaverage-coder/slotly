@@ -37,5 +37,5 @@ yarn-error.*
 *.tsbuildinfo
 
 # backend
-backend/.env
+app/.env
 

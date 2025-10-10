@@ -1,14 +1,13 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Circle, Path, Svg } from 'react-native-svg';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ContinueButton from "../../components/ContinueButton";
-
-const { width, height } = Dimensions.get('window');
 
 export default function OnboardingDefault({ }) {
 
     return (
-        <View style={styles.screenContainer}>
+        <SafeAreaView style={styles.screenContainer}>
             <View style={styles.topTextContainer}>
                 <View style={styles.frame121}>
                     <Svg style={styles.group12} width="31" height="32" viewBox="0 0 31 32" fill="none" >
@@ -118,25 +117,23 @@ export default function OnboardingDefault({ }) {
                 <ContinueButton nextScreen="/(onboarding)/OnboardingStepOneScreen" text="Continue" oppositeColours={false}></ContinueButton>
                 <ContinueButton nextScreen="/(onboarding)/Login" text="Login" oppositeColours={true}></ContinueButton>
             </View>
-        </View>)
+        </SafeAreaView>)
 }
 const styles = StyleSheet.create({
     screenContainer: {
         position: "relative",
         flexShrink: 0,
-        height: height,
-        width: width,
         backgroundColor: "rgba(33, 33, 33, 1)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         rowGap: 0,
-        columnGap: 0
+        columnGap: 0,
+        paddingHorizontal: 5
     },
     slotlyMascot: {
         position: "absolute",
         flexShrink: 0,
-        width: width,
         height: '10%'
     },
     topTextContainer: {

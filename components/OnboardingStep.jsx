@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
     },
     backButton: {
         flexShrink: 0,
-        height: '10%',
         width: 48,
         paddingTop: 20,
         paddingLeft: 30,
@@ -131,6 +130,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         rowGap: 0,
+        marginBottom: 20
     },
     backArrow: {
         flexShrink: 0,
@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
         alignSelf: "stretch",
         justifyContent: 'space-between',
         alignItems: "center",
+        marginVertical: 20
     },
     logoContainer: {
         flexShrink: 0,

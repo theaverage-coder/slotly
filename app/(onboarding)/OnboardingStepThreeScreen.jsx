@@ -1,15 +1,12 @@
-import { Dimensions, Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ContinueButton from '../../components/ContinueButton';
 import OnboardingStep from '../../components/OnboardingStep';
 import { useForm } from './FormProvider';
 
-const { width, height } = Dimensions.get('window');
-
 export default function OnboardingStepThreeScreen({ }) {
     const { formData, setFormData } = useForm();
-    //const [password, setPassword] = useState('');
 
     return (
         <SafeAreaView style={styles.screenContainer}>
@@ -49,7 +46,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingTop: 50,
         rowGap: 24,
-        height: height * 0.5,
+        height: "50%",
     },
     textField: {
         width: "95%",

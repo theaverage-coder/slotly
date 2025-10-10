@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Defs, FeBlend, FeColorMatrix, FeComposite, FeFlood, FeGaussianBlur, FeOffset, Filter, G, Path, Svg } from 'react-native-svg';
 
-import AddCourseModal from './(course)/AddCourseModal';
+import AddCourseModal from '../(course)/AddCourseModal';
 
 export default function HomeScreen() {
     const [modalVisible, setModalVisibility] = useState(false);

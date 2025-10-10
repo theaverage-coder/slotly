@@ -10,7 +10,7 @@ export default function OnboardingStepOneScreen({ }) {
 
     return (
         <SafeAreaView style={styles.screenContainer}>
-            <Pressable onPress={Keyboard.dismiss} >
+            <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <OnboardingStep number={1} header="Let’s Get to Know You!" description="Just your name, no essays, we promise."></OnboardingStep>
                 <View style={styles.inputNames}>
                     <View style={styles.textField}>
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingTop: 50,
         rowGap: 24,
+        height: "50%"
     },
     textField: {
         width: "95%",
