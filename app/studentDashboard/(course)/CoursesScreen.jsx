@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Path, Svg } from 'react-native-svg';
-import CourseCard from '../../components/CourseCard';
-import { useUser } from '../UserContext';
-import AddCourseModal from './(course)/AddCourseModal';
-
+import CourseCard from '../../../components/CourseCard';
+import { useUser } from '../../UserContext';
+import AddCourseModal from './AddCourseModal';
 export default function CourseScreen() {
     const { user } = useUser();
     const [modalVisible, setModalVisibility] = useState(false);
     const [courses, setCourses] = useState([]);
-
+    const API_URL =
+        Platform.OS === 'web'
+            ? process.env.EXPO_PUBLIC_API_URL_WEB
+            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
     useEffect(() => {
-        fetch("http://localhost:5000/api/courses/getCourses", {
+        fetch(`${API_URL}/api/courses/getCourses`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

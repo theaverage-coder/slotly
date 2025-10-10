@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUser } from '../UserContext';
 
 export default function Login() {
@@ -16,7 +17,7 @@ export default function Login() {
     };
 
     return (
-        <View>
+        <SafeAreaView>
             <View style={styles.textField}>
                 <TextInput
                     style={styles.inputText}
@@ -36,7 +37,7 @@ export default function Login() {
             <Pressable style={styles.loginButton} onPress={handleLogin}>
                 <Text> Login </Text>
             </Pressable>
-        </View>
+        </SafeAreaView>
     );
 }
 

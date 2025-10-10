@@ -1,17 +1,17 @@
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Circle, Svg } from 'react-native-svg';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ContinueButton from '../../components/ContinueButton';
 import OnboardingStep from '../../components/OnboardingStep';
 import { useForm } from './FormProvider';
 
-const { width, height } = Dimensions.get('window');
 
 export default function OnboardingStepFourScreen({ }) {
     const { formData, setFormData } = useForm();
 
     return (
-        <View style={styles.screenContainer}>
+        <SafeAreaView style={styles.screenContainer}>
             <OnboardingStep number={4} header="Choose Your Role!" description="We’ll personalize your experience based on your role."></OnboardingStep>
             <View style={styles.inputRole}>
                 <Pressable onPress={() => setFormData({ ...formData, role: "s" })} style={[styles.roleOption, (formData.role === "s") && styles.clickedRoleOption]}>
@@ -42,7 +42,7 @@ export default function OnboardingStepFourScreen({ }) {
                 </Pressable>
             </View>
             <ContinueButton nextScreen="/(onboarding)/OnboardingDone" text="Continue" oppositeColours={false}></ContinueButton>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingTop: 50,
         rowGap: 24,
-        height: height * 0.5,
+        height: "50%",
     },
     roleOption: {
         width: "95%",
