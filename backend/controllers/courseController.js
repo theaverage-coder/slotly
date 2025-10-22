@@ -98,9 +98,26 @@ const getCourses = asyncHandler(async (req, res) => {
             courses: user.courses
         });
     } catch (err) {
-        console.log("FAILED")
         console.log(err)
         return res.status(500).json({ success: false, error: err.message });
+    }
+})
+
+// @desc Get details pertaining to a single course with given id
+// @ router /api/courses/getCourse/:courseId
+const getCourseById = asyncHandler(async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        console.log("Course Id: ", courseId);
+        const course = await Course.findById(courseId);
+
+        if (!course) {
+            console.log("Course not found")
+            return res.status(404)
+        }
+        return res.json(course);
+    } catch (err) {
+        console.log(err)
     }
 })
 
@@ -121,4 +138,5 @@ module.exports = {
     addCourse,
     joinCourse,
     getCourses,
+    getCourseById
 }

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Path, Svg } from 'react-native-svg';
 import { useForm } from './FormProvider';
 
@@ -7,10 +7,14 @@ const { width, height } = Dimensions.get('window');
 
 export default function OnboardingDone({ }) {
     const { formData, setFormData } = useForm();
+    const API_URL =
+        Platform.OS === 'web'
+            ? process.env.EXPO_PUBLIC_API_URL_WEB
+            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/users/register", {
+            const response = await fetch(`${API_URL}/api/users/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

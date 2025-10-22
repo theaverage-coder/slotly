@@ -2,14 +2,17 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Defs, FeBlend, FeColorMatrix, FeComposite, FeFlood, FeGaussianBlur, FeOffset, Filter, G, Path, Svg } from 'react-native-svg';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AddCourseModal from '../(course)/AddCourseModal';
+import DashboardHeader from '../../../components/DashboardHeader';
 
 export default function HomeScreen() {
     const [modalVisible, setModalVisibility] = useState(false);
 
 
     return (
-        <View style={[styles.screenContainer, styles.emptyScreen]}>
+        <SafeAreaView style={[styles.screenContainer, styles.emptyScreen]}>
+            <DashboardHeader page={0} />
             <View style={styles.topContainer}>
                 <View style={styles.slotlyLogo}>
                     <Svg style={styles.group} width="140" height="140" viewBox="0 0 140 140" fill="none" >
@@ -62,7 +65,7 @@ export default function HomeScreen() {
                 </Pressable>
             </View>
             <AddCourseModal visible={modalVisible} onClose={() => setModalVisibility(false)} />
-        </View>
+        </SafeAreaView>
     );
 }
 

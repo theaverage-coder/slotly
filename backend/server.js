@@ -8,8 +8,6 @@ dotenv.config({ path: "./backend/.env" });
 const port = process.env.PORT || 5000
 //const { errorHandler } = require('./middleware/errorMiddleWare')
 
-console.log('Mongo URI:', process.env.MONGO_URI);
-
 connectDB()
 
 const app = express();
@@ -23,5 +21,6 @@ app.use(cors());
 //app.use(errorHandler)
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
+app.use('/api/bookings', require('./routes/bookingRoutes'));
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

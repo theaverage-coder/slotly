@@ -34,7 +34,7 @@ export function UserProvider({ children }) {
                 if (data.role == "s") {
                     router.replace("/studentDashboard/HomeScreen");
                 } else {
-                    router.replace("/teacherDashboard/HomeScreen")
+                    router.replace("/teacherDashboard/CreateBookingScreen")
                 }
             }
         } catch (err) {
