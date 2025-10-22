@@ -1,6 +1,5 @@
 import { Tabs } from "expo-router";
 
-
 export default function StudentLayout() {
     return (
         <Tabs
@@ -13,10 +12,12 @@ export default function StudentLayout() {
                     color: "rgba(255, 255, 255, 1)",
                     fontSize: 12,
                     fontWeight: 400,
+                    borderTopWidth: 0,
                 },
                 tabBarActiveTintColor: "white",
                 tabBarInactiveTintColor: "grey",
             }}>
+
             <Tabs.Screen name="(home)" options={{ title: 'Meetings' }} />
             <Tabs.Screen name="(course)" options={{ title: 'Courses' }} />
             <Tabs.Screen name="ProfileScreen" options={{ title: 'Profile' }} />

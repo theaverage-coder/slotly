@@ -23,6 +23,7 @@ export default function Login() {
                     style={styles.inputText}
                     placeholder="Email"
                     value={email}
+                    keyboardType='email-address'
                     onChangeText={(text) => setEmail(text)}
                 />
             </View>

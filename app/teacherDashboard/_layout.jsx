@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 
 
-export default function CourseLayout() {
+export default function Layout() {
     return (
         <Stack screenOptions={{ headerShown: false }}></Stack>
     )

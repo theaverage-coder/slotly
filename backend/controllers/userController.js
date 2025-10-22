@@ -52,7 +52,6 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc Authenticate a user
 // @route POST /api/users/login
 const loginUser = asyncHandler(async (req, res) => {
-    console.log("Received body:", req.body); // Make sure body exists
     const { email, password } = req.body
 
     // Check for user email

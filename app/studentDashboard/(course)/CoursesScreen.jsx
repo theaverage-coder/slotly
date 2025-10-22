@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Path, Svg } from 'react-native-svg';
 import CourseCard from '../../../components/CourseCard';
+import DashboardHeader from '../../../components/DashboardHeader';
 import { useUser } from '../../UserContext';
 import AddCourseModal from './AddCourseModal';
+
 export default function CourseScreen() {
     const { user } = useUser();
     const [modalVisible, setModalVisibility] = useState(false);
@@ -31,8 +34,9 @@ export default function CourseScreen() {
     }, []);
 
     return (
-        <View style={styles.screenContainer}>
-            <FlatList
+        <SafeAreaView style={styles.screenContainer}>
+            <DashboardHeader page={1} />
+            <FlatList style={{ marginLeft: 25 }}
                 data={courses}
                 keyExtractor={item => item._id}
                 renderItem={({ item }) => <CourseCard courseId={item._id} courseCode={item.courseCode} profName={"Prof Name"} courseName={item.courseName} semester={courses.semester} />}
@@ -46,16 +50,14 @@ export default function CourseScreen() {
                 </Pressable>
             </View>
             <AddCourseModal visible={modalVisible} onClose={() => setModalVisibility(false)} />
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     screenContainer: {
         backgroundColor: "rgba(33, 33, 33, 1)",
-        height: "70vh",
-        paddingLeft: 15,
-        display: "flex",
+        flex: 1,
         flexDirection: "column",
         rowGap: 20
     },

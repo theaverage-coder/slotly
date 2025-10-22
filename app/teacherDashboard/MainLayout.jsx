@@ -23,5 +23,7 @@ export default function MainLayout() {
             <Tab.Screen name={coursesName} component={CoursesScreen} />
             <Tab.Screen name={profileName} component={ProfileScreen} />
         </Tab.Navigator>
+
+
     );
 }
