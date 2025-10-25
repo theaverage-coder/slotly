@@ -23,6 +23,24 @@ const createBooking = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Get booking details given a course id
+// @router /api/bookings/getBooking/:courseId
+const getBooking = asyncHandler(async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const booking = await Booking.find({ course: courseId });
+
+        if (!booking) {
+            console.log("No booking exists")
+            return res.status(404)
+        }
+        return res.json(booking);
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 module.exports = {
-    createBooking
+    createBooking,
+    getBooking
 }

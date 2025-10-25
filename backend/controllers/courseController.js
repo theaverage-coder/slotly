@@ -104,7 +104,7 @@ const getCourses = asyncHandler(async (req, res) => {
 })
 
 // @desc Get details pertaining to a single course with given id
-// @ router /api/courses/getCourse/:courseId
+// @router /api/courses/getCourse/:courseId
 const getCourseById = asyncHandler(async (req, res) => {
     try {
         const { courseId } = req.params;

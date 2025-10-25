@@ -44,6 +44,11 @@ export default function CourseDetailsScreen() {
                         Location & Time of Course ?
                     </Text>
                     <Text>
+                        DISPLAY OFFICE HOURS eg.
+                        Monday 3:00-5:00
+                        Wednesday 1:00-3:00
+                    </Text>
+                    <Text>
                         INSERT LEAVE COURSE BUTTON
                     </Text>
                 </>
