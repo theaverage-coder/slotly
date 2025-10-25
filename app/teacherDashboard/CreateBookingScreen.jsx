@@ -10,18 +10,20 @@ export default function CreateBookingScreen() {
         Platform.OS === 'web'
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
+
     const { courseId } = useLocalSearchParams();
     const [timeSlotDuration, setTimeSlotDuration] = useState(10);
     const [isSameHours, setIsSameHours] = useState(false);
     const [sameHours, setSameHours] = useState([]);
     const [daysAvailable, setDaysAvailable] = useState({
+        Sunday: { isAvailable: false, timeIntervals: [] },
         Monday: { isAvailable: false, timeIntervals: [] },
         Tuesday: { isAvailable: false, timeIntervals: [] },
         Wednesday: { isAvailable: false, timeIntervals: [] },
         Thursday: { isAvailable: false, timeIntervals: [] },
         Friday: { isAvailable: false, timeIntervals: [] },
         Saturday: { isAvailable: false, timeIntervals: [] },
-        Sunday: { isAvailable: false, timeIntervals: [] },
+
     });
 
 
