@@ -22,5 +22,6 @@ app.use(cors());
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
+app.use('/api/appointments', require('./routes/appointmentRoutes'));
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

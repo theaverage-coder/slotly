@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const appointmentSchema = mongoose.Schema({
-    course: {
+    booking: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
+        ref: "Booking",
     },
     prof: {
         required: true,
