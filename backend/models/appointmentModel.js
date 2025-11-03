@@ -6,24 +6,21 @@ const appointmentSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Booking",
     },
-    prof: {
-        required: true,
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    },
     student: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
     startTime: {
-
+        required: true,
+        type: Date
     },
     endTime: {
-
+        required: true,
+        type: Date
     },
     location: {
-
+        type: String
     }
 
 })

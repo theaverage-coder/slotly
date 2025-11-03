@@ -62,7 +62,11 @@ const getAvailableTimeSlots = asyncHandler(async (req, res) => {
                 }
             }
         }
-        return res.json(timeSlots);
+        return res.json({
+            availableSlots: timeSlots,
+            bookingId: booking._id,
+            timeSlotDuration: booking.timeSlotDuration
+        });
 
     } catch (err) {
         console.log(err)
@@ -88,5 +92,5 @@ const getBooking = asyncHandler(async (req, res) => {
 
 module.exports = {
     createBooking,
-
+    getAvailableTimeSlots,
 }
