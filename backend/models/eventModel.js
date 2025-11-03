@@ -6,19 +6,30 @@ const eventSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
     },
-    time: {
+    title: {
         type: String,
+        required: true
+    },
+    startTime: {
+        type: Date,
+        required: true,
+    },
+    endTime: {
+        type: Date,
+        required: true,
     },
     location: {
         type: String,
         required: true,
-        unique: true,
     },
     capacity: {
         type: String,
         required: true,
     },
-    students: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+    students: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    description: {
+        type: String
+    }
 
 })
 

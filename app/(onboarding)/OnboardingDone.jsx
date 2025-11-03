@@ -5,7 +5,7 @@ import { useForm } from './FormProvider';
 
 const { width, height } = Dimensions.get('window');
 
-export default function OnboardingDone({ }) {
+export default function OnboardingDone() {
     const { formData, setFormData } = useForm();
     const API_URL =
         Platform.OS === 'web'
