@@ -3,24 +3,23 @@ import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-export default function MyButton({ nextScreen, text, backgroundColor, textColor, borderWidth, borderColor }) {
+export default function MyButton({ onPress, text, backgroundColor, textColor, borderWidth, borderColor }) {
     const router = useRouter();
 
     return (
         <View style={styles.buttonContainer}>
-            <Pressable onPress={() => router.push((nextScreen))}
+            <Pressable onPress={() => onPress}
                 style={{
                     backgroundColor: backgroundColor,
                     borderWidth: borderWidth,
                     borderColor: borderColor,
-                    flexShrink: 0,
-                    display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     width: "95%",
                     paddingHorizontal: 10,
                     paddingVertical: 16,
                     borderRadius: 32,
+
                 }}>
                 <Text style={{
                     color: textColor,
