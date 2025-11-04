@@ -29,7 +29,7 @@ export default function ScheduleScreen() {
                     </Svg>
                     <Text style={{ fontSize: 17, color: "white", fontWeight: "bold" }}> You don't have any meetings yet </Text>
                     <Text style={{ fontSize: 13, color: "rgba(173, 170, 170, 1)" }}> Book a meeting to view it here</Text>
-                    <MyButton nextScreen="/studentDashboard/MainLayout" text="Book a meeting" backgroundColor="rgba(222, 117, 82, 1)" textColor="white" borderWidth={0} borderColor="rgba(222, 117, 82, 1)"></MyButton>
+                    <MyButton onPress={() => router.push("/studentDashboard/MainLayout")} text="Book a meeting" backgroundColor="rgba(222, 117, 82, 1)" textColor="white" borderWidth={0} borderColor="rgba(222, 117, 82, 1)"></MyButton>
                 </View>
             </View>
         </SafeAreaView>

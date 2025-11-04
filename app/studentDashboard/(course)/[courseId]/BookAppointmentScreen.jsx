@@ -2,7 +2,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Platform, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useUser } from '../../UserContext';
+import { useUser } from '../../../UserContext';
 
 export default function BookAppointmentScreen() {
     const { courseId } = useLocalSearchParams();
