@@ -1,13 +1,11 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useLocalSearchParams } from 'expo-router';
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Pressable, Text, TextInput } from "react-native-web";
-import { useUser } from "../../../../contexts/UserContext";
+import { useCourseContext } from '../../../../../contexts/CourseContext';
 
 export default function CreateEventScreen() {
-    const { user } = useUser();
-    const { courseId } = useLocalSearchParams();
+    const { courseId } = useCourseContext();
 
     const [title, setTitle] = useState();
     const [startTime, setStartTime] = useState(new Date());
@@ -29,7 +27,7 @@ export default function CreateEventScreen() {
             startTime: startTime,
             endTime: endTime,
             location: location,
-            ...(isLimitedCapacity ? { capacity: capacity } : { capacity: "inf" }),
+            ...(isLimitedCapacity ? { capacity: capacity } : { capacity: -1 }),
             ...(description !== "" && { description: description }),
         }
 
