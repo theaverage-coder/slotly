@@ -1,10 +1,10 @@
-import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Platform, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCourseContext } from "../../../CourseContext";
 
 export default function CourseDetailsScreen() {
-    const { courseId } = useLocalSearchParams();
+    const { courseId } = useCourseContext();
     const [course, setCourse] = useState(null);
 
     const API_URL =

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native-web";
-import CourseCard from "../../components/CourseCard";
-import { useUser } from "../UserContext";
+import CourseCard from "../../../components/CourseCard";
+import { useUser } from "../../UserContext";
 
 export default function CoursesScreen() {
     const { user } = useUser();
