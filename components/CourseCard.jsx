@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useCourseContext } from '../app/CourseContext';
+import { useCourseContext } from '../contexts/CourseContext';
 
 export default function CourseCard({ courseId, courseCode, profName, }) {
     const { setCourseId } = useCourseContext();
