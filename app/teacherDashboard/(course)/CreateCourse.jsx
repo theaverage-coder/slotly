@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUser } from '../UserContext';
+import { useUser } from '../../UserContext';
 
 import { Pressable, Text, TextInput, View } from "react-native";
 

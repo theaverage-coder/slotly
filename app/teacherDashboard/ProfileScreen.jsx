@@ -1,5 +1,5 @@
 import { Text, View } from "react-native-web";
-import { useUser } from "../UserContext";
+import { useUser } from "../../contexts/UserContext";
 
 export default function ProfileScreen() {
     const { user } = useUser();

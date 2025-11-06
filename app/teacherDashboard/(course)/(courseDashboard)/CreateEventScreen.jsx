@@ -3,7 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Pressable, Text, TextInput } from "react-native-web";
-import { useUser } from "../../../UserContext";
+import { useUser } from "../../../../contexts/UserContext";
 
 export default function CreateEventScreen() {
     const { user } = useUser();

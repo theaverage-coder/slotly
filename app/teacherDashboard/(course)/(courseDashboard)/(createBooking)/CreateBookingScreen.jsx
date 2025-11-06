@@ -3,8 +3,8 @@ import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Modal, Platform, Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MyButton2 from '../../../../components/MyButton2';
-import { useCourseContext } from '../../../CourseContext';
+import MyButton2 from '../../../../../components/MyButton2';
+import { useCourseContext } from '../../../../../contexts/CourseContext';
 
 export default function CreateBookingScreen() {
     const API_URL =
@@ -280,7 +280,7 @@ export default function CreateBookingScreen() {
 
             </View>
 
-            <MyButton2 onPress={() => console.log("Created booking")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+            <MyButton2 onPress={handleCreateBooking} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
                 <Text> Create Booking </Text>
             </MyButton2>
         </SafeAreaView>
