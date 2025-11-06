@@ -1,11 +1,14 @@
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useCourseContext } from '../app/CourseContext';
 
 export default function CourseCard({ courseId, courseCode, profName, }) {
+    const { setCourseId } = useCourseContext();
     const router = useRouter();
 
     const handlePress = () => {
-        router.navigate(`studentDashboard/${courseId}/CourseDetailsScreen`)
+        setCourseId(courseId);
+        router.navigate(`studentDashboard/CourseDetailsScreen`)
     }
 
     return (

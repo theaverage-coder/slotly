@@ -1,8 +1,10 @@
 import { Stack } from "expo-router";
-
+import { CourseProvider } from "../../CourseContext";
 
 export default function CourseLayout() {
     return (
-        <Stack screenOptions={{ headerShown: false }}></Stack>
+        <CourseProvider>
+            <Stack screenOptions={{ headerShown: false }}></Stack>
+        </CourseProvider>
     )
 }

@@ -1,11 +1,11 @@
-import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Platform, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCourseContext } from "../../../CourseContext";
 import { useUser } from '../../../UserContext';
 
 export default function BookAppointmentScreen() {
-    const { courseId } = useLocalSearchParams();
+    const { courseId } = useCourseContext();
     const [availableSlots, setAvailableSlots] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);

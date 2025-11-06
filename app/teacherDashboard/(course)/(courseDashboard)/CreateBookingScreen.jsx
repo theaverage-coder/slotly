@@ -1,10 +1,10 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
-import { useLocalSearchParams } from 'expo-router';
 import { useState } from "react";
 import { Modal, Platform, Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MyButton2 from '../../components/MyButton2';
+import MyButton2 from '../../../../components/MyButton2';
+import { useCourseContext } from '../../../CourseContext';
 
 export default function CreateBookingScreen() {
     const API_URL =
@@ -12,7 +12,7 @@ export default function CreateBookingScreen() {
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
-    const { courseId } = useLocalSearchParams();
+    const { courseId } = useCourseContext();
     const [timeSlotDuration, setTimeSlotDuration] = useState(10);
     const [isSameHours, setIsSameHours] = useState(false);
     const [sameHours, setSameHours] = useState([{ start: new Date(), end: new Date() }]);
