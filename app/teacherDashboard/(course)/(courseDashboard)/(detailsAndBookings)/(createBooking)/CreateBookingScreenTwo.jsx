@@ -2,8 +2,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MyButton2 from "../../../../../components/MyButton2";
-import { useBookingContext } from '../../../../../contexts/BookingContext';
+import MyButton2 from "../../../../../../components/MyButton2";
+import { useBookingContext } from '../../../../../../contexts/BookingContext';
 
 export default function CreateBookingScreenTwo() {
     const router = useRouter();

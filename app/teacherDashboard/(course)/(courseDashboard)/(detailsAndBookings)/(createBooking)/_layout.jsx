@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { BookingProvider } from "../../../../../contexts/BookingContext";
+import { BookingProvider } from "../../../../../../contexts/BookingContext";
 
 
 export default function BookingLayout() {

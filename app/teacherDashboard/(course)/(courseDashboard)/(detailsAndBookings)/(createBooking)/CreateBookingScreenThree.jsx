@@ -2,9 +2,9 @@ import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
 import { Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MyButton2 from "../../../../../components/MyButton2";
-import { useBookingContext } from "../../../../../contexts/BookingContext";
-import { useCourseContext } from "../../../../../contexts/CourseContext";
+import MyButton2 from "../../../../../../components/MyButton2";
+import { useBookingContext } from "../../../../../../contexts/BookingContext";
+import { useCourseContext } from "../../../../../../contexts/CourseContext";
 
 export default function CreateBookingScreenThree() {
     const { daysAvailable, timeSlotDuration, setTimeSlotDuration, isSameHours, sameHours } = useBookingContext();

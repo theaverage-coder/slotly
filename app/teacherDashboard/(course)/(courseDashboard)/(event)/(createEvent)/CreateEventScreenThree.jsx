@@ -1,8 +1,8 @@
 import { Platform, StyleSheet, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MyButton2 from "../../../../../components/MyButton2";
-import { useCourseContext } from "../../../../../contexts/CourseContext";
-import { useEventContext } from "../../../../../contexts/EventContext";
+import MyButton2 from "../../../../../../components/MyButton2";
+import { useCourseContext } from "../../../../../../contexts/CourseContext";
+import { useEventContext } from "../../../../../../contexts/EventContext";
 
 export default function CreateEventScreenThree() {
     const { event, setEvent } = useEventContext();
