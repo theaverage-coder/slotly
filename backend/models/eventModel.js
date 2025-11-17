@@ -23,7 +23,7 @@ const eventSchema = mongoose.Schema({
         required: true,
     },
     capacity: {
-        type: String,
+        type: Number,
         required: true,
     },
     students: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

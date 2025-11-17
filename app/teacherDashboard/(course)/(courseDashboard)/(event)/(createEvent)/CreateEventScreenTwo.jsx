@@ -1,7 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Pressable, StyleSheet, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEventContext } from "../../../../../contexts/EventContext";
+import { useEventContext } from "../../../../../../contexts/EventContext";
 
 export default function CreateEventScreenTwo() {
     const { event, setEvent } = useEventContext();

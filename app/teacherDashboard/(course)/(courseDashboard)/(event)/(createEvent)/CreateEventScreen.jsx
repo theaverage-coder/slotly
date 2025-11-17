@@ -2,7 +2,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Pressable, Text, TextInput } from "react-native-web";
-import { useCourseContext } from '../../../../../contexts/CourseContext';
+import { useCourseContext } from '../../../../../../contexts/CourseContext';
 
 export default function CreateEventScreen() {
     const { courseId } = useCourseContext();
