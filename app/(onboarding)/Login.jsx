@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useUser } from '../UserContext';
+import { useUser } from '../../contexts/UserContext';
 
 export default function Login() {
     const [email, setEmail] = useState('');

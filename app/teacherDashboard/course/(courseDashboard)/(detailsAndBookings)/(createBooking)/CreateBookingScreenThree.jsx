@@ -1,5 +1,6 @@
 import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
@@ -84,7 +85,7 @@ export default function CreateBookingScreenThree() {
 
             </Modal>
 
-            <MyButton2 onPress={() => handleCreateBooking} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+            <MyButton2 onPress={handleCreateBooking} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
                 <Text> Create Booking </Text>
             </MyButton2>
         </SafeAreaView>

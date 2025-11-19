@@ -2,13 +2,18 @@ import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useCourseContext } from '../contexts/CourseContext';
 
-export default function CourseCard({ courseId, courseCode, profName, }) {
+export default function CourseCard({ courseId, courseCode, courseName, isStudent }) {
     const { setCourseId } = useCourseContext();
+
     const router = useRouter();
 
     const handlePress = () => {
         setCourseId(courseId);
-        router.navigate(`studentDashboard/CourseDetailsScreen`)
+        if (isStudent) {
+            router.navigate(`studentDashboard/course/CourseDetailsScreen`)
+        } else {
+            router.navigate(`teacherDashboard/course/CourseDetailsScreen`)
+        }
     }
 
     return (
@@ -20,8 +25,8 @@ export default function CourseCard({ courseId, courseCode, profName, }) {
                 <Text style={styles.courseCode}>
                     {courseCode}
                 </Text>
-                <Text style={styles.profName}>
-                    {profName}
+                <Text>
+                    {courseName}
                 </Text>
             </View>
         </Pressable>
