@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Path, Svg } from 'react-native-svg';
-import { useUser } from '../../UserContext';
+import { useUser } from '../../../contexts/UserContext';
 
 export default function AddCourseModal({ visible, onClose }) {
     const [signUpLink, setSignUpLink] = useState('');

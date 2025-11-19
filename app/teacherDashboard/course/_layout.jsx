@@ -5,7 +5,9 @@ import { CourseProvider } from "../../../contexts/CourseContext";
 export default function CourseLayout() {
     return (
         <CourseProvider>
-            <Stack screenOptions={{ headerShown: false }} />
+            <Stack screenOptions={{ headerShown: false }}>
+
+            </Stack>
         </CourseProvider>
     )
 }

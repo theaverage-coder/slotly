@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Course = require('../models/courseModel')
 const Booking = require('../models/bookingModel')
 const Appointment = require('../models/appointmentModel')
+
 // @desc Create a new booking
 // @route POST /api/bookings/createBooking
 const createBooking = asyncHandler(async (req, res) => {
@@ -93,4 +94,5 @@ const getBooking = asyncHandler(async (req, res) => {
 module.exports = {
     createBooking,
     getAvailableTimeSlots,
+    getBooking
 }

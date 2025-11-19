@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Path, Svg } from 'react-native-svg';
 import CourseCard from '../../../components/CourseCard';
 import DashboardHeader from '../../../components/DashboardHeader';
-import { useUser } from '../../UserContext';
+import { useUser } from '../../../contexts/UserContext';
 import AddCourseModal from './AddCourseModal';
 
 export default function CourseScreen() {
@@ -39,7 +39,7 @@ export default function CourseScreen() {
             <FlatList style={{ marginLeft: 25 }}
                 data={courses}
                 keyExtractor={item => item._id}
-                renderItem={({ item }) => <CourseCard courseId={item._id} courseCode={item.courseCode} profName={"Prof Name"} courseName={item.courseName} semester={courses.semester} />}
+                renderItem={({ item }) => <CourseCard courseId={item._id} courseCode={item.courseCode} courseName={item.courseName} isStudent={true} />}
             />
 
             <View style={styles.bottomContainer}>

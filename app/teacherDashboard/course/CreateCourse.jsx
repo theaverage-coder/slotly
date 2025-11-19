@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useUser } from '../../UserContext';
+import { useUser } from '../../../contexts/UserContext';
 
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, TextInput } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreateCourse() {
     const { user } = useUser();
@@ -12,9 +13,14 @@ export default function CreateCourse() {
         prof: user._id,
     });
 
+    const API_URL =
+        Platform.OS === 'web'
+            ? process.env.EXPO_PUBLIC_API_URL_WEB
+            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
+
     const handleCreateCourse = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/courses/addCourse", {
+            const response = await fetch(`${API_URL}/api/courses/addCourse`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(courseData),
@@ -32,18 +38,21 @@ export default function CreateCourse() {
 
 
     return (
-        <View>
+        <SafeAreaView>
             <TextInput
+                style={styles.textInput}
                 placeholder="Course Name"
                 value={courseData.courseName}
                 onChangeText={(text) => setCourseData({ ...courseData, courseName: text })}
             />
             <TextInput
+                style={styles.textInput}
                 placeholder="Course Code"
                 value={courseData.courseCode}
                 onChangeText={(text) => setCourseData({ ...courseData, courseCode: text })}
             />
             <TextInput
+                style={styles.textInput}
                 placeholder="Semester"
                 value={courseData.semester}
                 onChangeText={(text) => setCourseData({ ...courseData, semester: text })}
@@ -52,6 +61,14 @@ export default function CreateCourse() {
                 <Text> Create Course </Text>
             </Pressable>
 
-        </View>
+        </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    textInput: {
+        width: "90%",
+        borderWidth: 1,
+        height: 40
+    }
+})

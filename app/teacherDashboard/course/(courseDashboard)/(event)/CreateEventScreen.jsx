@@ -1,8 +1,8 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from "react";
+import { Platform, Pressable, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Pressable, Text, TextInput } from "react-native-web";
-import { useCourseContext } from '../../../../../../contexts/CourseContext';
+import { useCourseContext } from '../../../../../contexts/CourseContext';
 
 export default function CreateEventScreen() {
     const { courseId } = useCourseContext();
@@ -83,7 +83,11 @@ export default function CreateEventScreen() {
             />
 
             <Text> Set a max capacity </Text>
-            <Pressable onPress={() => setCapacity(!capacity)}> X </Pressable>
+            <Pressable onPress={() => setCapacity(!capacity)}>
+                <Text>
+                    X
+                </Text>
+            </Pressable>
             {isLimitedCapacity && (
                 <TextInput
                     value={capacity}
@@ -103,7 +107,11 @@ export default function CreateEventScreen() {
                 onChangeText={(text) => setDescription(text)}
             />
 
-            <Pressable onPress={handleCreateEvent}> Create Event </Pressable>
+            <Pressable onPress={handleCreateEvent}>
+                <Text>
+                    Create Event
+                </Text>
+            </Pressable>
 
         </SafeAreaView>
     );

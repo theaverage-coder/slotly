@@ -33,6 +33,10 @@ const addCourse = asyncHandler(async (req, res) => {
     })
 
     if (course) {
+        const update = await User.updateOne(
+            { _id: prof },
+            { $addToSet: { courses: course._id } }
+        );
         res.status(201).json({
             signUpLink: course.signUpLink,
         })
@@ -104,7 +108,7 @@ const getCourses = asyncHandler(async (req, res) => {
 })
 
 // @desc Get details pertaining to a single course with given id
-// @router /api/courses/getCourse/:courseId
+// @router /api/courses/getCourseById/:courseId
 const getCourseById = asyncHandler(async (req, res) => {
     try {
         const { courseId } = req.params;

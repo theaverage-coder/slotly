@@ -4,7 +4,7 @@ import { EventProvider } from "../../../../../../contexts/EventContext";
 export default function EventLayout() {
     return (
         <EventProvider>
-            <Stack screenOptions={{}}>
+            <Stack screenOptions={{ headerShown: false }}>
             </Stack>
         </EventProvider>
     )
