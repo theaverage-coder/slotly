@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, TextInput } from "react-native";
+import { Platform, StyleSheet, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../../contexts/CourseContext";
@@ -35,7 +35,7 @@ export default function CreateEventScreenThree() {
                 console.log("Event created!");
             }
         } catch (err) {
-            console.log(err);
+            console.log("Failed to create event:", err);
         }
     }
     return (
@@ -46,7 +46,7 @@ export default function CreateEventScreenThree() {
                 onChangeText={(text) => setEvent(prev => ({ ...prev, description: text }))}
             />
 
-            <MyButton2 onPress={() => handleCreateEvent} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+            <MyButton2 onPress={handleCreateEvent} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
                 <Text> Create Event </Text>
             </MyButton2>
         </SafeAreaView>
@@ -54,5 +54,8 @@ export default function CreateEventScreenThree() {
 }
 
 const styles = StyleSheet.create({
-
+    screenContainer: {
+        flex: 1,
+        backgroundColor: "rgba(33, 33, 33, 1)"
+    }
 })
