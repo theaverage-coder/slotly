@@ -86,6 +86,23 @@ const getUser = asyncHandler(async (req, res) => {
     })
 })
 
+// @desc Get names and emails given an array of ids
+// @route  /api/users/getStudents
+const getStudents = asyncHandler(async (req, res) => {
+    try {
+        const { ids } = req.body;
+
+        const students = await User.find(
+            { _id: { $in: ids } },
+            "firstName lastName email"
+        );
+
+        res.json(students);
+    } catch (err) {
+        console.log("Failed to retrieve students: ", err);
+    }
+})
+
 // Generate JWT
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -95,4 +112,5 @@ module.exports = {
     registerUser,
     loginUser,
     getUser,
+    getStudents
 }
