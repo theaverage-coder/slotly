@@ -1,6 +1,22 @@
 const asyncHandler = require('express-async-handler')
 const Event = require('../models/eventModel')
 
+// @desc Get all events pertaining to a course given the courseId
+// @router /api/events/getAllEvents/:courseId
+
+const getAllEvents = asyncHandler(async (req, res) => {
+    try {
+        const { courseId } = req.params;
+
+        const events = await Event.find({ course: courseId });
+
+        return res.json(events);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json("Failed to load events")
+    }
+})
+
 // @desc Get an event given the id
 // @router /api/events/getEvent/:eventId
 const getEvent = asyncHandler(async (req, res) => {
@@ -106,5 +122,6 @@ module.exports = {
     createEvent,
     joinEvent,
     getEvent,
-    leaveEvent
+    leaveEvent,
+    getAllEvents
 }

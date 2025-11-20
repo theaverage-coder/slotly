@@ -32,10 +32,13 @@ export default function CourseDetailsScreen() {
 
         const fetchBooking = async () => {
             try {
+
                 const response = await fetch(`${API_URL}/api/bookings/getBooking/${courseId}`);
+
                 if (response.ok) {
                     const data = await response.json();
                     setBooking(data);
+
                 }
             } catch (err) {
                 console.log(err);
@@ -65,7 +68,7 @@ export default function CourseDetailsScreen() {
                     ) : (
                         <>
                             <Text> Booking Details </Text>
-                            <Text> {booking} </Text>
+                            <Text> {booking.officeHours} </Text>
                         </>
                     )}
                     {!booking ? (
