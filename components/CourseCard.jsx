@@ -10,9 +10,9 @@ export default function CourseCard({ courseId, courseCode, courseName, isStudent
     const handlePress = () => {
         setCourseId(courseId);
         if (isStudent) {
-            router.navigate(`studentDashboard/course/CourseDetailsScreen`)
+            router.push(`studentDashboard/course/CourseDetailsScreen`)
         } else {
-            router.navigate(`teacherDashboard/course/CourseDetailsScreen`)
+            router.push(`teacherDashboard/course/CourseDetailsScreen`)
         }
     }
 

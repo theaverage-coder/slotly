@@ -118,10 +118,36 @@ const updatedEvent = await Event.findOneAndUpdate(
     }
 })
 
+// @desc Delete event
+// @router /api/events/deleteEvent/:eventId
+const deleteEvent = async (req, res) => {
+    try {
+        const { eventId } = req.params;
+        const deleted = await Event.findByIdAndDelete(eventId);
+
+        if (!deleted) {
+            return res.status(404);
+        }
+
+        res.status(200);
+    } catch (err) {
+        console.log("Failed to delete event: ", err);
+    }
+}
+
+// @desc Remove student from an event
+// @router /api/events/removeStudent/:eventId/:studentId
+const removeStudent = async (req, res) => {
+
+}
+
+
+
 module.exports = {
     createEvent,
     joinEvent,
     getEvent,
     leaveEvent,
-    getAllEvents
+    getAllEvents,
+    deleteEvent
 }

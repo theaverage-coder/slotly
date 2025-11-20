@@ -10,7 +10,6 @@ export default function AddCourseModal({ visible, onClose }) {
     //const studentId = user._id;
 
     const handleJoinCourse = async () => {
-        console.log(user)
         try {
             const response = await fetch("http://localhost:5000/api/courses/joinCourse", {
                 method: "POST",
@@ -37,7 +36,9 @@ export default function AddCourseModal({ visible, onClose }) {
 
     return (
         <SafeAreaView>
-            <Modal visible={visible} animationType='slide'>
+            <Modal visible={visible}
+                animationType='slide'
+                onRequestClose={onClose}>
                 <View style={styles.modalContainer} >
                     <View style={styles.header}>
                         <Text style={styles.headerText}>
