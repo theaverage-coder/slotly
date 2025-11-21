@@ -1,6 +1,5 @@
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Circle, Path, Svg } from 'react-native-svg';
 
 export default function DashboardHeader({ page }) {
@@ -30,7 +29,7 @@ export default function DashboardHeader({ page }) {
     }
 
     return (
-        <SafeAreaView style={styles.headerContainer}>
+        <View style={styles.headerContainer}>
             <View style={styles.slotlyLogo}>
                 <Svg style={styles.group12} width="44" height="44" viewBox="0 0 44 44" fill="none" >
                     <Path d="M17.9929 0C19.9187 0 21.4799 1.56117 21.4799 3.48696L21.4799 21.5153H14.5059L14.5059 3.48697C14.5059 1.56117 16.0671 0 17.9929 0Z" fill="white" />
@@ -47,9 +46,11 @@ export default function DashboardHeader({ page }) {
                     <Circle cx="19.0774" cy="21.1862" r="2.82264" fill="white" />
                 </Svg>
             </View>
-            <Text style={styles.headerText}>
-                {pageHeader()}
-            </Text>
+            <View style={styles.headerTextContainer}>
+                <Text style={styles.headerText}>
+                    {pageHeader()}
+                </Text>
+            </View>
             <Pressable onPress={handlePress} style={[styles.icon, page === 0 && styles.scheduleContainer]}>
                 {topRightIcon() === "Notifs" ? (
                     <Svg width="24" height="26" viewBox="0 0 24 26" fill="none" >
@@ -62,13 +63,13 @@ export default function DashboardHeader({ page }) {
                         </Svg>
                     </View>) : null}
             </Pressable>
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     headerContainer: {
-        height: "20vh",
+        height: "20%",
         flexDirection: "row",
         backgroundColor: "rgba(33, 33, 33, 1)",
     },
@@ -76,12 +77,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginHorizontal: 15
     },
+    headerTextContainer: {
+        width: "60%",
+        justifyContent: "center"
+    },
     headerText: {
         color: "rgba(255, 255, 255, 1)",
         fontFamily: "Urbanist",
         fontSize: 36,
         fontWeight: 700,
-        width: "60%"
     },
     icon: {
         justifyContent: "center",

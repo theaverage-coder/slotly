@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useUser } from '../../../contexts/UserContext';
 
-import { Platform, Pressable, StyleSheet, Text, TextInput } from "react-native";
+import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MyButton2 from "../../../components/MyButton2";
 
 export default function CreateCourse() {
     const { user } = useUser();
@@ -38,37 +39,82 @@ export default function CreateCourse() {
 
 
     return (
-        <SafeAreaView>
-            <TextInput
-                style={styles.textInput}
-                placeholder="Course Name"
-                value={courseData.courseName}
-                onChangeText={(text) => setCourseData({ ...courseData, courseName: text })}
-            />
-            <TextInput
-                style={styles.textInput}
-                placeholder="Course Code"
-                value={courseData.courseCode}
-                onChangeText={(text) => setCourseData({ ...courseData, courseCode: text })}
-            />
-            <TextInput
-                style={styles.textInput}
-                placeholder="Semester"
-                value={courseData.semester}
-                onChangeText={(text) => setCourseData({ ...courseData, semester: text })}
-            />
-            <Pressable onPress={handleCreateCourse}>
-                <Text> Create Course </Text>
+        <SafeAreaView style={styles.screenContainer}>
+            <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+                <View style={styles.topText}>
+                    <Text style={styles.header}>
+                        New Course
+                    </Text>
+                    <Text style={styles.description}>
+                        Add a new course and have students join using a link
+                    </Text>
+                </View>
+                <View style={styles.inputFields}>
+                    <TextInput
+                        style={styles.textField}
+                        placeholder="Course Name"
+                        value={courseData.courseName}
+                        onChangeText={(text) => setCourseData({ ...courseData, courseName: text })}
+                    />
+                    <TextInput
+                        style={styles.textField}
+                        placeholder="Course Code"
+                        value={courseData.courseCode}
+                        onChangeText={(text) => setCourseData({ ...courseData, courseCode: text })}
+                    />
+                    <TextInput
+                        style={styles.textField}
+                        placeholder="Semester"
+                        value={courseData.semester}
+                        onChangeText={(text) => setCourseData({ ...courseData, semester: text })}
+                    />
+                </View>
+                <MyButton2 onPress={handleCreateCourse} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+                    <Text> Create Course </Text>
+                </MyButton2>
             </Pressable>
-
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    textInput: {
-        width: "90%",
-        borderWidth: 1,
-        height: 40
-    }
+    screenContainer: {
+        flex: 1,
+        backgroundColor: "rgba(33, 33, 33, 1)",
+    },
+    inputFields: {
+        flex: 1,
+        gap: 40,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    textField: {
+        width: "95%",
+        flexShrink: 0,
+        height: 60,
+        backgroundColor: "rgba(50, 50, 50, 1)",
+        justifyContent: "center",
+        borderRadius: 16,
+        paddingLeft: 20
+    },
+    topText: {
+        gap: 15,
+        marginLeft: 15,
+        paddingTop: 25
+    },
+    header: {
+        textAlign: "left",
+        color: "rgba(255, 255, 255, 1)",
+        fontFamily: "Urbanist",
+        fontSize: 34,
+        fontWeight: 700
+    },
+    description: {
+        textAlign: "left",
+        color: "rgba(117, 117, 117, 1)",
+        fontFamily: "Urbanist",
+        fontSize: 18,
+        fontWeight: 500
+    },
+
 })

@@ -36,15 +36,22 @@ const getEvent = asyncHandler(async (req, res) => {
 // @desc Create an event
 // @router /api/events/createEvent
 const createEvent = asyncHandler(async (req, res) => {
+    const { event } = req.body;
+    try {
 
-    const event = await Event.create(req.body);
+        // Logic checks
+        if (event.endTime < event.startTime || event.startTime < new Date() || event.location === "" || event.title === "" || event.capacity === "") {
+            throw new Error("Invalid input")
+        }
 
-    if (event) {
-        res.status(201)
-        console.log("Event created")
-    } else {
-        res.status(400)
-        throw new Error("Failed to create event")
+        const newEvent = await Event.create(event);
+
+        if (newEvent) {
+            res.status(201)
+            console.log("Event created")
+        }
+    } catch (err) {
+        res.status(400).json({ error: err })
     }
 })
 

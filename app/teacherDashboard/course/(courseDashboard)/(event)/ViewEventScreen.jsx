@@ -56,6 +56,16 @@ export default function ViewEventScreen() {
             <Text>
                 {eventObj.location}
             </Text>
+            <Text> Students signed up: </Text>
+            {eventObj.maxCapacity === -1 ? (
+                <Text>
+                    {eventObj.students.length}
+                </Text>
+            ) : (
+                <Text>
+                    {eventObj.students.length} / {eventObj.students.maxCapacity}
+                </Text>
+            )}
 
             <Pressable onPress={() => setModalVisibility(true)}>
                 <Text>
