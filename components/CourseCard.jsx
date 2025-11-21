@@ -25,7 +25,7 @@ export default function CourseCard({ courseId, courseCode, courseName, isStudent
                 <Text style={styles.courseCode}>
                     {courseCode}
                 </Text>
-                <Text>
+                <Text style={styles.courseName}>
                     {courseName}
                 </Text>
             </View>
@@ -51,10 +51,16 @@ const styles = StyleSheet.create({
         rowGap: 5,
         justifyContent: "center"
     },
+    courseCode: {
+        color: "rgba(255, 255, 255, 1)",
+        fontFamily: "Inter",
+        fontSize: 20,
+        fontWeight: 400
+    },
     courseName: {
         color: "rgba(255, 255, 255, 1)",
         fontFamily: "Inter",
-        fontSize: 24,
+        fontSize: 15,
         fontWeight: 400
     },
     profName: {

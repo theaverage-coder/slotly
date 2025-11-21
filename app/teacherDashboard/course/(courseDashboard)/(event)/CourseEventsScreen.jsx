@@ -1,6 +1,6 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Platform, StyleSheet, Text } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EventCard from "../../../../../components/EventCard";
 import MyButton2 from "../../../../../components/MyButton2";
@@ -35,13 +35,23 @@ export default function CourseEventsScreen() {
 
     return (
         <SafeAreaView style={styles.screenContainer}>
-            <FlatList
-                data={events}
-                keyExtractor={item => item._id}
-                renderItem={({ item }) => <EventCard event={item} />}
-            />
+            <View style={{ flex: 1 }}>
+                {events.length === 0 ? (
+                    <View style={styles.noEventsTextContainer}>
+                        <Text style={styles.noEventsText}>
+                            No ongoing events
+                        </Text>
+                    </View>
+                ) : (
+                    <FlatList
+                        data={events}
+                        keyExtractor={item => item._id}
+                        renderItem={({ item }) => <EventCard event={item} />}
+                    />
+                )}
+            </View>
 
-            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenOne")}>
+            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenOne")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
                 <Text> Create Event </Text>
             </MyButton2>
         </SafeAreaView>
@@ -52,5 +62,12 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgba(33, 33, 33, 1)",
+    },
+    noEventsTextContainer: {
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    noEventsText: {
+        fontSize: 15,
     }
 })

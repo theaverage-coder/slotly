@@ -1,6 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, TextInput } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from '../../../../../../components/MyButton2';
 import { useEventContext } from "../../../../../../contexts/EventContext";
@@ -9,11 +9,26 @@ export default function CreateEventScreenTwo() {
     const { event, setEvent } = useEventContext();
     const router = useRouter();
 
+    const handleContinue = () => {
+        if (event.endTime < event.startTime) {
+            Alert.alert(
+                "Invalid date range",
+                "",
+                [
+                    { text: "OK" }
+                ]
+            );
+        } else {
+            router.navigate("teacherDashboard/course/CreateEventScreenThree");
+        }
+    }
+
     return (
         <SafeAreaView style={styles.screenContainer}>
             <DateTimePicker
                 mode="date"
                 value={event.startTime}
+                minimumDate={new Date()}
                 onChange={(event, selectedDate) => {
                     if (selectedDate) {
                         setEvent(prev => ({ ...prev, startTime: selectedDate, endTime: selectedDate }))
@@ -60,7 +75,10 @@ export default function CreateEventScreenTwo() {
                 onChangeText={(text) => setEvent(prev => ({ ...prev, location: text }))}
             />
 
-            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenThree")}>
+            <MyButton2
+                disabled={event.location === "" || (event.isLimitedCapacity && event.capacity === "")}
+                onPress={() => handleContinue}
+            >
                 <Text> Continue </Text>
             </MyButton2>
         </SafeAreaView>

@@ -15,7 +15,10 @@ export default function CreateEventScreenOne() {
                 value={event.title}
                 onChangeText={(text) => setEvent(prev => ({ ...prev, title: text }))}
             />
-            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenTwo")}>
+            <MyButton2
+                disabled={event.title === ""}
+                onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenTwo")}
+            >
                 <Text> Continue </Text>
             </MyButton2>
         </SafeAreaView>

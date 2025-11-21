@@ -36,7 +36,9 @@ export default function CourseScreen() {
     return (
         <SafeAreaView style={styles.screenContainer}>
             <DashboardHeader page={1} />
-            <FlatList style={{ marginLeft: 25 }}
+            <FlatList
+                style={{ marginLeft: 25 }}
+                contentContainerStyle={{ gap: 20 }}
                 data={courses}
                 keyExtractor={item => item._id}
                 renderItem={({ item }) => <CourseCard courseId={item._id} courseCode={item.courseCode} courseName={item.courseName} isStudent={true} />}

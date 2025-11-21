@@ -62,6 +62,7 @@ export default function CourseDetailsScreen() {
                     <Text>
                         {course.courseCode}
                         {course.courseName}
+                        {course.signUpLink}
                     </Text>
                     {!booking ? (
                         <></>
