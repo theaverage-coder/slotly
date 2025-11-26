@@ -54,7 +54,9 @@ export default function CreateBookingScreenOne() {
                 </Switch>
             </View>
 
-            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenTwo")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+            <MyButton2
+
+                onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenTwo")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
                 <Text> Next </Text>
             </MyButton2>
         </SafeAreaView>

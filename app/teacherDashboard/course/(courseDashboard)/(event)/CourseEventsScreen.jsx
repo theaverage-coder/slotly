@@ -44,6 +44,8 @@ export default function CourseEventsScreen() {
                     </View>
                 ) : (
                     <FlatList
+                        style={styles.eventsList}
+                        contentContainerStyle={{ gap: 20, alignItems: "center" }}
                         data={events}
                         keyExtractor={item => item._id}
                         renderItem={({ item }) => <EventCard event={item} />}
@@ -65,9 +67,14 @@ const styles = StyleSheet.create({
     },
     noEventsTextContainer: {
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        flex: 1
     },
     noEventsText: {
-        fontSize: 15,
+        fontSize: 20,
+        color: "white"
+    },
+    eventsList: {
+
     }
 })

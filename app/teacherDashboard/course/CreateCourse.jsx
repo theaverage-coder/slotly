@@ -90,12 +90,12 @@ const styles = StyleSheet.create({
     },
     textField: {
         width: "95%",
-        flexShrink: 0,
         height: 60,
         backgroundColor: "rgba(50, 50, 50, 1)",
         justifyContent: "center",
         borderRadius: 16,
-        paddingLeft: 20
+        paddingLeft: 20,
+        color: "rgba(255, 255, 255, 1)",
     },
     topText: {
         gap: 15,
@@ -103,14 +103,12 @@ const styles = StyleSheet.create({
         paddingTop: 25
     },
     header: {
-        textAlign: "left",
         color: "rgba(255, 255, 255, 1)",
         fontFamily: "Urbanist",
         fontSize: 34,
         fontWeight: 700
     },
     description: {
-        textAlign: "left",
         color: "rgba(117, 117, 117, 1)",
         fontFamily: "Urbanist",
         fontSize: 18,
