@@ -1,38 +1,33 @@
 import { useRouter } from "expo-router";
-import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Keyboard, Pressable, StyleSheet, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
-import { useEventContext } from "../../../../../../contexts/EventContext";
+import { usePollContext } from "../../../../../../contexts/PollContext";
 
-export default function CreateEventScreenOne() {
-    const { event, setEvent } = useEventContext();
+export default function CreatePollScreenOne() {
+    const { poll, setPoll } = usePollContext();
     const router = useRouter();
-
-    const isDisabledButton = event.title === "";
+    const isDisabledButton = poll.title === "";
 
     return (
         <SafeAreaView style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <View style={styles.header}>
-                    <Text style={styles.title}>
-                        Event Title
-                    </Text>
-                    <Text style={styles.description}>
-                        What is this event for?
-                    </Text>
+                    <Text style={styles.title}> Set Your Poll Title </Text>
+                    <Text style={styles.description}> What do you want to ask your students? </Text>
                 </View>
                 <View style={styles.inputFields}>
                     <TextInput
                         style={styles.textField}
-                        placeholder="Event Title"
-                        value={event.title}
-                        onChangeText={(text) => setEvent(prev => ({ ...prev, title: text }))}
+                        placeholder="Poll Title"
+                        value={poll.title}
+                        onChangeText={(text) => setPoll(prev => ({ ...prev, title: text }))}
                     />
                 </View>
                 <MyButton2
                     disabled={isDisabledButton}
                     style={[{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }, isDisabledButton && styles.disabledButton]}
-                    onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenTwo")}
+                    onPress={() => router.navigate("teacherDashboard/course/CreatePollScreenTwo")}
                 >
                     <Text> Continue </Text>
                 </MyButton2>

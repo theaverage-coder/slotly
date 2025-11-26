@@ -10,11 +10,29 @@ const pollSchema = mongoose.Schema({
         required: true,
         type: String
     },
-    endPollDate: {
-        required: true,
+    dateCreated: {
+        type: Date,
+        required: true
+    },
+    expirationDate: {
         type: Date
     },
-    pollOptions: [
+    isClosed: {
+        default: false,
+        type: Boolean
+    },
+    multipleVotes: {
+        type: Boolean,
+        required: true
+    },
+    options: [
+        {
+            text: { type: String, required: true },
+            numVotes: {
+                type: Number,
+                default: 0,
+            }
+        }
     ]
 })
 

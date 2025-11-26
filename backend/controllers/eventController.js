@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
-const Event = require('../models/eventModel')
+const Event = require('../models/eventModel');
+const { json } = require('express');
 
 // @desc Get all events pertaining to a course given the courseId
 // @router /api/events/getAllEvents/:courseId
@@ -36,21 +37,23 @@ const getEvent = asyncHandler(async (req, res) => {
 // @desc Create an event
 // @router /api/events/createEvent
 const createEvent = asyncHandler(async (req, res) => {
-    const { event } = req.body;
+    const eventObj = req.body;
     try {
 
         // Logic checks
-        if (event.endTime < event.startTime || event.startTime < new Date() || event.location === "" || event.title === "" || event.capacity === "") {
+
+        if (eventObj.endTime < eventObj.startTime || eventObj.endTime < new Date() || eventObj.location === "" || eventObj.title === "" || eventObj.capacity === "") {
             throw new Error("Invalid input")
         }
 
-        const newEvent = await Event.create(event);
+        const createdEvent = await Event.create(eventObj);
 
-        if (newEvent) {
+        if (createEvent) {
             res.status(201)
             console.log("Event created")
         }
     } catch (err) {
+        console.log(err)
         res.status(400).json({ error: err })
     }
 })

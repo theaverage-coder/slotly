@@ -1,0 +1,93 @@
+import { useRouter } from "expo-router";
+import { Keyboard, Pressable, StyleSheet, TextInput } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import MyButton2 from "../../../../../../components/MyButton2";
+import { usePollContext } from "../../../../../../contexts/PollContext";
+
+export default function CreatePollScreenTwo() {
+    const { poll, setPoll } = usePollContext();
+    const router = useRouter();
+    const API_URL =
+        Platform.OS === 'web'
+            ? process.env.EXPO_PUBLIC_API_URL_WEB
+            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
+
+    const isDisabledButton = poll.options.length >= 2;
+
+    const handleAddOption = () => {
+        setPoll(prev =>
+            [...prev, ""]
+        );
+    }
+
+    const handleRemoveOption = (indexToRemove) => {
+        setPoll(prev =>
+            prev.filter((_, index) => index != indexToRemove)
+        )
+    }
+
+    const handleCreatePoll = async () => {
+        const newPoll = {
+
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/polls/createPoll`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newPoll),
+            })
+
+            if (response.ok) {
+                console.log("Poll created!");
+                router.navigate("teacherDashboard/course/CoursePollsScreen")
+            }
+        } catch (err) {
+            console.log("Failed to create poll:", err);
+        }
+    }
+
+    return (
+        <SafeAreaView>
+            <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+                <View style={styles.header}>
+                    <Text style={styles.title}> {poll.title} </Text>
+                    <Text style={styles.description}> Add at least two options </Text>
+                </View>
+                <View style={styles.optionsContainer}>
+                    {poll.options.map((option, index) => (
+                        <View>
+                            <TextInput
+                                style={styles.textField}
+                                placeholder="Option"
+                                value={option}
+                                onChangeText={(text) => {
+                                    setPoll(prev => (prev.map((item, i) =>
+                                        index === i ? text : item)))
+                                }}
+                            />
+
+                            <Pressable onPress={handleRemoveOption(index)}>
+                                -
+                            </Pressable>
+                        </View>
+                    ))}
+
+                </View>
+                <Pressable onPress={handleAddOption}>
+                    <Text> Add Option</Text>
+                </Pressable>
+                <MyButton2
+                    disabled={isDisabledButton}
+                    style={[{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }, isDisabledButton && styles.disabledButton]}
+                    onPress={handleCreatePoll}>
+                    <Text> Create Poll </Text>
+                </MyButton2>
+            </Pressable>
+        </SafeAreaView>
+    )
+}
+
+const styles = StyleSheet.create({
+
+})
