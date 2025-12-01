@@ -2,10 +2,13 @@ import { useRouter } from "expo-router";
 import { Keyboard, Pressable, StyleSheet, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
+import { useCourseContext } from "../../../../../../contexts/CourseContext";
 import { usePollContext } from "../../../../../../contexts/PollContext";
 
 export default function CreatePollScreenTwo() {
     const { poll, setPoll } = usePollContext();
+    const { courseId } = useCourseContext();
+
     const router = useRouter();
     const API_URL =
         Platform.OS === 'web'
@@ -27,15 +30,13 @@ export default function CreatePollScreenTwo() {
     }
 
     const handleCreatePoll = async () => {
-        const newPoll = {
-
-        }
+        poll.course = courseId;
 
         try {
             const response = await fetch(`${API_URL}/api/polls/createPoll`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newPoll),
+                body: JSON.stringify(poll),
             })
 
             if (response.ok) {
