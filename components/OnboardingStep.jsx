@@ -72,7 +72,6 @@ export default function OnboardingStep({ number, header, description }) {
                                 <Circle cx="27.3324" cy="20.7826" r="2.66148" fill="#1C1C1C" />
                                 <Circle cx="18.1761" cy="20.7826" r="2.66148" fill="#1C1C1C" />
                             </Svg>
-
                         </View>
                     </View>
                     <View style={styles.logoContainer}>

@@ -57,7 +57,7 @@ const getAllPolls = asyncHandler(async (req, res) => {
 const voteInPoll = asyncHandler(async (req, res) => {
     const { pollId, studentId, voteIndex } = req.body;
     try {
-        const poll = await Poll.find({ _id: pollId });
+        const poll = await Poll.findOne({ _id: ObjectId(pollId) });
 
         if (poll.isClosed) {
             throw new Error("Poll is closed")
@@ -84,26 +84,65 @@ const voteInPoll = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Get vote of user in poll
+// @router /api/polls/getVote/:pollId
+
+const getVote = asyncHandler(async (req, res) => {
+    const { pollId } = req.params;
+    const { studentId } = req.body;
+
+    try {
+        const vote = await Vote.findOne({ poll: pollId, student: studentId });
+        if (vote) {
+            return res.status(200).json(vote);
+        } else {
+            return res.status(404); //If the student has not yet voted in the poll
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json("Failed to retrieve vote")
+    }
+})
+
 // @desc Close poll ie. students can no longer vote
 // @router /api/polls/closePoll/:pollId
 const closePoll = asyncHandler(async (req, res) => {
+    const { pollId } = req.params;
+
     try {
-
+        const updatedPoll = await Poll.findByIdAndUpdate(
+            pollId,
+            { $set: { isClosed: true } },
+            { new: true }
+        )
+        return res.status(200)
     } catch (err) {
-
+        console.log(err);
+        return res.status(400).json("Failed to update poll")
     }
 })
 
 // @desc Delete a poll
 // @router /api/polls/deletePoll/:pollId
 const deletePoll = async (req, res) => {
+    const { pollId } = req.params;
+
     try {
-
+        const result = await Poll.deleteOne({ _id: ObjectId(pollId) })
+        if (result.acknowledged) {
+            return res.status(200)
+        }
     } catch (err) {
-
+        console.log(err);
+        return res.status(400).json("Failed to complete vote operation")
     }
 }
 
 module.exports = {
     createPoll,
+    getAllPolls,
+    voteInPoll,
+    deletePoll,
+    closePoll,
+    getVote
 }

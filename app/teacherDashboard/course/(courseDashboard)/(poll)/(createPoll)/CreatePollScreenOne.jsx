@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Keyboard, Pressable, StyleSheet, Text, TextInput } from "react-native";
+import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { usePollContext } from "../../../../../../contexts/PollContext";
