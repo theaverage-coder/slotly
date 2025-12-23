@@ -8,6 +8,14 @@ export default function CreateBookingScreenOne() {
     const { daysAvailable, setDaysAvailable, isSameHours, setIsSameHours } = useBookingContext();
     const router = useRouter();
 
+    const isDisabledButton = !daysAvailable.Sunday.isAvailable &&
+        !daysAvailable.Monday.isAvailable &&
+        !daysAvailable.Tuesday.isAvailable &&
+        !daysAvailable.Wednesday.isAvailable &&
+        !daysAvailable.Thursday.isAvailable &&
+        !daysAvailable.Friday.isAvailable &&
+        !daysAvailable.Saturday.isAvailable;
+
     const changeDayAvailability = (day) => {
         setDaysAvailable(prev => ({
             ...prev, [day]: {
@@ -55,7 +63,7 @@ export default function CreateBookingScreenOne() {
             </View>
 
             <MyButton2
-
+                disabled={isDisabledButton}
                 onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenTwo")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
                 <Text> Next </Text>
             </MyButton2>

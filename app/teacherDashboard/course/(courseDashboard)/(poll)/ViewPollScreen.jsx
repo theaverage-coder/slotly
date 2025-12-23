@@ -4,8 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 
 export default function ViewPollScreen() {
-    const { poll } = useLocalSearchParams();
-    const pollObj = JSON.parse(poll);
+    const { pollObj } = useLocalSearchParams();
+    const poll = JSON.parse(pollObj);
 
     const API_URL =
         Platform.OS === 'web'
@@ -47,11 +47,13 @@ export default function ViewPollScreen() {
                 }
             />
 
-            <MyButton2 onPress={handleClosePoll}>
-                <Text>
-                    Close Poll
-                </Text>
-            </MyButton2>
+            {!poll.isClosed && (
+                <MyButton2 onPress={handleClosePoll}>
+                    <Text>
+                        Close Poll
+                    </Text>
+                </MyButton2>
+            )}
         </SafeAreaView>
     )
 }

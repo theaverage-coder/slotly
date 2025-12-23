@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Keyboard, Pressable, StyleSheet, TextInput } from "react-native";
+import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../../contexts/CourseContext";
@@ -18,15 +18,17 @@ export default function CreatePollScreenTwo() {
     const isDisabledButton = poll.options.length >= 2;
 
     const handleAddOption = () => {
-        setPoll(prev =>
-            [...prev, ""]
-        );
+        setPoll(prev => ({
+            ...prev,
+            options: [...prev.options, ""]
+        }));
     }
 
     const handleRemoveOption = (indexToRemove) => {
-        setPoll(prev =>
-            prev.filter((_, index) => index != indexToRemove)
-        )
+        setPoll(prev => ({
+            ...prev,
+            options: prev.options.filter((_, index) => index != indexToRemove)
+        }))
     }
 
     const handleCreatePoll = async () => {
@@ -49,7 +51,7 @@ export default function CreatePollScreenTwo() {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <View style={styles.header}>
                     <Text style={styles.title}> {poll.title} </Text>
@@ -63,13 +65,16 @@ export default function CreatePollScreenTwo() {
                                 placeholder="Option"
                                 value={option}
                                 onChangeText={(text) => {
-                                    setPoll(prev => (prev.map((item, i) =>
-                                        index === i ? text : item)))
+                                    setPoll(prev => ({
+                                        ...prev,
+                                        options: prev.options.map((item, i) =>
+                                            index === i ? text : item)
+                                    }))
                                 }}
                             />
 
                             <Pressable onPress={handleRemoveOption(index)}>
-                                -
+                                <Text> - </Text>
                             </Pressable>
                         </View>
                     ))}
@@ -90,5 +95,8 @@ export default function CreatePollScreenTwo() {
 }
 
 const styles = StyleSheet.create({
-
+    screenContainer: {
+        flex: 1,
+        backgroundColor: "rgba(33, 33, 33, 1)"
+    },
 })

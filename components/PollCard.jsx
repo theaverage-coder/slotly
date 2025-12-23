@@ -18,7 +18,7 @@ export default function PollCard({ poll }) {
             </Text>
             {poll.expirationDate && (
                 <Text>
-                    Time left to vote:
+                    Time left to vote: {poll.expirationDate - new Date()}
                 </Text>
             )}
             <Text>
