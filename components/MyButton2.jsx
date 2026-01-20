@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: "10%",
         justifyContent: "flex-end",
+        width: "100%"
     },
     btn: {
         alignItems: "center",

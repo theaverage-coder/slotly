@@ -57,32 +57,34 @@ export default function CreatePollScreenTwo() {
                     <Text style={styles.title}> {poll.title} </Text>
                     <Text style={styles.description}> Add at least two options </Text>
                 </View>
-                <View style={styles.optionsContainer}>
-                    {poll.options.map((option, index) => (
-                        <View>
-                            <TextInput
-                                style={styles.textField}
-                                placeholder="Option"
-                                value={option}
-                                onChangeText={(text) => {
-                                    setPoll(prev => ({
-                                        ...prev,
-                                        options: prev.options.map((item, i) =>
-                                            index === i ? text : item)
-                                    }))
-                                }}
-                            />
+                <View style={styles.screenContent}>
+                    <View style={styles.optionsContainer}>
+                        {poll.options.map((option, index) => (
+                            <View style={styles.individualOptionContainer} key={index}>
+                                <TextInput
+                                    style={styles.textField}
+                                    placeholder="Option"
+                                    value={option}
+                                    onChangeText={(text) => {
+                                        setPoll(prev => ({
+                                            ...prev,
+                                            options: prev.options.map((item, i) =>
+                                                index === i ? text : item)
+                                        }))
+                                    }}
+                                />
 
-                            <Pressable onPress={handleRemoveOption(index)}>
-                                <Text> - </Text>
-                            </Pressable>
-                        </View>
-                    ))}
+                                <Pressable onPress={() => handleRemoveOption(index)}>
+                                    <Text> - </Text>
+                                </Pressable>
+                            </View>
+                        ))}
 
+                    </View>
+                    <Pressable style={[styles.addAnotherOptionButton]} onPress={handleAddOption}>
+                        <Text style={{ color: "rgba(116, 116, 116, 1)" }}> Add Another Option </Text>
+                    </Pressable>
                 </View>
-                <Pressable onPress={handleAddOption}>
-                    <Text> Add Option</Text>
-                </Pressable>
                 <MyButton2
                     disabled={isDisabledButton}
                     style={[{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }, isDisabledButton && styles.disabledButton]}
@@ -99,4 +101,52 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "rgba(33, 33, 33, 1)"
     },
+    header: {
+        gap: 15,
+        marginLeft: 15,
+    },
+    title: {
+        color: "rgba(255, 255, 255, 1)",
+        fontFamily: "Urbanist",
+        fontSize: 34,
+        fontWeight: 700
+    },
+    description: {
+        color: "rgba(117, 117, 117, 1)",
+        fontFamily: "Urbanist",
+        fontSize: 18,
+        fontWeight: 500
+    },
+    screenContent: {
+        flex: 1,
+        gap: 20,
+        alignItems: "center"
+
+    },
+    optionsContainer: {
+        paddingTop: 30,
+        gap: 20,
+        width: "100%"
+    },
+    individualOptionContainer: {
+        width: "100%",
+        justifyContent: "center",
+        flexDirection: "row"
+    },
+    textField: {
+        width: "85%",
+        height: 60,
+        backgroundColor: "rgba(50, 50, 50, 1)",
+        justifyContent: "center",
+        borderRadius: 16,
+        paddingLeft: 20,
+        color: "rgba(255, 255, 255, 1)",
+    },
+    addAnotherOptionButton: {
+        backgroundColor: "rgba(85, 85, 85, 0.5)",
+        width: "40%",
+        borderRadius: 16,
+        padding: 10,
+
+    }
 })
