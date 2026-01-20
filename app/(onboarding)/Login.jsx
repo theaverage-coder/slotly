@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Logo from '../../components/Logo';
 import MyButton2 from '../../components/MyButton2';
@@ -22,44 +22,45 @@ export default function Login() {
 
     return (
         <SafeAreaView style={styles.screenContainer}>
-            <View style={styles.screenContent}>
-                <Logo style={{ height: 80, width: 80, }}></Logo>
-                <Text style={{ color: "white", fontSize: 18 }}> Log In to Start Scheduling</Text>
-                <View style={styles.inputFields}>
-                    <View style={styles.textField}>
-                        <TextInput
-                            style={styles.inputText}
-                            placeholder="Email"
-                            value={email}
-                            keyboardType='email-address'
-                            onChangeText={(text) => setEmail(text)}
-                        />
+            <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+                <View style={styles.screenContent}>
+                    <Logo style={{ height: 80, width: 80, }}></Logo>
+                    <Text style={{ color: "white", fontSize: 18 }}> Log In to Start Scheduling</Text>
+                    <View style={styles.inputFields}>
+                        <View style={styles.textField}>
+                            <TextInput
+                                style={styles.inputText}
+                                placeholder="Email"
+                                value={email}
+                                keyboardType='email-address'
+                                onChangeText={(text) => setEmail(text)}
+                            />
+                        </View>
+                        <View style={styles.textField}>
+                            <TextInput
+                                style={styles.inputText}
+                                placeholder="Password"
+                                value={password}
+                                onChangeText={(text) => setPassword(text)}
+                            />
+                        </View>
+                        <Text style={[{ width: "85.5%", textAlign: "right" }, styles.text]}> Forgot Password? </Text>
+
                     </View>
-                    <View style={styles.textField}>
-                        <TextInput
-                            style={styles.inputText}
-                            placeholder="Password"
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
-                        />
-                    </View>
-                    <Text style={[{ width: "85.5%", textAlign: "right" }, styles.text]}> Forgot Password? </Text>
 
                 </View>
-
-            </View>
-            <MyButton2 style={styles.loginButton} onPress={handleLogin}>
-                <Text> Login </Text>
-            </MyButton2>
-            <View style={styles.signUpInsteadText}>
-                <Text style={styles.text}> Don't have an account? </Text>
-                <Pressable onPress={() => router.navigate("/(onboarding)/OnboardingStepOneScreen")}>
-                    <Text>
-                        Sign Up Here
-                    </Text>
-                </Pressable>
-            </View>
-
+                <MyButton2 style={styles.loginButton} onPress={handleLogin}>
+                    <Text> Login </Text>
+                </MyButton2>
+                <View style={styles.signUpInsteadText}>
+                    <Text style={styles.text}> Don't have an account? </Text>
+                    <Pressable onPress={() => router.navigate("/(onboarding)/OnboardingStepOneScreen")}>
+                        <Text>
+                            Sign Up Here
+                        </Text>
+                    </Pressable>
+                </View>
+            </Pressable>
         </SafeAreaView>
     );
 }
