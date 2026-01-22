@@ -3,10 +3,13 @@ import { useCallback, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
+import PollCard from "../../../../../components/PollCard";
+import { useCourseContext } from "../../../../../contexts/CourseContext";
 
 export default function CoursePollsScreen() {
     const [polls, setPolls] = useState([]);
     const router = useRouter();
+    const { courseId } = useCourseContext();
 
     const API_URL =
         Platform.OS === 'web'

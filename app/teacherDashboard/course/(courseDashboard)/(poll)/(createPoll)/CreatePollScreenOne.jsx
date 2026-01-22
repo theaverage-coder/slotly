@@ -1,6 +1,5 @@
 import { useRouter } from "expo-router";
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { usePollContext } from "../../../../../../contexts/PollContext";
 
@@ -10,7 +9,7 @@ export default function CreatePollScreenOne() {
     const isDisabledButton = poll.title === "";
 
     return (
-        <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <View style={styles.header}>
                     <Text style={styles.title}> Set Your Poll Title </Text>
@@ -23,6 +22,8 @@ export default function CreatePollScreenOne() {
                         value={poll.title}
                         onChangeText={(text) => setPoll(prev => ({ ...prev, title: text }))}
                     />
+
+
                 </View>
                 <MyButton2
                     disabled={isDisabledButton}
@@ -32,14 +33,15 @@ export default function CreatePollScreenOne() {
                     <Text> Continue </Text>
                 </MyButton2>
             </Pressable>
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)"
+        backgroundColor: "rgba(33, 33, 33, 1)",
+        paddingTop: 20
     },
     inputFields: {
         flex: 1,

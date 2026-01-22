@@ -8,6 +8,7 @@ const { getCourseById } = require('./courseController');
 // @router /api/polls/createPoll
 const createPoll = asyncHandler(async (req, res) => {
     const poll = req.body;
+
     try {
 
         // Logic checks
@@ -22,13 +23,12 @@ const createPoll = asyncHandler(async (req, res) => {
             multipleVotes: poll.multipleVotes,
             options: poll.options.map(option => ({
                 text: option,
-                numVotes: 0,
             })),
             ...(poll.hasExpirationDate && { expirationDate: poll.expirationDate })
         })
 
         if (newPoll) {
-            res.status(201);
+            res.sendStatus(201);
             console.log("Poll created")
         }
     } catch (err) {
@@ -108,14 +108,14 @@ const getVote = asyncHandler(async (req, res) => {
 // @router /api/polls/closePoll/:pollId
 const closePoll = asyncHandler(async (req, res) => {
     const { pollId } = req.params;
-
+    console.log("Closing poll")
     try {
         const updatedPoll = await Poll.findByIdAndUpdate(
             pollId,
             { $set: { isClosed: true } },
             { new: true }
         )
-        return res.status(200)
+        return res.sendStatus(200)
     } catch (err) {
         console.log(err);
         return res.status(400).json("Failed to update poll")

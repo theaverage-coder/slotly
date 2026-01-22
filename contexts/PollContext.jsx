@@ -8,9 +8,11 @@ export const PollProvider = ({ children }) => {
         title: "",
         options: [
             "",
+            ""
         ],
-        multipleVotes: true,
-        course: ""
+        multipleVotes: false,
+        course: "",
+        duration: 7
     })
 
     return (
