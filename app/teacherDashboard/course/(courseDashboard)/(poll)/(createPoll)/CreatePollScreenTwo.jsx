@@ -1,6 +1,7 @@
+import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
-import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useState } from "react";
+import { Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../../contexts/CourseContext";
 import { usePollContext } from "../../../../../../contexts/PollContext";
@@ -8,14 +9,43 @@ import { usePollContext } from "../../../../../../contexts/PollContext";
 export default function CreatePollScreenTwo() {
     const { poll, setPoll } = usePollContext();
     const { courseId } = useCourseContext();
-
+    const [modalIsVisible, setModalVisibility] = useState(false);
     const router = useRouter();
+
     const API_URL =
         Platform.OS === 'web'
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
-    const isDisabledButton = poll.options.length >= 2;
+    const isDisabledButton = poll.options.length < 2;
+
+    const handleGetDuration = (num) => {
+        switch (num) {
+            case 1:
+                return "24 hours";
+            case 3:
+                return "3 days";
+            case 7:
+                return "1 week";
+            case 14:
+                return "2 weeks";
+            default:
+                return "Unknown"
+        }
+    }
+    const toggleMultipleVotes = () => {
+        setPoll(prev => ({
+            ...prev,
+            multipleVotes: !prev.multipleVotes
+        }))
+    }
+
+    const handleSetDuration = (num) => {
+        setPoll(prev => ({
+            ...prev,
+            duration: num
+        }))
+    }
 
     const handleAddOption = () => {
         setPoll(prev => ({
@@ -32,14 +62,19 @@ export default function CreatePollScreenTwo() {
     }
 
     const handleCreatePoll = async () => {
-        poll.course = courseId;
+        const pollData = {
+            ...poll,
+            course: courseId
+        }
 
         try {
             const response = await fetch(`${API_URL}/api/polls/createPoll`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(poll),
+                body: JSON.stringify(pollData),
             })
+
+            console.log(response);
 
             if (response.ok) {
                 console.log("Poll created!");
@@ -51,40 +86,80 @@ export default function CreatePollScreenTwo() {
     }
 
     return (
-        <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <View style={styles.header}>
                     <Text style={styles.title}> {poll.title} </Text>
-                    <Text style={styles.description}> Add at least two options </Text>
+                    <View style={styles.verticalBorder}>
+                        <Text style={[styles.description]}> Poll duration </Text>
+                        <Pressable onPress={() => setModalVisibility(true)}>
+                            <Text style={styles.durationTextColor}> {handleGetDuration(poll.duration)} </Text>
+                        </Pressable>
+                    </View>
+                    <View style={styles.verticalBorder}>
+                        <Text style={[styles.description]}> Allow multiple votes</Text>
+                        <View>
+                            <Switch
+                                trackColor={{ false: '#767577', true: "rgba(222, 117, 82, 0.6)" }}
+                                thumbColor={poll.multipleVotes ? "rgba(222, 117, 82, 1)" : '#f4f3f4'}
+                                value={poll.multipleVotes}
+                                onValueChange={toggleMultipleVotes}
+                            />
+                        </View>
+                    </View>
                 </View>
                 <View style={styles.screenContent}>
-                    <View style={styles.optionsContainer}>
-                        {poll.options.map((option, index) => (
-                            <View style={styles.individualOptionContainer} key={index}>
-                                <TextInput
-                                    style={styles.textField}
-                                    placeholder="Option"
-                                    value={option}
-                                    onChangeText={(text) => {
-                                        setPoll(prev => ({
-                                            ...prev,
-                                            options: prev.options.map((item, i) =>
-                                                index === i ? text : item)
-                                        }))
-                                    }}
-                                />
+                    <ScrollView>
+                        <View style={styles.optionsContainer}>
+                            {poll.options.map((option, index) => (
+                                <View style={styles.individualOptionContainer} key={index}>
+                                    <TextInput
+                                        style={styles.textField}
+                                        placeholder="Option"
+                                        value={option}
+                                        onChangeText={(text) => {
+                                            setPoll(prev => ({
+                                                ...prev,
+                                                options: prev.options.map((item, i) =>
+                                                    index === i ? text : item)
+                                            }))
+                                        }}
+                                    />
 
-                                <Pressable onPress={() => handleRemoveOption(index)}>
-                                    <Text> - </Text>
-                                </Pressable>
-                            </View>
-                        ))}
+                                    {index > 1 && (<Pressable style={styles.deleteSignContainer} onPress={() => handleRemoveOption(index)}>
+                                        <Text style={styles.deleteSign}> X </Text>
+                                    </Pressable>)}
+                                </View>
+                            ))}
 
-                    </View>
+                        </View>
+                    </ScrollView>
                     <Pressable style={[styles.addAnotherOptionButton]} onPress={handleAddOption}>
                         <Text style={{ color: "rgba(116, 116, 116, 1)" }}> Add Another Option </Text>
                     </Pressable>
                 </View>
+
+                <Modal visible={modalIsVisible} transparent animationType="slide">
+                    <View style={styles.modal}>
+                        <View style={styles.modalContent}>
+                            <Pressable onPress={() => setModalVisibility(false)}>
+                                <Text style={{ color: "white" }}>
+                                    Close
+                                </Text>
+                            </Pressable>
+                            <Picker
+                                selectedValue={poll.duration}
+                                onValueChange={(itemValue, _) => handleSetDuration(itemValue)}>
+                                <Picker.Item label="24 hours" value={1} />
+                                <Picker.Item label="3 days" value={3} />
+                                <Picker.Item label="1 week" value={7} />
+                                <Picker.Item label="2 weeks" value={14} />
+
+                            </Picker>
+                        </View>
+                    </View>
+                </Modal>
+
                 <MyButton2
                     disabled={isDisabledButton}
                     style={[{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }, isDisabledButton && styles.disabledButton]}
@@ -92,30 +167,35 @@ export default function CreatePollScreenTwo() {
                     <Text> Create Poll </Text>
                 </MyButton2>
             </Pressable>
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)"
-    },
-    header: {
-        gap: 15,
-        marginLeft: 15,
+        backgroundColor: "rgba(33, 33, 33, 1)",
+        paddingTop: 20
     },
     title: {
         color: "rgba(255, 255, 255, 1)",
         fontFamily: "Urbanist",
         fontSize: 34,
-        fontWeight: 700
+        fontWeight: 700,
+        paddingLeft: 15,
+        paddingBottom: 15
     },
     description: {
-        color: "rgba(117, 117, 117, 1)",
+        color: "white",
         fontFamily: "Urbanist",
-        fontSize: 18,
-        fontWeight: 500
+        fontSize: 15,
+        fontWeight: 500,
+        paddingLeft: 15,
+        width: "75%"
+    },
+    durationTextColor: {
+        color: "rgba(117, 117, 117, 1)",
+
     },
     screenContent: {
         flex: 1,
@@ -130,8 +210,8 @@ const styles = StyleSheet.create({
     },
     individualOptionContainer: {
         width: "100%",
-        justifyContent: "center",
-        flexDirection: "row"
+        flexDirection: "row",
+        marginLeft: 30
     },
     textField: {
         width: "85%",
@@ -147,6 +227,36 @@ const styles = StyleSheet.create({
         width: "40%",
         borderRadius: 16,
         padding: 10,
-
+    },
+    disabledButton: {
+        opacity: 0.3
+    },
+    verticalBorder: {
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderBottomColor: "rgb(88, 88, 88)",
+        borderTopColor: "rgb(88, 88, 88)",
+        flexDirection: "row",
+        alignItems: "center",
+        height: 60,
+    },
+    modal: {
+        flex: 1,
+        justifyContent: "flex-end",
+        backgroundColor: "rgba(0,0,0,0.5)"
+    },
+    modalContent: {
+        height: "40%",
+        backgroundColor: "rgba(33, 33, 33, 1)",
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        padding: 15
+    },
+    deleteSignContainer: {
+        justifyContent: "center"
+    },
+    deleteSign: {
+        color: "rgba(117, 117, 117, 1)",
     }
+
 })

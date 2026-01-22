@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 export default function PollCard({ poll }) {
     const router = useRouter();
@@ -7,7 +7,7 @@ export default function PollCard({ poll }) {
     const handlePress = () => {
         router.push({
             pathname: "teacherDashboard/course/ViewPollScreen",
-            params: { poll: JSON.stringify(poll) }
+            params: { pollObj: JSON.stringify(poll) }
         });
     }
     return (
@@ -18,7 +18,7 @@ export default function PollCard({ poll }) {
             </Text>
             {poll.expirationDate && (
                 <Text>
-                    Time left to vote: {poll.expirationDate - new Date()}
+                    Time left to vote:
                 </Text>
             )}
             <Text>

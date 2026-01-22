@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { FlatList, Platform, StyleSheet } from "react-native";
+import { FlatList, Platform, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 
@@ -14,7 +14,14 @@ export default function ViewPollScreen() {
 
     const handleClosePoll = async () => {
         try {
-            await fetch(`${API_URL}/api/polls/closePoll/${poll._id}`)
+            const response = await fetch(`${API_URL}/api/polls/closePoll/${poll._id}`, {
+                method: 'PATCH',
+
+            });
+
+            if (response.ok) {
+                console.log("Poll Closed")
+            }
         } catch (err) {
             console.log(err);
         }

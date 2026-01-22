@@ -80,9 +80,7 @@ export default function CreateBookingScreenThree() {
                             <Picker.Item label="60 minutes" value={60} />
                         </Picker>
                     </View>
-
                 </View>
-
             </Modal>
 
             <MyButton2 onPress={handleCreateBooking} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
