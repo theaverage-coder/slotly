@@ -1,7 +1,6 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 import PollCard from "../../../../../components/PollCard";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
@@ -34,7 +33,7 @@ export default function CoursePollsScreen() {
     );
 
     return (
-        <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.screenContainer}>
             <View style={{ flex: 1 }}>
                 {polls.length === 0 ? (
                     <View style={styles.noPollsTextContainer}>
@@ -56,7 +55,7 @@ export default function CoursePollsScreen() {
             <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreatePollScreenOne")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
                 <Text> Create Poll </Text>
             </MyButton2>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -64,6 +63,7 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgba(33, 33, 33, 1)",
+        paddingTop: 30
     },
     noEventsTextContainer: {
         justifyContent: "center",
