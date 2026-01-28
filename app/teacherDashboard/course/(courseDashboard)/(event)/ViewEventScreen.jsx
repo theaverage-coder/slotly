@@ -1,7 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { FlatList, Modal, Platform, Pressable, StyleSheet, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 
 
@@ -46,7 +45,7 @@ export default function ViewEventScreen() {
     }
 
     return (
-        <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.screenContainer}>
             <Text>
                 {eventObj.title}
             </Text>
@@ -57,13 +56,13 @@ export default function ViewEventScreen() {
                 {eventObj.location}
             </Text>
             <Text> Students signed up: </Text>
-            {eventObj.maxCapacity === -1 ? (
+            {eventObj.capacity === -1 ? (
                 <Text>
                     {eventObj.students.length}
                 </Text>
             ) : (
                 <Text>
-                    {eventObj.students.length} / {eventObj.students.maxCapacity}
+                    {eventObj.students.length} / {eventObj.capacity}
                 </Text>
             )}
 
@@ -76,9 +75,12 @@ export default function ViewEventScreen() {
             <Modal
                 visible={isModalVisible}
                 onShow={handleGetStudents}
-                onRequestClose={() => setModalVisibility(false)}
                 animationType="slide">
-
+                <Pressable onPress={() => setModalVisibility(false)} style={{ marginTop: 50 }}>
+                    <Text>
+                        Close
+                    </Text>
+                </Pressable>
                 <FlatList
                     data={students}
                     keyExtractor={item => item._id}
@@ -91,7 +93,7 @@ export default function ViewEventScreen() {
                     Delete Event
                 </Text>
             </MyButton2>
-        </SafeAreaView>
+        </View>
     )
 }
 

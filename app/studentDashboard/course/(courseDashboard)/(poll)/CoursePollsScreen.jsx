@@ -1,7 +1,6 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
-import MyButton2 from "../../../../../components/MyButton2";
 import PollCard from "../../../../../components/PollCard";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
 
@@ -52,9 +51,6 @@ export default function CoursePollsScreen() {
                 )}
             </View>
 
-            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreatePollScreenOne")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
-                <Text> Create Poll </Text>
-            </MyButton2>
         </View>
     )
 }

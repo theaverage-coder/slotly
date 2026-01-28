@@ -30,7 +30,7 @@ export default function CreateEventScreenTwo() {
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <View style={styles.header}>
                     <Text style={styles.title}>
-                        Important Details
+                        Event Details
                     </Text>
                     <Text style={styles.description}>
                         Set a time and place for the event

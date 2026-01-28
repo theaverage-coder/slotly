@@ -1,15 +1,17 @@
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useCourseContext } from '../contexts/CourseContext';
+import { useUser } from '../contexts/UserContext';
 
-export default function CourseCard({ courseId, courseCode, courseName, isStudent }) {
+export default function CourseCard({ courseId, courseCode, courseName }) {
     const { setCourseId } = useCourseContext();
+    const { user } = useUser();
 
     const router = useRouter();
 
     const handlePress = () => {
         setCourseId(courseId);
-        if (isStudent) {
+        if (user.role === "s") {
             router.push(`studentDashboard/course/CourseDetailsScreen`)
         } else {
             router.push(`teacherDashboard/course/CourseDetailsScreen`)

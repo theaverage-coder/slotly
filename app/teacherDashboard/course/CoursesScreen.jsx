@@ -28,7 +28,6 @@ export default function CoursesScreen() {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    console.log(data);
                     setCourses(data.courses);
                 }
             })

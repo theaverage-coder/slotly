@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { FlatList, Platform, Pressable, View } from "react-native";
+import { FlatList, Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCourseContext } from "../../../../contexts/CourseContext";
-import { useUser } from '../../../../contexts/UserContext';
+import { useCourseContext } from "../../../../../contexts/CourseContext";
+import { useUser } from "../../../../../contexts/UserContext";
 
 export default function BookAppointmentScreen() {
     const { courseId } = useCourseContext();

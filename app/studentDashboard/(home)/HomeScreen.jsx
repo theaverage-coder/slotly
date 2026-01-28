@@ -3,8 +3,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Defs, FeBlend, FeColorMatrix, FeComposite, FeFlood, FeGaussianBlur, FeOffset, Filter, G, Path, Svg } from 'react-native-svg';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AddCourseModal from '../(course)/AddCourseModal';
 import DashboardHeader from '../../../components/DashboardHeader';
+import AddCourseModal from '../course/AddCourseModal';
 
 export default function HomeScreen() {
     const [modalVisible, setModalVisibility] = useState(false);
