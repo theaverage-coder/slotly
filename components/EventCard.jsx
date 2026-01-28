@@ -1,17 +1,28 @@
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useUser } from "../contexts/UserContext";
 
 
 export default function EventCard({ event }) {
     const router = useRouter();
+    const { user } = useUser();
+
     const start = new Date(event.startTime);
 
     const handlePress = () => {
-        router.push({
-            pathname: "teacherDashboard/course/ViewEventScreen",
-            params: { event: JSON.stringify(event) }
-        });
+        if (user.role === "s") {
+            router.push({
+                pathname: "studentDashboard/course/ViewEventScreen",
+                params: { event: JSON.stringify(event) }
+            });
+        } else {
+            router.push({
+                pathname: "teacherDashboard/course/ViewEventScreen",
+                params: { event: JSON.stringify(event) }
+            });
+        }
     }
+
     return (
         <Pressable onPress={handlePress} style={styles.cardContainer}>
             <View style={styles.date}>

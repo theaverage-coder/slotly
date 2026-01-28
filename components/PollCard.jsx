@@ -1,18 +1,27 @@
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useUser } from "../contexts/UserContext";
 
 export default function PollCard({ poll }) {
     const router = useRouter();
+    const { user } = useUser();
 
     const handlePress = () => {
-        router.push({
-            pathname: "teacherDashboard/course/ViewPollScreen",
-            params: { pollObj: JSON.stringify(poll) }
-        });
+        if (user.role === "s") {
+            router.push({
+                pathname: "studentDashboard/course/ViewPollScreen",
+                params: { pollObj: JSON.stringify(poll) }
+            });
+        } else {
+            router.push({
+                pathname: "teacherDashboard/course/ViewPollScreen",
+                params: { pollObj: JSON.stringify(poll) }
+            });
+        }
     }
 
     const getTimeLeft = () => {
-        if (!poll.expirationDate) {
+        if (!poll.expirationDate || new Date(poll.expirationDate) < new Date()) {
             return "";
         }
         const expirationDate = new Date(poll.expirationDate);

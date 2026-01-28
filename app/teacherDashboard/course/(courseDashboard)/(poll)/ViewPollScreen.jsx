@@ -47,39 +47,42 @@ export default function ViewPollScreen() {
 
     return (
         <View style={styles.screenContainer}>
-            <View style={styles.titleContainer}>
-                <Text style={styles.title}> {poll.title} </Text>
-            </View>
-            <Text> Poll Created on {poll.dateCreated} </Text>
-            <Text> Poll Status: {getPollStatus()} </Text>
+            <View style={{ flex: 1 }}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}> {poll.title} </Text>
+                </View>
+                <Text style={styles.statusText}> Poll Status: {getPollStatus()} </Text>
+                <Text style={styles.statusText}> Poll Created on {poll.dateCreated} </Text>
 
-            <View style={styles.outerResultContainer}>
-                <View style={styles.innerResultContainer}>
-                    <FlatList
-                        data={poll.options}
-                        keyExtractor={item => item._id}
-                        ItemSeparatorComponent={() => (
-                            <View style={{ height: 20 }} />
-                        )}
-                        renderItem={({ item }) => {
-                            const width = totalVotes === 0 ? 0 : (item.numVotes / totalVotes) * 100;
+                <View style={styles.outerResultContainer}>
+                    <View style={styles.innerResultContainer}>
+                        <FlatList
+                            data={poll.options}
+                            keyExtractor={item => item._id}
+                            ItemSeparatorComponent={() => (
+                                <View style={{ height: 20 }} />
+                            )}
+                            renderItem={({ item }) => {
+                                const width = totalVotes === 0 ? 0 : (item.numVotes / totalVotes) * 100;
 
-                            return (
-                                <View style={styles.optionBarContainer}>
-                                    <View style={[styles.barFill, { width: `${width}%` }]} />
-                                    <Text style={styles.optionLabel}>
-                                        {item.text} {item.numVotes}
-                                    </Text>
-                                </View>
-                            )
-                        }}
-                    />
-                    <Text> Total Votes: {totalVotes} </Text>
+                                return (
+                                    <View style={styles.optionBarContainer}>
+                                        <View style={[styles.barFill, { width: `${width}%` }]} />
+                                        <Text style={styles.optionLabel}>
+                                            {item.text} {item.numVotes}
+                                        </Text>
+                                    </View>
+                                )
+                            }}
+                        />
+                        <Text> Total Votes: {totalVotes} </Text>
+                    </View>
                 </View>
             </View>
-
             {!poll.isClosed && (
-                <MyButton2 onPress={handleClosePoll}>
+                <MyButton2 onPress={handleClosePoll} style={{
+                    backgroundColor: "rgba(217, 217, 217, 0.51)", textColor: "rgba(33, 33, 33, 1)"
+                }}>
                     <Text>
                         Close Poll
                     </Text>
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgba(33, 33, 33, 1)",
-        paddingVertical: 20
+        paddingTop: 20
     },
     titleContainer: {
         alignItems: "center"
@@ -106,6 +109,10 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         paddingBottom: 15
     },
+    statusText: {
+        color: "white",
+        paddingLeft: 15
+    },
     outerResultContainer: {
         height: "70%",
         padding: 20,
@@ -113,7 +120,7 @@ const styles = StyleSheet.create({
     innerResultContainer: {
         border: 1,
         borderRadius: 16,
-        backgroundColor: "rgb(65, 65, 65)",
+        backgroundColor: "rgb(105, 105, 105)",
         flex: 1,
         padding: 10,
         paddingVertical: 20
@@ -130,7 +137,7 @@ const styles = StyleSheet.create({
     barFill: {
         height: 50,
         position: 'absolute',
-        backgroundColor: "rgb(139, 139, 139)",
+        backgroundColor: "rgba(222, 117, 82, 1)",
         borderTopLeftRadius: 16,
         borderBottomLeftRadius: 16
     },

@@ -1,14 +1,13 @@
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
-import MyButton2 from "../../../../../components/MyButton2";
-import PollCard from "../../../../../components/PollCard";
+import EventCard from "../../../../../components/EventCard";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
 
-export default function CoursePollsScreen() {
-    const [polls, setPolls] = useState([]);
+export default function CourseEventsScreen() {
     const router = useRouter();
     const { courseId } = useCourseContext();
+    const [events, setEvents] = useState([]);
 
     const API_URL =
         Platform.OS === 'web'
@@ -16,45 +15,42 @@ export default function CoursePollsScreen() {
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     useFocusEffect(useCallback(() => {
-        const fetchPolls = async () => {
+        const fetchEvents = async () => {
             try {
-                const response = await fetch(`${API_URL}/api/polls/getAllPolls/${courseId}`);
+                const response = await fetch(`${API_URL}/api/events/getAllEvents/${courseId}`);
                 if (response.ok) {
                     const data = await response.json();
-                    setPolls(data);
+                    setEvents(data);
                 }
             } catch (err) {
-                console.log("Failed to retrieve polls: ", err);
+                console.log("Failed to retrieve events: ", err);
             }
         }
 
-        fetchPolls();
+        fetchEvents();
     }, [])
     );
 
     return (
         <View style={styles.screenContainer}>
             <View style={{ flex: 1 }}>
-                {polls.length === 0 ? (
-                    <View style={styles.noPollsTextContainer}>
-                        <Text style={styles.noPollsText}>
-                            No ongoing polls
+                {events.length === 0 ? (
+                    <View style={styles.noEventsTextContainer}>
+                        <Text style={styles.noEventsText}>
+                            No ongoing events
                         </Text>
                     </View>
                 ) : (
                     <FlatList
-                        style={styles.pollsList}
+                        style={styles.eventsList}
                         contentContainerStyle={{ gap: 20, alignItems: "center" }}
-                        data={polls}
+                        data={events}
                         keyExtractor={item => item._id}
-                        renderItem={({ item }) => <PollCard poll={item} />}
+                        renderItem={({ item }) => <EventCard event={item} />}
                     />
                 )}
             </View>
 
-            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreatePollScreenOne")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
-                <Text> Create Poll </Text>
-            </MyButton2>
         </View>
     )
 }
@@ -63,15 +59,19 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgba(33, 33, 33, 1)",
-        paddingTop: 30
+        paddingTop: 20
+
     },
-    noPollsTextContainer: {
+    noEventsTextContainer: {
         justifyContent: "center",
         alignItems: "center",
         flex: 1
     },
-    noPollsText: {
+    noEventsText: {
         fontSize: 20,
         color: "white"
     },
+    eventsList: {
+
+    }
 })

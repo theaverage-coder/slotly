@@ -1,8 +1,9 @@
-import { FlatList, Modal, StyleSheet, Text, View } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { FlatList, Modal, Platform, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useUser } from "../../../../../contexts/UserContext";
-
 
 export default function ViewPollScreen() {
     const { pollObj } = useLocalSearchParams();
@@ -11,6 +12,11 @@ export default function ViewPollScreen() {
     const [modalVisibility, setModalVisibility] = useState(false);
     const { user } = useUser();
     const [userVote, setUserVote] = useState();
+
+    const API_URL =
+        Platform.OS === 'web'
+            ? process.env.EXPO_PUBLIC_API_URL_WEB
+            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleCloseModal = async () => {
         try {
@@ -23,8 +29,11 @@ export default function ViewPollScreen() {
             })
 
             if (response.status === 200) {
-                const data = response.json();
-                setUserVote(data);
+                /*const data = await response.json();
+                if (data !== "") {
+                    setUserVote(data);
+
+                }*/
             }
             setModalVisibility(false);
         } catch (err) {

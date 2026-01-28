@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Path, Svg } from 'react-native-svg';
@@ -15,7 +16,9 @@ export default function CourseScreen() {
         Platform.OS === 'web'
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
-    useEffect(() => {
+
+
+    useFocusEffect(useCallback(() => {
         fetch(`${API_URL}/api/courses/getCourses`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -26,12 +29,12 @@ export default function CourseScreen() {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    console.log(data);
                     setCourses(data.courses);
                 }
             })
             .catch(err => console.error(err));
-    }, []);
+    }, [])
+    );
 
     return (
         <SafeAreaView style={styles.screenContainer}>

@@ -19,7 +19,7 @@ export default function StudentLayout() {
             }}>
 
             <Tabs.Screen name="(home)" options={{ title: 'Meetings' }} />
-            <Tabs.Screen name="(course)" options={{ title: 'Courses' }} />
+            <Tabs.Screen name="course" options={{ title: 'Courses' }} />
             <Tabs.Screen name="ProfileScreen" options={{ title: 'Profile' }} />
         </Tabs>
     );
