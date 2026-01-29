@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { FlatList, Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
@@ -21,21 +22,24 @@ export default function BookAppointmentScreen() {
 
 
     const fetchAvailableTimeslots = async () => {
+        //console.log("calling once")
         try {
             const response = await fetch(`${API_URL}/api/bookings/getAvailableTimeSlots/${courseId}/${startDate}`)
             const data = await response.json();
             setAvailableSlots(data.availableSlots);
             setBookingId(data.bookingId);
             setTimeSlotDuration(data.timeSlotDuration);
-            setStartDate(startDate.setDate(startDate.getDate() + 14));
+            //setStartDate(startDate.setDate(startDate.getDate() + 14));
         } catch (err) {
             console.log(err);
         }
     };
 
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
         fetchAvailableTimeslots();
-    }, []);
+        //console.log("usefocuseffect")
+    }, [])
+    );
 
     const handleBookAppointment = async () => {
         try {
@@ -62,20 +66,19 @@ export default function BookAppointmentScreen() {
     return (
         <SafeAreaView>
             {(!availableSlots) ? (
-                <></>
+                <Text> No available time slots</Text>
             ) : (
                 <View>
                     <FlatList
                         data={Object.keys(availableSlots)}
                         horizontal={true}
                         keyExtractor={item => item}
-                        onEndReachedThreshold={0.7}
-                        onEndReached={fetchAvailableTimeslots()}
+                        //onEndReachedThreshold={0.9}
+                        //onEndReached={fetchAvailableTimeslots()}
                         renderItem={({ item }) =>
                             <Pressable onPress={() => setSelectedDate(item)}>
                                 <Text>
-                                    {item.getMonth()}
-                                    {item.getDate()}
+                                    {item}
                                 </Text>
                             </Pressable>
                         }
