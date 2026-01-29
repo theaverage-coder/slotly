@@ -5,81 +5,88 @@ const User = require('../models/userModel')
 // @desc Add a new course
 // @route /api/courses/addCourse
 const addCourse = asyncHandler(async (req, res) => {
-    const { courseCode, courseName, semester, prof } = req.body;
+    try {
+        const { courseCode, courseName, semester, prof } = req.body;
 
-    if (!courseCode || !courseName || !semester) {
-        res.status(400);
-        throw new Error('Missing fields');
-    }
-
-    // Create unique sign up code
-    let signUpLink;
-    while (true) {
-        signUpLink = generateSignUpLink();
-        const exists = await Course.findOne({ signUpLink })
-
-        if (!exists) {
-            break;
+        if (!courseCode || !courseName || !semester) {
+            res.status(400);
+            throw new Error('Missing fields');
         }
-    }
 
-    // Create course
-    const course = await Course.create({
-        courseCode,
-        courseName,
-        semester,
-        prof,
-        signUpLink,
-    })
+        // Create unique sign up code
+        let signUpLink;
+        while (true) {
+            signUpLink = generateSignUpLink();
+            const exists = await Course.findOne({ signUpLink })
 
-    if (course) {
-        const update = await User.updateOne(
-            { _id: prof },
-            { $addToSet: { courses: course._id } }
-        );
-        res.status(201).json({
-            signUpLink: course.signUpLink,
+            if (!exists) {
+                break;
+            }
+        }
+
+        // Create course
+        const course = await Course.create({
+            courseCode,
+            courseName,
+            semester,
+            prof,
+            signUpLink,
         })
-    } else {
-        res.status(400);
-        throw new Error('Invalid data');
-    }
 
+        if (course) {
+            const update = await User.updateOne(
+                { _id: prof },
+                { $addToSet: { courses: course._id } }
+            );
+            res.status(201).json({
+                signUpLink: course.signUpLink,
+            })
+        } else {
+            res.status(400);
+            throw new Error('Invalid data');
+        }
+    } catch (err) {
+        console.log(err)
+    }
 })
 // @desc Register to course
 // @router /api/courses/joinCourse
 const joinCourse = asyncHandler(async (req, res) => {
-    const { studentId, signUpLink } = req.body;
+    try {
+        const { studentId, signUpLink } = req.body;
 
-    // Check if a course with that sign up link exists
-    const course = await Course.findOne({ signUpLink });
+        // Check if a course with that sign up link exists
+        const course = await Course.findOne({ signUpLink });
 
-    if (course) {
-        console.log("Course found")
-        // Register student to course
-        const update = await User.updateOne(
-            { _id: studentId },
-            { $addToSet: { courses: course._id } }
-        );
+        if (course) {
+            console.log("Course found")
+            // Register student to course
+            const update = await User.updateOne(
+                { _id: studentId },
+                { $addToSet: { courses: course._id } }
+            );
 
-        // If successfully enrolled
-        if (update.modifiedCount == 1) {
-            return res.status(201).json({
-                success: true,
-                added: true,
-            });
-        } else { // Already enrolled in course
-            return res.status(201).json({
-                success: true,
-                added: false,
+            // If successfully enrolled
+            if (update.modifiedCount == 1) {
+                return res.status(201).json({
+                    success: true,
+                    added: true,
+                });
+            } else { // Already enrolled in course
+                return res.status(201).json({
+                    success: true,
+                    added: false,
+                });
+            }
+        } else { // No course found
+            console.log("No course found");
+
+            return res.status(400).json({
+                success: false,
             });
         }
-    } else { // No course found
-        console.log("No course found");
-
-        return res.status(400).json({
-            success: false,
-        });
+    } catch (err) {
+        console.log(err)
     }
 
 })

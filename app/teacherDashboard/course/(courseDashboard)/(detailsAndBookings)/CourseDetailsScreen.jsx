@@ -1,5 +1,5 @@
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
@@ -16,7 +16,7 @@ export default function CourseDetailsScreen() {
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
         const fetchCourse = async () => {
             try {
                 const response = await fetch(`${API_URL}/api/courses/getCourseById/${courseId}`);
@@ -31,13 +31,11 @@ export default function CourseDetailsScreen() {
 
         const fetchBooking = async () => {
             try {
-
                 const response = await fetch(`${API_URL}/api/bookings/getBooking/${courseId}`);
 
                 if (response.ok) {
                     const data = await response.json();
                     setBooking(data);
-
                 }
             } catch (err) {
                 console.log(err);
@@ -46,9 +44,8 @@ export default function CourseDetailsScreen() {
 
         fetchCourse();
         fetchBooking();
-    }, []);
+    }, []));
 
-    //useFocusEffect for bookings in case its modified ? 
 
     return (
         <View style={styles.screenContainer}>
@@ -64,6 +61,7 @@ export default function CourseDetailsScreen() {
                     </View>
                     <View style={styles.semesterContainer}>
                         <Text style={styles.semesterText}> {course.semester} </Text>
+                        <Text> Sign up link: {course.signUpLink} </Text>
                     </View>
                     <View style={styles.line}></View>
 
@@ -106,8 +104,8 @@ export default function CourseDetailsScreen() {
                     </View>
 
 
-                    {!booking ? (
-                        <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenOne")}>
+                    {!booking || booking.length === 0 ? (
+                        <MyButton2 style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }} onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenOne")}>
                             <Text> Set Booking Hours </Text>
                         </MyButton2>
                     ) : (

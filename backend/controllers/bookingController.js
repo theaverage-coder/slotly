@@ -6,21 +6,25 @@ const Appointment = require('../models/appointmentModel')
 // @desc Create a new booking
 // @route POST /api/bookings/createBooking
 const createBooking = asyncHandler(async (req, res) => {
-    const { course, officeHours, timeSlotDuration } = req.body
+    try {
+        const { course, officeHours, timeSlotDuration } = req.body
 
-    // Create booking
-    const booking = await Booking.create({
-        course,
-        officeHours,
-        timeSlotDuration
-    })
+        // Create booking
+        const booking = await Booking.create({
+            course,
+            officeHours,
+            timeSlotDuration
+        })
 
-    if (booking) {
-        res.status(201)
-        console.log("Booking created")
-    } else {
-        res.status(400)
-        throw new Error('Failed to create booking')
+        if (booking) {
+            res.sendStatus(201)
+            console.log("Booking created")
+        } else {
+            res.status(400)
+            throw new Error('Failed to create booking')
+        }
+    } catch (err) {
+        console.log(err);
     }
 })
 
@@ -29,39 +33,46 @@ const createBooking = asyncHandler(async (req, res) => {
 const getAvailableTimeSlots = asyncHandler(async (req, res) => {
     try {
         const { courseId, startDate } = req.params;
-        const booking = await Booking.find({ course: courseId }, { _id: 1, officeHours: 1, timeSlotDuration: 1 });
+        const booking = await Booking.findOne({ course: courseId }, { _id: 1, officeHours: 1, timeSlotDuration: 1 });
+        //Get all appointments sorted by increasing date/time
         const appointments = await Appointment.find({ booking: booking._id }, { startTime: 1 }).sort({ startTime: 1 });
 
         if (!booking) {
             console.log("No booking exists")
             return res.status(404)
         }
-
-        const timeSlots = {};
+        const timeSlots = {}; //Dictionary with key = date and value = list of timeslots
         let cur = new Date(startDate);
         const endDate = new Date(startDate);
-        endDate.setDate(endDate.getDate() + 14); //2 weeks
-        const availableDays = booking.officeHours.map(h => [h.day, h]);
+        endDate.setDate(endDate.getDate() + 14); //2 weeks from startDate
+        const availableDays = booking.officeHours;
         let appointmentsIdx = 0;
-
+        //Iterate through all 14 days
         while (cur < endDate) {
             const dayOfWeek = cur.getDay();
-            if (availableDays.includes(dayOfWeek)) {
-                for (const interval of availableDays.get(dayOfWeek).timeIntervals) {
-                    let curSlot = new Date(interval.startTime);
+            if (availableDays.some(item => item.day === dayOfWeek)) { //Check if the day of the week is included in the booking
+                for (const interval of availableDays.find(item => item.day === dayOfWeek).timeIntervals) {
+                    let curSlot = new Date(interval.start);
 
-                    while (curSlot < new Date(interval.endTime)) {
-                        if (appointmentsIdx < appointments.length && curSlot.getTime() !== appointments[appointmentsIdx].getTime()) {
-                            const dateOnly = curSlot.getFullYear() + "-" + String(curSlot.getMonth() + 1).padStart(2, "0") + "-" + String(curSlot.getDate()).padStart(2, "0");
+                    while (curSlot < new Date(interval.end)) { //Get all timeslots within the interval
+                        //Check if current timeslot is not already booked
+                        if (appointments.length === 0 || (appointmentsIdx < appointments.length && curSlot.getTime() !== appointments[appointmentsIdx].getTime())) {
+                            const dateOnly = cur.getFullYear() + "-" + String(cur.getMonth() + 1).padStart(2, "0") + "-" + String(cur.getDate()).padStart(2, "0");
                             const timeOnly = curSlot.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                            //Add to dictionary
+                            if (!timeSlots[dateOnly]) {
+                                timeSlots[dateOnly] = [];
+                            }
                             timeSlots[dateOnly].push(timeOnly);
                         } else {
                             appointmentsIdx++;
                         }
+                        //Get the next timeSlot
                         curSlot = new Date(curSlot.getTime() + booking.timeSlotDuration * 60000);
                     }
                 }
             }
+            cur.setDate(cur.getDate() + 1);
         }
         return res.json({
             availableSlots: timeSlots,
