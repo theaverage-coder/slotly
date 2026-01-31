@@ -6,22 +6,23 @@ const Appointment = require('../models/appointmentModel')
 // @router /api/appointments/bookAppointment
 const bookAppointment = asyncHandler(async (req, res) => {
     try {
-        const { selectedTimeSlot, selectedDate, bookingId, studentId, timeSlotDuration } = req.body;
-        const startDateUTC = new Date(`${selectedDate}T${selectedTimeSlot}:00Z`);
-        const endDateUTC = new Date(startDateUTC.getTime() + timeSlotDuration * 60000);
+        const { selectedTimeSlot, bookingId, studentId, timeSlotDuration, message } = req.body;
+        const startDateUTC = new Date(selectedTimeSlot);
+        const endDateUTC = new Date(new Date(selectedTimeSlot).getTime() + timeSlotDuration * 60000);
 
         const appointment = await Appointment.create({
             booking: bookingId,
             student: studentId,
             startTime: startDateUTC,
-            endTime: endDateUTC
+            endTime: endDateUTC,
+            message: message,
         })
 
         if (appointment) {
-            res.status(201)
+            res.sendStatus(201)
             console.log("Appointment booked")
         } else {
-            res.status(400)
+            res.sendStatus(400)
             throw new Error("Failed to book appointment")
         }
     } catch (err) {

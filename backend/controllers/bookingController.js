@@ -46,24 +46,30 @@ const getAvailableTimeSlots = asyncHandler(async (req, res) => {
         const endDate = new Date(startDate);
         endDate.setDate(endDate.getDate() + 14); //2 weeks from startDate
         const availableDays = booking.officeHours;
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+        const dayNames = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"]
         let appointmentsIdx = 0;
         //Iterate through all 14 days
         while (cur < endDate) {
             const dayOfWeek = cur.getDay();
+            const key = dayNames[dayOfWeek] + "-" + monthNames[cur.getMonth()] + "-" + String(cur.getDate()).padStart(2, "0")
             if (availableDays.some(item => item.day === dayOfWeek)) { //Check if the day of the week is included in the booking
                 for (const interval of availableDays.find(item => item.day === dayOfWeek).timeIntervals) {
-                    let curSlot = new Date(interval.start);
 
-                    while (curSlot < new Date(interval.end)) { //Get all timeslots within the interval
+                    // Combine date of cur with times of the interval to get accurate time slot dates
+                    let curSlot = combineDates(cur, new Date(interval.start));
+                    const endSlot = combineDates(cur, new Date(interval.end));
+
+                    //let curSlot = new Date(interval.start);
+                    while (curSlot < endSlot) { //Get all timeslots within the interval
                         //Check if current timeslot is not already booked
-                        if (appointments.length === 0 || (appointmentsIdx < appointments.length && curSlot.getTime() !== appointments[appointmentsIdx].getTime())) {
-                            const dateOnly = cur.getFullYear() + "-" + String(cur.getMonth() + 1).padStart(2, "0") + "-" + String(cur.getDate()).padStart(2, "0");
-                            const timeOnly = curSlot.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                        if (appointmentsIdx >= appointments.length || (appointmentsIdx < appointments.length && curSlot.getTime() !== new Date(appointments[appointmentsIdx].startTime).getTime())) {
+
                             //Add to dictionary
-                            if (!timeSlots[dateOnly]) {
-                                timeSlots[dateOnly] = [];
+                            if (!timeSlots[key]) {
+                                timeSlots[key] = [];
                             }
-                            timeSlots[dateOnly].push(timeOnly);
+                            timeSlots[key].push(curSlot);
                         } else {
                             appointmentsIdx++;
                         }
@@ -71,6 +77,8 @@ const getAvailableTimeSlots = asyncHandler(async (req, res) => {
                         curSlot = new Date(curSlot.getTime() + booking.timeSlotDuration * 60000);
                     }
                 }
+            } else {    //If it's not an available day, add to dictionary with an empty array
+                timeSlots[key] = [];
             }
             cur.setDate(cur.getDate() + 1);
         }
@@ -84,6 +92,21 @@ const getAvailableTimeSlots = asyncHandler(async (req, res) => {
         console.log(err)
     }
 })
+
+// Helper function that combines date1's date and date2's time and returns the new date object
+const combineDates = (date1, date2) => {
+    const combinedDate = new Date(date1);
+
+    combinedDate.setHours(
+        date2.getHours(),
+        date2.getMinutes(),
+        date2.getSeconds(),
+        date2.getMilliseconds()
+    )
+
+    return combinedDate;
+}
+
 
 // @desc Get booking details given a course id
 // @router /api/bookings/getBooking/:courseId

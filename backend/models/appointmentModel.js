@@ -21,6 +21,9 @@ const appointmentSchema = mongoose.Schema({
     },
     location: {
         type: String
+    },
+    message: {
+        type: String
     }
 
 })
