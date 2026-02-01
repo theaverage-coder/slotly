@@ -38,11 +38,29 @@ const getAppointments = asyncHandler(async (req, res) => {
     try {
         const { userId, isStudent } = req.body;
         let appointments = [];
+
+        //Retrieve professor/student first and last names AND the course code
         if (isStudent) {
-            appointments = await Appointment.find({ student: userId });
+            appointments = await Appointment.find({ student: userId })
+                .populate('prof', 'firstName lastName')
+                .populate({
+                    path: 'booking',
+                    populate: {
+                        path: 'course',
+                        select: 'courseCode'
+                    }
+                });
 
         } else {
-            appointments = await Appointment.find({ prof: userId });
+            appointments = await Appointment.find({ prof: userId })
+                .populate('student', 'firstName lastName')
+                .populate({
+                    path: 'booking',
+                    populate: {
+                        path: 'course',
+                        select: 'courseCode'
+                    }
+                });
         }
 
         return res.json(appointments);
