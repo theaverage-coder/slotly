@@ -11,6 +11,11 @@ const appointmentSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
+    prof: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
     startTime: {
         required: true,
         type: Date
