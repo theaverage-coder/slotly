@@ -21,8 +21,8 @@ export default function AppointmentCard({ appointment }) {
 
                 </View>
                 <View style={styles.detailsContainer}>
-                    <Text style={styles.profName}> {appointment.prof} </Text>
-                    <Text style={styles.courseCode}> {appointment.booking} </Text>
+                    <Text style={styles.profName}> {appointment.prof.firstName} {appointment.prof.lastName} </Text>
+                    <Text style={styles.courseCode}> {appointment.booking.course.courseCode} </Text>
                     <Text style={styles.time}> {getDateString()} | {getTimeString()} </Text>
                 </View>
             </View>
