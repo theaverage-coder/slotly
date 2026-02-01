@@ -9,12 +9,12 @@ const bookAppointment = asyncHandler(async (req, res) => {
         const { selectedTimeSlot, bookingId, studentId, timeSlotDuration, message } = req.body;
         const startDateUTC = new Date(selectedTimeSlot);
         const endDateUTC = new Date(new Date(selectedTimeSlot).getTime() + timeSlotDuration * 60000);
-        const profId = await Booking.findOne({ _id: bookingId }, { prof: 1 });
+        const prof = await Booking.findOne({ _id: bookingId }, { course: 1 }).populate('course', 'prof');
 
         const appointment = await Appointment.create({
             booking: bookingId,
             student: studentId,
-            prof: profId,
+            prof: prof.course.prof,
             startTime: startDateUTC,
             endTime: endDateUTC,
             message: message,
@@ -36,18 +36,20 @@ const bookAppointment = asyncHandler(async (req, res) => {
 // @router /api/appointments/getAppointments
 const getAppointments = asyncHandler(async (req, res) => {
     try {
+        //console.log("here")
         const { userId, isStudent } = req.body;
         let appointments = [];
 
         //Retrieve professor/student first and last names AND the course code
         if (isStudent) {
             appointments = await Appointment.find({ student: userId })
-                .populate('prof', 'firstName lastName')
+                .populate('prof', 'firstName lastName -_id')
                 .populate({
                     path: 'booking',
+                    select: 'course -_id',
                     populate: {
                         path: 'course',
-                        select: 'courseCode'
+                        select: 'courseCode -_id'
                     }
                 });
 
@@ -56,16 +58,19 @@ const getAppointments = asyncHandler(async (req, res) => {
                 .populate('student', 'firstName lastName')
                 .populate({
                     path: 'booking',
+                    select: 'course',
                     populate: {
                         path: 'course',
                         select: 'courseCode'
-                    }
+                    },
                 });
         }
+        console.log(appointments)
 
         return res.json(appointments);
     } catch (err) {
         console.log(err)
+        return res.sendStatus(404);
     }
 })
 

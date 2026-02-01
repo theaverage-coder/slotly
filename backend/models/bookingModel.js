@@ -6,11 +6,6 @@ const bookingSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
     },
-    prof: {
-        //required: true,
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    },
     // Each day of the week has its own start time, end time and location
     officeHours: [
         { day: { type: Number, required: true }, timeIntervals: [{ start: { type: Date, required: true }, end: { type: Date, required: true } }], location: { type: String } }
