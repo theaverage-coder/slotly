@@ -52,7 +52,7 @@ export default function ViewPollScreen() {
                     <Text style={styles.title}> {poll.title} </Text>
                 </View>
                 <Text style={styles.statusText}> Poll Status: {getPollStatus()} </Text>
-                <Text style={styles.statusText}> Poll Created on {poll.dateCreated} </Text>
+                <Text style={styles.statusText}> Poll Created on {new Date(poll.dateCreated).toLocaleDateString()} </Text>
 
                 <View style={styles.outerResultContainer}>
                     <View style={styles.innerResultContainer}>

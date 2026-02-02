@@ -55,58 +55,6 @@ const getAllPolls = asyncHandler(async (req, res) => {
     }
 })
 
-// @desc Vote in a poll
-// @router /api/polls/voteInPoll
-const voteInPoll = asyncHandler(async (req, res) => {
-    const { pollId, studentId, voteIndex } = req.body;
-    try {
-        const poll = await Poll.findOne({ _id: ObjectId(pollId) });
-
-        if (poll.isClosed) {
-            throw new Error("Poll is closed")
-        }
-
-        const result = await Vote.updateOne(
-            { poll: pollId, student: studentId },
-            {
-                $setOnInsert: { poll: pollId, student: studentId },
-                $set: { voteIndex: voteIndex }
-            },
-            {
-                upsert: true,
-            }
-
-        )
-
-        if (result.acknowledged) {
-            return res.status(200)
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(400).json("Failed to complete vote operation")
-    }
-})
-
-// @desc Get vote of user in poll
-// @router /api/polls/getVote/:pollId
-
-const getVote = asyncHandler(async (req, res) => {
-    const { pollId } = req.params;
-    const { studentId } = req.body;
-
-    try {
-        const vote = await Vote.findOne({ poll: pollId, student: studentId });
-        if (vote) {
-            return res.status(200).json(vote);
-        } else {
-            return res.status(404); //If the student has not yet voted in the poll
-        }
-    } catch (err) {
-        console.log(err);
-        return res.status(400).json("Failed to retrieve vote")
-    }
-})
-
 // @desc Close poll ie. students can no longer vote
 // @router /api/polls/closePoll/:pollId
 const closePoll = asyncHandler(async (req, res) => {
@@ -141,11 +89,80 @@ const deletePoll = async (req, res) => {
     }
 }
 
+// @desc Vote in a poll
+// @router /api/polls/voteInPoll
+const voteInPoll = asyncHandler(async (req, res) => {
+    const { pollId, studentId, optionId } = req.body;
+    try {
+        const poll = await Poll.findById(pollId);
+
+        if (poll.isClosed) {
+            throw new Error("Poll is closed")
+        }
+
+        const result = await Vote.updateOne(
+            { poll: pollId, student: studentId },
+            {
+                $setOnInsert: { poll: pollId, student: studentId },
+                $set: { optionId: optionId }
+            },
+            {
+                upsert: true,
+            }
+
+        )
+
+        if (result.acknowledged) {
+            return res.sendStatus(200)
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json("Failed to complete vote operation")
+    }
+})
+
+// @desc Get all votes pertaining to given pollId
+// @router /api/polls/getVotes/:pollId
+const getAllVotes = asyncHandler(async (req, res) => {
+    const { pollId } = req.params;
+
+    try {
+        const votes = await Vote.find({ poll: pollId }, { _id: 0, poll: 0 });
+
+        console.log(votes);
+        return res.status(200).json(votes);
+
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+
+// @desc Get vote of user in poll
+// @router /api/polls/getVote/:pollId
+const getVote = asyncHandler(async (req, res) => {
+    const { pollId } = req.params;
+    const { studentId } = req.body;
+
+    try {
+        const vote = await Vote.findOne({ poll: pollId, student: studentId }, { optionId: 1 });
+        if (vote) {
+            return res.status(200).json(vote);
+        } else {
+            return res.sendStatus(404); //If the student has not yet voted in the poll
+        }
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json("Failed to retrieve vote")
+    }
+})
+
 module.exports = {
     createPoll,
     getAllPolls,
     voteInPoll,
     deletePoll,
     closePoll,
-    getVote
+    getVote,
+    getAllVotes
 }

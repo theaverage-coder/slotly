@@ -11,9 +11,10 @@ const voteSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    voteIndex: {
+    optionId: {
         required: true,
-        type: Number
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Poll.options"
     }
 })
 
