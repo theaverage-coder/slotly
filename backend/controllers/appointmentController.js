@@ -61,13 +61,12 @@ const getAppointments = asyncHandler(async (req, res) => {
                     select: 'course',
                     populate: {
                         path: 'course',
-                        select: 'courseCode'
+                        select: 'courseCode courseName'
                     },
                 });
         }
-        console.log(appointments)
 
-        return res.json(appointments);
+        return res.status(200).json(appointments);
     } catch (err) {
         console.log(err)
         return res.sendStatus(404);
