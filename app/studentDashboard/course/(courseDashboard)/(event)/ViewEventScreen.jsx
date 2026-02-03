@@ -2,63 +2,63 @@
 // if not signed up -> button at bottom to sign up which pulls up a modal to confirm
 // if signed up -> tells you that you have already joined the event, gives an option to deregister
 
-import { useEffect, useState } from "react";
-import { Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useUser } from "../../../../../contexts/UserContext";
 
 
-export default function ViewEventScreen({ eventId }) {
+export default function ViewEventScreen() {
+    const { initialEventObj } = useLocalSearchParams();
+    const initialEvent = JSON.parse(initialEventObj);
     const [modalIsVisible, setModalVisibility] = useState(false);
     const { user } = useUser();
-    const [event, setEvent] = useState(null);
+    const [event, setEvent] = useState(initialEvent);
 
     const API_URL =
         Platform.OS === 'web'
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
+    /*
     const fetchEvent = async () => {
-        const res = await fetch(`${API_URL}/api/events/getEvent/${eventId}`);
+        const res = await fetch(`${API_URL}/api/events/getEvent/${event._id}`);
         const data = await res.json();
         setEvent(data);
-    };
+    };*/
 
     const isFull = event?.students?.length >= event?.capacity;
-    const isJoined = event?.students?.includes(user);
-
-    useEffect(() => {
-        fetchEvent();
-    }, []);
+    const isJoined = event?.students?.includes(user._id);
 
     const handleJoinEvent = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/events/joinEvent/${eventId}`, {
+            const response = await fetch(`${API_URL}/api/events/joinEvent/${event._id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    userId: user
+                    userId: user._id
                 }),
             });
 
             const updatedEvent = await response.json();
-
+            console.log("returned: ", updatedEvent)
             if (response.ok) {
                 setEvent(updatedEvent);
+                console.log("Joined event")
             }
         } catch (err) {
-            console.log("Failed to join event")
+            console.log("Failed to join event", err)
         }
     }
 
     const handleLeaveEvent = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/events/leaveEvent/${eventId}`, {
+            const response = await fetch(`${API_URL}/api/events/leaveEvent/${event._id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    userId: user
+                    userId: user._id
                 }),
             });
 
@@ -66,25 +66,27 @@ export default function ViewEventScreen({ eventId }) {
 
             if (response.ok) {
                 setEvent(updatedEvent);
+                console.log("Left event")
             }
         } catch (err) {
-            console.log("Failed to leave event")
+            console.log("Failed to leave event", err)
         }
     }
 
-
     return (
-        <SafeAreaView>
+        <View style={styles.screenContainer}>
             {!event ? (
                 <></>
             ) : (
                 <>
+                    <Text> {true} </Text>
+                    <Text> {event._id} </Text>
                     <Text> {event.title} </Text>
                     <Text> {event.startTime} </Text>
                     <Text> {event.endTime} </Text>
                     <Text> {event.location} </Text>
                     <Text> {event.students.length} / {event.capacity} </Text>
-
+                    <Text> {event.students} </Text>
                     {!isJoined ? (
                         !isFull ? (
                             <MyButton2 onPress={handleJoinEvent}>
@@ -101,6 +103,12 @@ export default function ViewEventScreen({ eventId }) {
                     )}
                 </>
             )}
-        </SafeAreaView>
+        </View>
     )
 }
+
+const styles = StyleSheet.create({
+    screenContainer: {
+        flex: 1
+    }
+})

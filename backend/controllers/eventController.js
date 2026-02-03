@@ -62,15 +62,20 @@ const createEvent = asyncHandler(async (req, res) => {
 // @router /api/events/leaveEvent/:eventId
 const leaveEvent = asyncHandler(async (req, res) => {
     try {
+        const { eventId } = req.params;
         const { userId } = req.body;
-        const updatedEvent = Event.findById(req.params.eventId);
-        if (!updatedEvent) return res.status(404).json({ error: 'Event not found' });
+        //const updatedEvent = Event.findById(eventId);
 
-        updatedEvent.students = updatedEvent.students.filter(
-            (id) => id.toString() !== userId
+        const updatedEvent = await Event.findOneAndUpdate(
+            {
+                _id: eventId,
+                students: { $in: userId }
+            },
+            { $pull: { students: userId } },
+            { new: true }
         );
 
-        await updatedEvent.save();
+        if (!updatedEvent) return res.status(404).json({ error: 'Event not found' });
 
         return res.status(200).json(updatedEvent);
     } catch (err) {
@@ -83,48 +88,24 @@ const leaveEvent = asyncHandler(async (req, res) => {
 // @router /api/events/joinEvent/:eventId
 const joinEvent = asyncHandler(async (req, res) => {
     try {
+        const { eventId } = req.params;
         const { userId } = req.body;
-        const event = Event.findById(req.params.eventId);
-
         const updatedEvent = await Event.findOneAndUpdate(
             {
-                _id: req.params.eventId,
+                _id: eventId,
                 $expr: { $lt: [{ $size: "$students" }, "$capacity"] },
-                students: { $ne: userId } // not already joined
+                students: { $nin: userId } // not already joined
             },
-            { $push: { students: userId } },
+            { $addToSet: { students: userId } },
             { new: true }
         );
 
         if (!updatedEvent) return res.status(404).json({ error: "Event not found" })
 
-
-        if (updatedEvent.students.includes(userId)) {
-            return res.status(400).json({ error: "Already joined" });
-        }
-
-        if (updatedEvent.students.length >= updatedEvent.capacity) {
-            return res.status(400).json({ error: "Event is full" });
-        }
-
-        updatedEvent.students.push(userId);
-        await updatedEvent.save();
-
         return res.status(200).json(updatedEvent);
 
-        /*
-const updatedEvent = await Event.findOneAndUpdate(
-  { 
-    _id: req.params.id,
-    $expr: { $lt: [{ $size: "$students" }, "$capacity"] },
-    students: { $ne: userId } // not already joined
-  },
-  { $push: { students: userId } },
-  { new: true }
-);
-        */
     } catch (err) {
-        return res.status(400).json({ error: "Request failed" });
+        return res.status(400).json({ error: "Request failed", err });
     }
 })
 

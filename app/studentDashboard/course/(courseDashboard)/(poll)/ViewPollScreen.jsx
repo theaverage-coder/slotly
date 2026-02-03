@@ -11,9 +11,10 @@ export default function ViewPollScreen() {
     const [selectedOption, setSelectedOption] = useState(null);
     const [modalVisibility, setModalVisibility] = useState(false);
     const { user } = useUser();
-    const [userVote, setUserVote] = useState(null);
+    const [userVote, setUserVote] = useState([]); //WHAT ABOUT IF USER HAS MADE MULTIPLE VOTES?
     const [totalVotes, setTotalVotes] = useState(0);
     const insets = useSafeAreaInsets();
+    const [optionsMap, setOptionsMap] = useState(null);
 
     const API_URL =
         Platform.OS === 'web'
@@ -21,27 +22,34 @@ export default function ViewPollScreen() {
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     useFocusEffect(useCallback(() => {
-        const fetchVotes = async () => {
-            try {
-                const response = await fetch(`${API_URL}/api/polls/getAllVotes/${poll._id}`);
-                if (response.ok) {
-                    const votes = await response.json();
-
-                    setTotalVotes(votes.length);
-                    //HASHMAP where key = optionId, value = numVotes
-                    //Set in a useState?
-                    votes.forEach((vote) => {
-                        if (vote.student === user) {
-                            setUserVote(vote.optionId);
-                        }
-                    })
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        fetchVotes();
     }, [])
     );
+
+    const fetchVotes = async () => {
+        try {
+            const response = await fetch(`${API_URL}/api/polls/getAllVotes/${poll._id}`);
+            if (response.ok) {
+                const votes = await response.json();
+                const map = new Map();
+
+                votes.forEach((vote) => {
+                    if (!map.has(vote._id)) {
+                        map.set(vote._id, 0);
+                    }
+                    map.set(vote._id, map.get(vote._id) + 1);
+                    if (vote.student === user._id) {
+                        setUserVote(vote.optionId); //WHAT ABOUT IF USER HAS MADE MULTIPLE VOTES?
+                    }
+                })
+
+                setTotalVotes(votes.length);
+                setOptionsMap(map);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
     /*
     useFocusEffect(useCallback(() => {
         let sum = 0;
@@ -52,7 +60,7 @@ export default function ViewPollScreen() {
 
         getVote();
     }, [])
-    );*/
+    );
 
     const getVote = async () => {
         try {
@@ -60,7 +68,7 @@ export default function ViewPollScreen() {
                 method: "POST",
                 headers: { 'Content-Type': "application/json" },
                 body: JSON.stringify({
-                    studentId: user,
+                    studentId: user._id,
                 })
             })
 
@@ -71,10 +79,10 @@ export default function ViewPollScreen() {
         } catch (err) {
             console.log(err);
         }
-    }
+    }*/
 
     const handleCloseModal = () => {
-        getVote();
+        fetchVotes();
         setModalVisibility(false);
     }
 
@@ -85,7 +93,7 @@ export default function ViewPollScreen() {
                 headers: { 'Content-Type': "application/json" },
                 body: JSON.stringify({
                     pollId: poll,
-                    studentId: user,
+                    studentId: user._id,
                     optionId: selectedOption
                 })
             })
@@ -129,7 +137,7 @@ export default function ViewPollScreen() {
                                 <View style={{ height: 20 }} />
                             )}
                             renderItem={({ item }) => {
-                                const width = totalVotes === 0 ? 0 : (item.numVotes / totalVotes) * 100;
+                                const width = totalVotes === 0 ? 0 : (optionsMap.get(item._id) / totalVotes) * 100;
 
                                 return (
                                     <View style={[item._id === userVote && styles.prevVotedOption, styles.optionBarContainer]}>
@@ -174,7 +182,7 @@ export default function ViewPollScreen() {
                                     {item.text}
                                 </Text>
                                 <Text>
-                                    numVotes
+                                    {optionsMap.get(item._id)}
                                 </Text>
                             </Pressable>
 
@@ -194,7 +202,12 @@ export default function ViewPollScreen() {
             <MyButton2 onPress={() => setModalVisibility(true)} style={{
                 backgroundColor: "rgba(217, 217, 217, 0.51)", textColor: "rgba(33, 33, 33, 1)"
             }}>
-                <Text> Vote </Text>
+                {userVote ? (
+                    <Text> Change Vote </Text>
+                ) : (
+                    <Text> Vote </Text>
+                )}
+
             </MyButton2>
 
         </View>
