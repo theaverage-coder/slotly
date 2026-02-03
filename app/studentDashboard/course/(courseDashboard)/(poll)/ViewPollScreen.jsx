@@ -1,5 +1,5 @@
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
@@ -8,42 +8,48 @@ import { useUser } from "../../../../../contexts/UserContext";
 export default function ViewPollScreen() {
     const { pollObj } = useLocalSearchParams();
     const poll = JSON.parse(pollObj);
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOptions, setSelectedOptions] = useState([]);
     const [modalVisibility, setModalVisibility] = useState(false);
     const { user } = useUser();
     const [userVote, setUserVote] = useState([]); //WHAT ABOUT IF USER HAS MADE MULTIPLE VOTES?
     const [totalVotes, setTotalVotes] = useState(0);
     const insets = useSafeAreaInsets();
-    const [optionsMap, setOptionsMap] = useState(null);
+    const [optionsMap, setOptionsMap] = useState(new Map());
 
     const API_URL =
         Platform.OS === 'web'
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
-    useFocusEffect(useCallback(() => {
+    useEffect(() => {
         fetchVotes();
-    }, [])
-    );
+    }, []);
 
     const fetchVotes = async () => {
         try {
             const response = await fetch(`${API_URL}/api/polls/getAllVotes/${poll._id}`);
             if (response.ok) {
-                const votes = await response.json();
-                const map = new Map();
 
-                votes.forEach((vote) => {
-                    if (!map.has(vote._id)) {
-                        map.set(vote._id, 0);
-                    }
-                    map.set(vote._id, map.get(vote._id) + 1);
+                const allVotes = await response.json();
+                const map = new Map();
+                let sum = 0;
+
+                allVotes.forEach((vote) => {
                     if (vote.student === user._id) {
-                        setUserVote(vote.optionId); //WHAT ABOUT IF USER HAS MADE MULTIPLE VOTES?
+                        setUserVote(vote.votes);
                     }
+                    sum += vote.votes.length;
+
+                    vote.votes.forEach((optionId) => {
+                        if (!map.has(optionId)) {
+                            map.set(optionId, 0);
+                        }
+                        map.set(optionId, map.get(optionId) + 1);
+                    })
+
                 })
 
-                setTotalVotes(votes.length);
+                setTotalVotes(sum);
                 setOptionsMap(map);
             }
         } catch (err) {
@@ -86,6 +92,24 @@ export default function ViewPollScreen() {
         setModalVisibility(false);
     }
 
+    // If the poll only allows one vote, changes the selectedOptions array to include the new vote
+    // Else, add new vote to the array or remove an existing one
+    const handleVote = (optionId) => {
+        setSelectedOptions(prev => {
+            if (!poll.multipleVotes) {
+                return [optionId];
+            } else {
+                if (selectedOptions.includes(optionId)) {
+                    return selectedOptions.filter(id =>
+                        id != optionId
+                    );
+                } else {
+                    return [...prev, optionId];
+                }
+            }
+        })
+    }
+
     const handleVoteInPoll = async () => {
         try {
             const response = await fetch(`${API_URL}/api/polls/voteInPoll`, {
@@ -94,7 +118,7 @@ export default function ViewPollScreen() {
                 body: JSON.stringify({
                     pollId: poll,
                     studentId: user._id,
-                    optionId: selectedOption
+                    optionsId: selectedOptions
                 })
             })
 
@@ -172,11 +196,10 @@ export default function ViewPollScreen() {
                         data={poll.options}
                         keyExtractor={item => item._id}
                         renderItem={({ item, index }) =>
-
                             <Pressable
-                                onPress={() => setSelectedOption(item._id)}
-                                disabled={index === userVote}
-                                style={[styles.option, index === userVote && styles.prevVotedOption, index === selectedOption && styles.selectedOption]}
+                                onPress={() => handleVote(item._id)}
+                                //disabled={index === userVote}
+                                style={[styles.option,]}
                             >
                                 <Text>
                                     {item.text}
@@ -185,13 +208,12 @@ export default function ViewPollScreen() {
                                     {optionsMap.get(item._id)}
                                 </Text>
                             </Pressable>
-
                         }
                     />
-                    <Text> {selectedOption} </Text>
+                    <Text> {selectedOptions} </Text>
                     <MyButton2
                         onPress={handleVoteInPoll}
-                        disabled={selectedOption === null}>
+                        disabled={selectedOptions.length === 0}>
                         <Text>
                             Send Vote
                         </Text>
@@ -202,7 +224,7 @@ export default function ViewPollScreen() {
             <MyButton2 onPress={() => setModalVisibility(true)} style={{
                 backgroundColor: "rgba(217, 217, 217, 0.51)", textColor: "rgba(33, 33, 33, 1)"
             }}>
-                {userVote ? (
+                {userVote.length !== 0 ? (
                     <Text> Change Vote </Text>
                 ) : (
                     <Text> Vote </Text>

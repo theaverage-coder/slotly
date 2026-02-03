@@ -149,7 +149,7 @@ export default function BookAppointmentScreen() {
                         />
                     </View>
 
-                    <MyButton2 onPress={handleBookAppointment} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)", borderRadius: 10 }}>
+                    <MyButton2 onPress={handleBookAppointment} style={{ backgroundColor: "rgba(217, 217, 217, 1)", borderRadius: 10 }}>
                         <Text> Make an appointment</Text>
                     </MyButton2>
                 </>

@@ -124,9 +124,9 @@ const getCourseById = asyncHandler(async (req, res) => {
 
         if (!course) {
             console.log("Course not found")
-            return res.status(404)
+            return res.sendStatus(404)
         }
-        return res.json(course);
+        return res.status(200).json(course);
     } catch (err) {
         console.log(err)
     }

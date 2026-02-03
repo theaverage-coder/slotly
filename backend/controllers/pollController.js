@@ -92,7 +92,7 @@ const deletePoll = async (req, res) => {
 // @desc Vote in a poll
 // @router /api/polls/voteInPoll
 const voteInPoll = asyncHandler(async (req, res) => {
-    const { pollId, studentId, optionId } = req.body;
+    const { pollId, studentId, optionsId } = req.body;
     try {
         const poll = await Poll.findById(pollId);
 
@@ -100,28 +100,26 @@ const voteInPoll = asyncHandler(async (req, res) => {
             throw new Error("Poll is closed")
         }
 
-        //If user if only allowed one vote, enforce in the backend: 
-        // (change existing vote if it exists otherwise create a new one)
-        if (!poll.multipleVotes) {
-            const result = await Vote.updateOne(
-                { poll: pollId, student: studentId },
-                {
-                    $setOnInsert: { poll: pollId, student: studentId },
-                    $set: { optionId: optionId }
-                },
-                {
-                    upsert: true,
-                }
-
-            )
-            if (result.acknowledged) {
-                return res.sendStatus(200)
-            }
-        } else { //Allow user to make multiple votes for the same poll
-
+        //If user has multiple votes but poll only allows one vote
+        if (!poll.multipleVotes && optionsId.length > 1) {
+            return res.status(400).json("Can only vote once");
         }
 
+        // (change existing vote if it exists otherwise create a new one)
+        const result = await Vote.updateOne(
+            { poll: pollId, student: studentId },
+            {
+                $setOnInsert: { poll: pollId, student: studentId },
+                $set: { votes: optionsId }
+            },
+            {
+                upsert: true,
+            }
 
+        )
+        if (result.acknowledged) {
+            return res.sendStatus(200)
+        }
 
     } catch (err) {
         console.log(err);
@@ -133,11 +131,9 @@ const voteInPoll = asyncHandler(async (req, res) => {
 // @router /api/polls/getVotes/:pollId
 const getAllVotes = asyncHandler(async (req, res) => {
     const { pollId } = req.params;
-
     try {
         const votes = await Vote.find({ poll: pollId }, { _id: 0, poll: 0 });
 
-        console.log(votes);
         return res.status(200).json(votes);
 
     } catch (err) {
@@ -153,9 +149,9 @@ const getVote = asyncHandler(async (req, res) => {
     const { studentId } = req.body;
 
     try {
-        const vote = await Vote.findOne({ poll: pollId, student: studentId }, { optionId: 1 });
-        if (vote) {
-            return res.status(200).json(vote);
+        const votes = await Vote.findOne({ poll: pollId, student: studentId }, { votes: 1 });
+        if (votes) {
+            return res.status(200).json(votes);
         } else {
             return res.sendStatus(404); //If the student has not yet voted in the poll
         }
