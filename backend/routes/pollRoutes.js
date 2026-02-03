@@ -8,5 +8,5 @@ router.patch('/closePoll/:pollId', closePoll);
 router.post('/getVote/:pollId', getVote);
 router.get('/getAllPolls/:courseId', getAllPolls);
 router.post('/voteInPoll', voteInPoll);
-router.get('/getAllVotes', getAllVotes);
+router.get('/getAllVotes/:pollId', getAllVotes);
 module.exports = router

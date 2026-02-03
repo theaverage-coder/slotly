@@ -11,11 +11,11 @@ const voteSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    optionId: {
-        required: true,
+    votes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Poll.options"
-    }
+    }]
+
 })
 
 module.exports = mongoose.model('Vote', voteSchema);
