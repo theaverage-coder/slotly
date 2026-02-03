@@ -100,21 +100,29 @@ const voteInPoll = asyncHandler(async (req, res) => {
             throw new Error("Poll is closed")
         }
 
-        const result = await Vote.updateOne(
-            { poll: pollId, student: studentId },
-            {
-                $setOnInsert: { poll: pollId, student: studentId },
-                $set: { optionId: optionId }
-            },
-            {
-                upsert: true,
+        //If user if only allowed one vote, enforce in the backend: 
+        // (change existing vote if it exists otherwise create a new one)
+        if (!poll.multipleVotes) {
+            const result = await Vote.updateOne(
+                { poll: pollId, student: studentId },
+                {
+                    $setOnInsert: { poll: pollId, student: studentId },
+                    $set: { optionId: optionId }
+                },
+                {
+                    upsert: true,
+                }
+
+            )
+            if (result.acknowledged) {
+                return res.sendStatus(200)
             }
+        } else { //Allow user to make multiple votes for the same poll
 
-        )
-
-        if (result.acknowledged) {
-            return res.sendStatus(200)
         }
+
+
+
     } catch (err) {
         console.log(err);
         return res.status(400).json("Failed to complete vote operation")

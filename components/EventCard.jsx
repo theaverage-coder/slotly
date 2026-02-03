@@ -13,12 +13,12 @@ export default function EventCard({ event }) {
         if (user.role === "s") {
             router.push({
                 pathname: "studentDashboard/course/ViewEventScreen",
-                params: { event: JSON.stringify(event) }
+                params: { initialEventObj: JSON.stringify(event) }
             });
         } else {
             router.push({
                 pathname: "teacherDashboard/course/ViewEventScreen",
-                params: { event: JSON.stringify(event) }
+                params: { eventObj: JSON.stringify(event) }
             });
         }
     }

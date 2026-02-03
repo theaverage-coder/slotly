@@ -5,8 +5,8 @@ import MyButton2 from "../../../../../components/MyButton2";
 
 
 export default function ViewEventScreen() {
-    const { event } = useLocalSearchParams();
-    const eventObj = JSON.parse(event);
+    const { eventObj } = useLocalSearchParams();
+    const event = JSON.parse(eventObj);
     const [isModalVisible, setModalVisibility] = useState(false);
     const [students, setStudents] = useState([]);
 
@@ -17,7 +17,7 @@ export default function ViewEventScreen() {
 
     const handleDeleteEvent = async () => {
         try {
-            await fetch(`${API_URL}/api/events/deleteEvent/${eventObj._id}`, {
+            await fetch(`${API_URL}/api/events/deleteEvent/${event._id}`, {
                 method: "DELETE"
             })
         } catch (err) {
@@ -31,7 +31,7 @@ export default function ViewEventScreen() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    ids: eventObj.students
+                    ids: event.students
                 }),
             })
 
@@ -47,22 +47,22 @@ export default function ViewEventScreen() {
     return (
         <View style={styles.screenContainer}>
             <Text>
-                {eventObj.title}
+                {event.title}
             </Text>
             <Text>
-                {eventObj.startTime}
+                {event.startTime}
             </Text>
             <Text>
-                {eventObj.location}
+                {event.location}
             </Text>
             <Text> Students signed up: </Text>
-            {eventObj.capacity === -1 ? (
+            {event.capacity === -1 ? (
                 <Text>
-                    {eventObj.students.length}
+                    {event.students.length}
                 </Text>
             ) : (
                 <Text>
-                    {eventObj.students.length} / {eventObj.capacity}
+                    {event.students.length} / {event.capacity}
                 </Text>
             )}
 
