@@ -2,6 +2,7 @@
 // if not signed up -> button at bottom to sign up which pulls up a modal to confirm
 // if signed up -> tells you that you have already joined the event, gives an option to deregister
 
+import Ionicons from "@react-native-vector-icons/ionicons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
@@ -101,27 +102,38 @@ export default function ViewEventScreen() {
                     </View>
                     <View style={styles.detailsContainer}>
                         <Text style={styles.courseText}> {course.courseCode}: {course.courseName} </Text>
-                        <Text style={styles.detailsText}> CALENDAR ICON {new Date(event.startTime).toDateString()} </Text>
-                        <Text style={styles.detailsText}>
-                            CLOCK ICON
-                            {new Date(event.startTime).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            })} -
-                            {new Date(event.endTime).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            })}
-                        </Text>
+                        <View>
+                            <Ionicons size={15} color="white" name="calendar" />
+                            <Text style={styles.detailsText}>{new Date(event.startTime).toDateString()} </Text>
+                        </View>
+                        <View>
+                            <Ionicons size={15} color="white" name="time" />
+                            <Text style={styles.detailsText}>
+                                {new Date(event.startTime).toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })} -
+                                {new Date(event.endTime).toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </Text>
+                        </View>
+                        <View>
+                            <Ionicons size={15} color="white" name="location" />
+                            <Text style={styles.detailsText}> {event.location} </Text>
+                        </View>
+                        <View>
+                            <Ionicons size={15} color="white" name="people" />
+                            <Text style={styles.detailsText}> {event.students.length} / {event.capacity} students signed up</Text>
+                        </View>
                         <View style={styles.descriptionContainer}>
                             <Text style={styles.sectionHeader}> Description </Text>
                             <View style={styles.descriptionBox}>
                                 <Text> {event.description} </Text>
                             </View>
                         </View>
-                        <Text style={styles.detailsText}> {event.students.length} / {event.capacity} students signed up</Text>
-                        <Text style={styles.sectionHeader}> Location </Text>
-                        <Text style={styles.detailsText}> {event.location} </Text>
+
                     </View>
                     {!isJoined ? (
                         !isFull ? (
