@@ -2,10 +2,9 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Logo from '../../components/Logo';
 import MyButton2 from '../../components/MyButton2';
+import SlotlyLogo from '../../components/SlotlyLogo';
 import { useUser } from '../../contexts/UserContext';
-
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -24,7 +23,7 @@ export default function Login() {
         <SafeAreaView style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <View style={styles.screenContent}>
-                    <Logo style={{ height: 80, width: 80, }}></Logo>
+                    <SlotlyLogo size={80} />
                     <Text style={{ color: "white", fontSize: 18 }}> Log In to Start Scheduling</Text>
                     <View style={styles.inputFields}>
                         <View style={styles.textField}>

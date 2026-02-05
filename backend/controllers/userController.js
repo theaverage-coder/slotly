@@ -60,7 +60,7 @@ const loginUser = asyncHandler(async (req, res) => {
         const { email, password } = req.body
 
         // Check for user email
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email }).select("+password");
 
         // Check password matches
         if (user && (await bcrypt.compare(password, user.password))) {
@@ -114,6 +114,69 @@ const getStudents = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Edit name
+// @router /api/users/changeName
+const changeName = asyncHandler(async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const allowedFieldChanges = ["firstName", "lastName"];
+        const updates = {};
+
+        for (const field of allowedFieldChanges) {
+            if (req.body[field] != undefined && req.body[field] != "") {
+                updates[field] = req.body[field];
+            }
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: "No fields to update" });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: updates },
+            { new: true }
+        );
+
+        if (!updatedUser) return res.sendStatus(404);
+
+        return res.status(200).json(updatedUser);
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+// @desc Change password
+// @router /api/users/changePassword
+const changePassword = asyncHandler(async (req, res) => {
+    try {
+        console.log("here")
+        const { userId, oldPassword, newPassword } = req.body;
+
+        const user = await User.findById(userId, { password: 1 });
+
+        if (!(await bcrypt.compare(oldPassword, user.password))) {
+            console.log("Passwords do not match");
+            return res.sendStatus(400);
+        }
+
+        // Hash new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: { password: hashedPassword } },
+            { new: true }
+        );
+
+        if (!updatedUser) return res.sendStatus(404);
+        console.log("updated pass")
+        return res.sendStatus(200);
+    } catch (err) {
+        console.log(err);
+    }
+})
 // Generate JWT
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -123,5 +186,7 @@ module.exports = {
     registerUser,
     loginUser,
     getUser,
-    getStudents
+    getStudents,
+    changeName,
+    changePassword
 }

@@ -32,7 +32,7 @@ const bookAppointment = asyncHandler(async (req, res) => {
     }
 })
 
-// @desc Get all appointments of a user
+// @desc Get all appointments of a user sorted by start time
 // @router /api/appointments/getAppointments
 const getAppointments = asyncHandler(async (req, res) => {
     try {
@@ -51,7 +51,7 @@ const getAppointments = asyncHandler(async (req, res) => {
                         path: 'course',
                         select: 'courseCode -_id'
                     }
-                });
+                }).sort({ startTime: 1 });
 
         } else {
             appointments = await Appointment.find({ prof: userId })
@@ -63,7 +63,7 @@ const getAppointments = asyncHandler(async (req, res) => {
                         path: 'course',
                         select: 'courseCode courseName'
                     },
-                });
+                }).sort({ startTime: 1 });
         }
 
         return res.status(200).json(appointments);
