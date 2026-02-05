@@ -62,7 +62,7 @@ export default function CreateEventScreenThree() {
                 </View>
                 <MyButton2
                     onPress={handleCreateEvent}
-                    style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+                    style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}>
                     <Text> Create Event </Text>
                 </MyButton2>
             </Pressable>

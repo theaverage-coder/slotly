@@ -114,7 +114,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
     try {
         const { courseId } = req.params;
-        const booking = await Booking.find({ course: courseId }, { officeHours: 1, timeSlotDuration: 1 });
+        const booking = await Booking.findOne({ course: courseId }, { officeHours: 1, timeSlotDuration: 1 });
 
         if (!booking) {
             console.log("No booking exists")

@@ -117,10 +117,10 @@ const deleteEvent = async (req, res) => {
         const deleted = await Event.findByIdAndDelete(eventId);
 
         if (!deleted) {
-            return res.status(404);
+            return res.sendStatus(404);
         }
 
-        res.sendStatus(200);
+        return res.sendStatus(200);
     } catch (err) {
         console.log("Failed to delete event: ", err);
     }

@@ -119,7 +119,6 @@ const getCourses = asyncHandler(async (req, res) => {
 const getCourseById = asyncHandler(async (req, res) => {
     try {
         const { courseId } = req.params;
-        //console.log("Course Id: ", courseId);
         const course = await Course.findById(courseId);
 
         if (!course) {
@@ -132,8 +131,68 @@ const getCourseById = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Get all students names and emails of a course
+// @router /api/courses/getAllStudents/:courseId
+const getAllStudents = asyncHandler(async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const students = await User.find({ courses: courseId, role: "s" }, 'firstName lastName email');
+
+        return res.status(200).json(students);
+
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 // @desc Delete a course
-// @router /api/courses/deleteCourse
+// @router /api/courses/deleteCourse/:courseId
+const deleteCourse = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const deleted = await Course.findByIdAndDelete(courseId);
+
+        if (!deleted) {
+            return res.sendStatus(404);
+        }
+
+        return res.sendStatus(200);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+// @desc Edit an existing's course (name, code or semester)
+// @router /api/courses/editCourse/:courseId
+const editCourse = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const allowedFieldChanges = ["courseCode", "courseName", "semester"];
+        const updates = {};
+
+        for (const field of allowedFieldChanges) {
+            if (req.body[field] != undefined) {
+                updates[field] = req.body[field];
+            }
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: "No fields to update" });
+        }
+
+        const updatedCourse = await Course.findByIdAndUpdate(
+            courseId,
+            { $set: updates },
+            { new: true }
+        );
+
+        if (!updatedCourse) return res.sendStatus(404);
+
+        return res.status(200).json(updatedCourse);
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 function generateSignUpLink() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -149,5 +208,8 @@ module.exports = {
     addCourse,
     joinCourse,
     getCourses,
-    getCourseById
+    getCourseById,
+    getAllStudents,
+    deleteCourse,
+    editCourse
 }
