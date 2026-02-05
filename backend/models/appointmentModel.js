@@ -29,8 +29,17 @@ const appointmentSchema = mongoose.Schema({
     },
     message: {
         type: String
+    },
+    completed: {
+        type: Boolean,
+        default: false
     }
 
 })
+
+appointmentSchema.index(
+    { booking: 1, startTime: 1 },
+    { unique: true }
+)
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

@@ -4,7 +4,6 @@ const { json } = require('express');
 
 // @desc Get all events pertaining to a course given the courseId
 // @router /api/events/getAllEvents/:courseId
-
 const getAllEvents = asyncHandler(async (req, res) => {
     try {
         const { courseId } = req.params;
@@ -15,6 +14,23 @@ const getAllEvents = asyncHandler(async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.status(400).json("Failed to load events")
+    }
+})
+
+// @desc Get all events that a student has signed up for
+// @router /api/events/getAllJoinedEvents
+const getAllJoinedEvents = asyncHandler(async (req, res) => {
+    try {
+        const { userId, courses } = req.body;
+        const events = await Event.aggregate([
+            { $match: { course: { $in: courses } } },
+            { $match: { students: userId } },
+            { $sort: { startTime: 1 } },
+        ]);
+
+        return res.status(200).json(events);
+    } catch (err) {
+        console.log(err);
     }
 })
 
@@ -41,14 +57,13 @@ const createEvent = asyncHandler(async (req, res) => {
     try {
 
         // Logic checks
-
         if (eventObj.endTime < eventObj.startTime || eventObj.endTime < new Date() || eventObj.location === "" || eventObj.title === "" || eventObj.capacity === "") {
             throw new Error("Invalid input")
         }
 
         const createdEvent = await Event.create(eventObj);
 
-        if (createEvent) {
+        if (createdEvent) {
             res.status(201)
             console.log("Event created")
         }
@@ -140,5 +155,6 @@ module.exports = {
     getEvent,
     leaveEvent,
     getAllEvents,
-    deleteEvent
+    deleteEvent,
+    getAllJoinedEvents
 }

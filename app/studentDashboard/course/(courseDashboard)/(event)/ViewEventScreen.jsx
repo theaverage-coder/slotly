@@ -100,6 +100,14 @@ export default function ViewEventScreen() {
                     <View style={styles.titleContainer}>
                         <Text style={styles.title}> {event.title} </Text>
                     </View>
+                    <View>
+                        {isJoined && (
+                            <>
+                                <Ionicons size={20} color="white" name="checkmark-circle" />
+                                <Text> Joined</Text>
+                            </>
+                        )}
+                    </View>
                     <View style={styles.detailsContainer}>
                         <Text style={styles.courseText}> {course.courseCode}: {course.courseName} </Text>
                         <View>

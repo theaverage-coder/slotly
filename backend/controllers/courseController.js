@@ -171,7 +171,7 @@ const editCourse = async (req, res) => {
         const updates = {};
 
         for (const field of allowedFieldChanges) {
-            if (req.body[field] != undefined) {
+            if (req.body[field] != undefined && req.body[field] != "") {
                 updates[field] = req.body[field];
             }
         }
