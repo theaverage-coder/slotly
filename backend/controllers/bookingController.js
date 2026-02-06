@@ -111,7 +111,6 @@ const combineDates = (date1, date2) => {
 // @desc Get booking details given a course id
 // @router /api/bookings/getBooking/:courseId
 const getBooking = asyncHandler(async (req, res) => {
-
     try {
         const { courseId } = req.params;
         const booking = await Booking.findOne({ course: courseId }, { officeHours: 1, timeSlotDuration: 1 });
