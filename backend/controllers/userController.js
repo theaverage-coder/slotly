@@ -177,6 +177,24 @@ const changePassword = asyncHandler(async (req, res) => {
         console.log(err);
     }
 })
+
+// @desc Delete account
+// @router /api/users/deleteAccount/:userId
+const deleteAccount = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const deleted = await User.findByIdAndDelete(userId);
+
+        if (!deleted) {
+            return res.sendStatus(404);
+        }
+
+        return res.sendStatus(200);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Generate JWT
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -188,5 +206,6 @@ module.exports = {
     getUser,
     getStudents,
     changeName,
-    changePassword
+    changePassword,
+    deleteAccount
 }

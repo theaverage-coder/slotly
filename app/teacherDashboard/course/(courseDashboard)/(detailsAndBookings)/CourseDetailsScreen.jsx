@@ -1,7 +1,7 @@
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
@@ -19,7 +19,7 @@ export default function CourseDetailsScreen() {
         courseName: "",
         semester: "",
     })
-    const courseChanged = !newCourse.courseCode && !newCourse.courseName && !newCourse.semester;
+    const disabledEditCourseBtn = !newCourse.courseCode && !newCourse.courseName && !newCourse.semester;
 
     const insets = useSafeAreaInsets();
 
@@ -109,6 +109,12 @@ export default function CourseDetailsScreen() {
             if (response.ok) {
                 setCourse(updatedCourse);
                 console.log("Updated course")
+                setNewCourse({
+                    courseCode: "",
+                    courseName: "",
+                    semester: "",
+                })
+                setModalVisibility(false);
             }
         } catch (err) {
             console.log(err)
@@ -126,7 +132,7 @@ export default function CourseDetailsScreen() {
                                 data={students}
                                 keyExtractor={item => item.email}
                                 renderItem={({ item }) =>
-                                    <View >
+                                    <View style={{ marginBottom: 10 }}>
                                         <View style={{ flexDirection: "row" }}>
                                             <Ionicons size={20} color="white" name="person" />
                                             <Text style={styles.white}> {item.firstName} {item.lastName} </Text>
@@ -144,27 +150,28 @@ export default function CourseDetailsScreen() {
                 return (
                     <>
                         <Text style={[styles.white, styles.modalTitle]}> Delete Course </Text>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.white}> Are you sure you want to delete this course? </Text>
-                            <Pressable onPress={handleDeleteCourse}>
-                                <Text> Delete </Text>
-                            </Pressable>
-                        </View>
+                        <View style={[{ alignItems: "center", flex: 1 }]}>
+                            <Text style={[styles.white, { marginBottom: 25 }]}> Are you sure you want to delete this course? </Text>
+                            <MyButton2 style={{ backgroundColor: "rgb(167, 167, 167)" }} onPress={handleDeleteCourse}>
+                                <Text style={{ color: "rgb(156, 49, 49)" }}> Delete </Text>
+                            </MyButton2>
+                        </View >
                     </>
                 );
             case "link":
                 return (
                     <>
                         <Text style={[styles.white, styles.modalTitle]}> Sign Up Link </Text>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.white}> Send your students this invite code so they can sign up </Text>
+                        <View style={[{ alignItems: "center", flex: 1 }]}>
+                            <Text style={[styles.white, { marginBottom: 25 }]}> Send your students this invite code so they can sign up </Text>
                             <View style={styles.signUpLinkContainer}>
-                                <Text style={[styles.white, { fontSize: 18 }]}> {course.signUpLink} </Text>
+                                <Text style={[styles.white, styles.signUpLinkText]}> {course.signUpLink} </Text>
                             </View>
                         </View >
                     </>
                 );
             case "bookingDetails":
+                const daysOfWeek = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
                 return (
                     <>
                         <Text style={[styles.white, styles.modalTitle]}> Booking Details </Text>
@@ -176,7 +183,43 @@ export default function CourseDetailsScreen() {
                                 </View>
                             ) : (
                                 <View>
-                                    <Text> </Text>
+                                    <View style={[styles.locationContainer, { marginBottom: 15 }]}>
+                                        <Ionicons size={20} color="white" name="timer-outline" />
+                                        <Text style={[styles.white, { fontSize: 15 }]}> {booking.timeSlotDuration} minute time slots</Text>
+                                    </View>
+                                    <Text style={styles.inputLabel}> Availabilities </Text>
+                                    <FlatList
+                                        data={booking.officeHours}
+                                        keyExtractor={item => item.day}
+                                        renderItem={({ item }) =>
+                                            <View style={styles.dayContainer}>
+                                                <View style={styles.locationContainer}>
+                                                    <Ionicons size={20} color="rgb(134, 134, 134)" name="today-outline" />
+                                                    <Text style={styles.dayOfWeek}> {daysOfWeek[item.day]} </Text>
+                                                </View>
+                                                {item.timeIntervals.map((interval) => (
+                                                    <View style={styles.timeContainer} key={interval.start}>
+                                                        <Text style={styles.white}> {new Date(interval.start).toLocaleTimeString([], {
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })}
+                                                            -
+                                                            {new Date(interval.end).toLocaleTimeString([], {
+                                                                hour: '2-digit',
+                                                                minute: '2-digit'
+                                                            })}
+                                                        </Text>
+                                                        {interval.location && (
+                                                            <View style={styles.locationContainer}>
+                                                                <Ionicons size={15} color="white" name="pin" />
+                                                                <Text style={styles.white}> {interval.location}</Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
+                                                ))}
+                                            </View>}
+                                    />
+
                                 </View>
                             )
                             }
@@ -188,37 +231,46 @@ export default function CourseDetailsScreen() {
                     <>
                         <Text style={[styles.white, styles.modalTitle]}> Edit Course </Text>
                         <View style={styles.modalContent}>
-                            <TextInput
-                                style={styles.textField}
-                                placeholder={course.courseCode}
-                                value={newCourse.courseCode}
-                                onChangeText={(text) => setNewCourse(prev => ({
-                                    ...prev,
-                                    courseCode: text
-                                }))}
-                            />
-                            <TextInput
-                                style={styles.textField}
-                                placeholder={course.courseName}
-                                value={newCourse.courseName}
-                                onChangeText={(text) => setNewCourse(prev => ({
-                                    ...prev,
-                                    courseName: text
-                                }))}
-                            />
-                            <TextInput
-                                style={styles.textField}
-                                placeholder={course.semester}
-                                value={newCourse.semester}
-                                onChangeText={(text) => setNewCourse(prev => ({
-                                    ...prev,
-                                    semester: text
-                                }))}
-                            />
+                            <View style={styles.inputContainer}>
+                                <Text style={styles.inputLabel}> COURSE CODE</Text>
+                                <TextInput
+                                    style={styles.inputField}
+                                    placeholder={course.courseCode}
+                                    value={newCourse.courseCode}
+                                    onChangeText={(text) => setNewCourse(prev => ({
+                                        ...prev,
+                                        courseCode: text
+                                    }))}
+                                />
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <Text style={styles.inputLabel}> COURSE NAME </Text>
+                                <TextInput
+                                    style={styles.inputField}
+                                    placeholder={course.courseName}
+                                    value={newCourse.courseName}
+                                    onChangeText={(text) => setNewCourse(prev => ({
+                                        ...prev,
+                                        courseName: text
+                                    }))}
+                                />
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <Text style={styles.inputLabel}> SEMESTER </Text>
+                                <TextInput
+                                    style={styles.inputField}
+                                    placeholder={course.semester}
+                                    value={newCourse.semester}
+                                    onChangeText={(text) => setNewCourse(prev => ({
+                                        ...prev,
+                                        semester: text
+                                    }))}
+                                />
+                            </View>
                             <MyButton2
-                                disabled={courseChanged}
+                                disabled={disabledEditCourseBtn}
                                 onPress={handleSubmitCourseChanges}
-                                style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}>
+                                style={[{ backgroundColor: "rgba(217, 217, 217, 1)" }, disabledEditCourseBtn && styles.disabledButton]}>
                                 <Text> Submit Changes</Text>
                             </MyButton2>
                         </View>
@@ -311,10 +363,12 @@ export default function CourseDetailsScreen() {
                             },
                             styles.modalContainer,
                         ]}>
-                            <Pressable onPress={() => setModalVisibility(false)}>
-                                <Text style={styles.white}> Close </Text>
+                            <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+                                <Pressable style={styles.closeBtn} onPress={() => setModalVisibility(false)}>
+                                    <Text style={styles.white}> Close </Text>
+                                </Pressable>
+                                {renderModalContent()}
                             </Pressable>
-                            {renderModalContent()}
                         </View>
 
                     </Modal>
@@ -362,7 +416,6 @@ const styles = StyleSheet.create({
         width: "100%",
         padding: 20
     },
-
     optionsContainer: {
         backgroundColor: "rgba(92, 92, 92, 0.5)",
         borderRadius: 16,
@@ -397,6 +450,11 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         paddingLeft: 20,
+        flex: 1
+    },
+    closeBtn: {
+        marginTop: 10,
+        marginLeft: 15
     },
     modalTitle: {
         fontSize: 25,
@@ -408,12 +466,56 @@ const styles = StyleSheet.create({
         color: "white"
     },
     signUpLinkContainer: {
-        height: "30%",
+        height: "10%",
         width: "70%",
         padding: 20,
         borderWidth: 1,
+        borderColor: "rgb(125, 78, 87)",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+    },
+    signUpLinkText: {
+        fontWeight: "bold",
+        color: "rgb(125, 78, 87)",
+        fontSize: 18,
+    },
+    inputContainer: {
+        gap: 5,
+        marginBottom: 20
+    },
+    inputLabel: {
+        color: "white",
+        fontSize: 20
+    },
+    inputField: {
+        width: "95%",
+        height: 70,
+        backgroundColor: "rgba(50, 50, 50, 1)",
+        justifyContent: "center",
+        borderRadius: 16,
+        paddingLeft: 20,
+        color: "rgba(255, 255, 255, 1)",
+    },
+    disabledButton: {
+        opacity: 0.3
+    },
+    dayContainer: {
+        marginLeft: 30,
+        marginTop: 8
+    },
+    timeContainer: {
+        marginLeft: 40,
+        marginVertical: 8,
+        gap: 5
+    },
+    dayOfWeek: {
+        color: "rgb(134, 134, 134)",
+        fontSize: 15,
+        fontWeight: "bold",
+    },
+    locationContainer: {
+        flexDirection: "row",
+        alignItems: "center"
     }
 
 })
