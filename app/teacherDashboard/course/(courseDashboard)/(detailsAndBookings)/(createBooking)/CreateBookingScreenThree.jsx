@@ -83,7 +83,7 @@ export default function CreateBookingScreenThree() {
                 </View>
             </Modal>
 
-            <MyButton2 onPress={handleCreateBooking} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+            <MyButton2 onPress={handleCreateBooking} style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}>
                 <Text> Create Booking </Text>
             </MyButton2>
         </SafeAreaView>

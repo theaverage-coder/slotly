@@ -141,6 +141,18 @@ const deleteEvent = async (req, res) => {
     }
 }
 
+// @desc Get info of all students that are signed up for an event
+// @router /api/events/getStudents/:eventId
+const getStudents = async (req, res) => {
+    try {
+        const { eventId } = req.params;
+        const students = await Event.findById(eventId, "students").populate("students", "firstName lastName email ");
+        return res.status(200).json(students);
+    } catch (err) {
+        console.log("Failed to retrieve students: ", err);
+        return res.sendStatus(400)
+    }
+}
 // @desc Remove student from an event
 // @router /api/events/removeStudent/:eventId/:studentId
 const removeStudent = async (req, res) => {
@@ -156,5 +168,6 @@ module.exports = {
     leaveEvent,
     getAllEvents,
     deleteEvent,
-    getAllJoinedEvents
+    getAllJoinedEvents,
+    getStudents
 }

@@ -35,7 +35,6 @@ export default function ViewEventScreen() {
             if (response.ok) {
                 const data = await response.json();
                 setCourse(data);
-
             }
         } catch (err) {
             console.log(err);
@@ -93,28 +92,29 @@ export default function ViewEventScreen() {
 
     return (
         <View style={styles.screenContainer}>
-            {!event ? (
+            {!event || !course ? (
                 <></>
             ) : (
                 <>
+                    {isJoined && (
+                        <View style={[styles.horizontalContainer, styles.joinedEventBanner]}>
+                            <Ionicons size={50} color="white" name="checkmark-circle" />
+                            <Text style={styles.joinedEventText}> Joined Event </Text>
+                        </View>
+                    )}
                     <View style={styles.titleContainer}>
                         <Text style={styles.title}> {event.title} </Text>
                     </View>
-                    <View>
-                        {isJoined && (
-                            <>
-                                <Ionicons size={20} color="white" name="checkmark-circle" />
-                                <Text> Joined</Text>
-                            </>
-                        )}
-                    </View>
                     <View style={styles.detailsContainer}>
                         <Text style={styles.courseText}> {course.courseCode}: {course.courseName} </Text>
-                        <View>
+
+                        <Text style={styles.sectionHeader}> Details </Text>
+
+                        <View style={styles.horizontalContainer}>
                             <Ionicons size={15} color="white" name="calendar" />
                             <Text style={styles.detailsText}>{new Date(event.startTime).toDateString()} </Text>
                         </View>
-                        <View>
+                        <View style={styles.horizontalContainer}>
                             <Ionicons size={15} color="white" name="time" />
                             <Text style={styles.detailsText}>
                                 {new Date(event.startTime).toLocaleTimeString([], {
@@ -127,22 +127,26 @@ export default function ViewEventScreen() {
                                 })}
                             </Text>
                         </View>
-                        <View>
+                        <View style={styles.horizontalContainer}>
                             <Ionicons size={15} color="white" name="location" />
                             <Text style={styles.detailsText}> {event.location} </Text>
                         </View>
-                        <View>
+                        <View style={styles.horizontalContainer}>
                             <Ionicons size={15} color="white" name="people" />
-                            <Text style={styles.detailsText}> {event.students.length} / {event.capacity} students signed up</Text>
+                            <Text style={styles.detailsText}> {event.capacity === -1
+                                ? `${event.students.length}`
+                                : `${event.students.length} / ${event.capacity}`} students signed up</Text>
+
                         </View>
                         <View style={styles.descriptionContainer}>
                             <Text style={styles.sectionHeader}> Description </Text>
                             <View style={styles.descriptionBox}>
-                                <Text> {event.description} </Text>
+                                <Text style={styles.detailsText}> {event.description} </Text>
                             </View>
                         </View>
 
                     </View>
+
                     {!isJoined ? (
                         !isFull ? (
                             <MyButton2 onPress={handleJoinEvent}
@@ -169,10 +173,10 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgba(33, 33, 33, 1)",
-        paddingTop: 20
     },
     titleContainer: {
-        alignItems: "center"
+        alignItems: "center",
+        marginTop: 20
     },
     title: {
         color: "rgba(255, 255, 255, 1)",
@@ -184,8 +188,8 @@ const styles = StyleSheet.create({
     },
     detailsContainer: {
         flex: 1,
-        paddingLeft: 15,
-        rowGap: 12
+        paddingLeft: 20,
+        rowGap: 12,
     },
     courseText: {
         color: "white",
@@ -198,11 +202,30 @@ const styles = StyleSheet.create({
     sectionHeader: {
         color: "white",
         fontWeight: "bold",
-        fontSize: 15
+        fontSize: 15,
+    },
+    descriptionContainer: {
+        marginTop: 20,
+        gap: 10
     },
     descriptionBox: {
-        padding: 25,
+        paddingHorizontal: 25,
         width: "60%",
         justifyContent: "center",
+    },
+    horizontalContainer: {
+        flexDirection: "row",
+        gap: 10,
+        paddingLeft: 20,
+        alignItems: "center"
+    },
+    joinedEventBanner: {
+        backgroundColor: "rgb(125, 78, 87)",
+        height: "10%",
+        gap: 5
+    },
+    joinedEventText: {
+        color: "white",
+        fontSize: 18
     }
 })

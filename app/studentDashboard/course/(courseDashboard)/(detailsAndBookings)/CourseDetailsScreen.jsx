@@ -1,14 +1,15 @@
+import Ionicons from "@react-native-vector-icons/ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
-
 export default function CourseDetailsScreen() {
     const { courseId } = useCourseContext();
     const [course, setCourse] = useState(null);
     const [booking, setBooking] = useState(null);
     const router = useRouter();
+    const daysOfWeek = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
 
 
     const API_URL =
@@ -48,34 +49,83 @@ export default function CourseDetailsScreen() {
     }, []));
 
     return (
-        <>
+        <View style={styles.screenContainer}>
             {(!course) ? (
                 <Text> {courseId} </Text>
             ) : (
-                <View style={styles.screenContainer}>
-                    <Text>
-                        {course.courseCode} : {course.courseName}
-                    </Text>
-                    <Text>
-                        {course.prof}
-                    </Text>
-                    <Text>
-                        {course.semester}
-                    </Text>
-                    <Text>
-                        Location & Time of Course ?
-                    </Text>
-                    {booking && <Text> Booking found </Text>}
-                    <Text>
-                        INSERT LEAVE COURSE BUTTON
-                    </Text>
-
-                    <MyButton2 onPress={() => router.push("studentDashboard/course/BookAppointmentScreen")}>
+                <>
+                    <View style={styles.courseTitleContainer}>
+                        <Text style={styles.courseTitle}>
+                            {course.courseCode}: {course.courseName}
+                        </Text>
+                    </View>
+                    <View style={styles.semesterContainer}>
+                        <Text style={styles.semesterText}> {course.semester} </Text>
+                    </View>
+                    <View style={styles.line} />
+                    <View style={styles.screenContent}>
+                        <View>
+                            <Text style={styles.headingText}> Professor</Text>
+                            <Text style={[styles.white, { paddingLeft: 10 }]}>
+                                {course.prof.firstName} {course.prof.lastName}
+                            </Text>
+                        </View>
+                        <View>
+                            <Text style={styles.headingText}> Email </Text>
+                            <Text style={[styles.white, { paddingLeft: 10 }]}>
+                                {course.prof.email}
+                            </Text>
+                        </View>
+                        {booking ? (
+                            <>
+                                <Text style={styles.headingText}>Office Hours </Text>
+                                <View>
+                                    <FlatList
+                                        data={booking.officeHours}
+                                        keyExtractor={item => item.day}
+                                        renderItem={({ item }) =>
+                                            <View style={styles.dayContainer}>
+                                                <View style={styles.locationContainer}>
+                                                    <Ionicons size={20} color="rgb(134, 134, 134)" name="today-outline" />
+                                                    <Text style={styles.dayOfWeek}> {daysOfWeek[item.day]} </Text>
+                                                </View>
+                                                {item.timeIntervals.map((interval) => (
+                                                    <View style={styles.timeContainer} key={interval.start}>
+                                                        <Text style={styles.white}> {new Date(interval.start).toLocaleTimeString([], {
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })}
+                                                            -
+                                                            {new Date(interval.end).toLocaleTimeString([], {
+                                                                hour: '2-digit',
+                                                                minute: '2-digit'
+                                                            })}
+                                                        </Text>
+                                                        {interval.location && (
+                                                            <View style={styles.locationContainer}>
+                                                                <Ionicons size={15} color="white" name="pin" />
+                                                                <Text style={styles.white}> {interval.location}</Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
+                                                ))}
+                                            </View>}
+                                    />
+                                </View>
+                            </>
+                        ) : (
+                            <Text> Your professor hasn't set any office hours yet</Text>
+                        )}
+                    </View>
+                    <MyButton2 onPress={() => router.push("studentDashboard/course/BookAppointmentScreen")} style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}>
                         <Text> Book an Appointment</Text>
                     </MyButton2>
-                </View>
+                    <MyButton2 onPress={() => router.push("studentDashboard/course/BookAppointmentScreen")} style={{ backgroundColor: "rgb(77, 77, 77)" }}>
+                        <Text style={{ color: "red" }}> Leave Course</Text>
+                    </MyButton2>
+                </>
             )}
-        </>
+        </View>
     );
 }
 
@@ -83,5 +133,68 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgba(33, 33, 33, 1)",
-    }
+        alignItems: "center"
+    },
+    courseTitleContainer: {
+        padding: 20,
+        alignItems: "center",
+        paddingBottom: 10
+    },
+    courseTitle: {
+        color: "white",
+        fontSize: 25,
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    semesterContainer: {
+        alignItems: "center",
+    },
+    semesterText: {
+        color: "white",
+        fontSize: 18
+    },
+    line: {
+        borderBottomWidth: 1,
+        marginTop: 15,
+        width: "90%",
+        borderColor: "rgba(217, 217, 217, 0.5)",
+    },
+    headingText: {
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "rgba(217, 217, 217, 0.5)",
+        marginBottom: 5
+    },
+    dayContainer: {
+        marginLeft: 30,
+        marginBottom: 8
+    },
+    screenContent: {
+        flex: 1,
+        rowGap: 15,
+        width: "100%",
+        paddingLeft: 20,
+        paddingTop: 20
+    },
+    timeContainer: {
+        marginLeft: 40,
+        marginVertical: 8,
+        gap: 5
+    },
+    dayOfWeek: {
+        color: "rgb(134, 134, 134)",
+        fontSize: 15,
+        fontWeight: "bold",
+    },
+    locationContainer: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    white: {
+        color: "white"
+    },
+    availabilitiesText: {
+        color: "white",
+        fontSize: 20
+    },
 })

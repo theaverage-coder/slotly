@@ -119,7 +119,7 @@ const getCourses = asyncHandler(async (req, res) => {
 const getCourseById = asyncHandler(async (req, res) => {
     try {
         const { courseId } = req.params;
-        const course = await Course.findById(courseId);
+        const course = await Course.findById(courseId).populate('prof', 'firstName lastName email -_id');
 
         if (!course) {
             console.log("Course not found")

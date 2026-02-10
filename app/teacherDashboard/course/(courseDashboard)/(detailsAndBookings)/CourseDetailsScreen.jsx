@@ -283,7 +283,6 @@ export default function CourseDetailsScreen() {
 
     return (
         <View style={styles.screenContainer}>
-
             {!course ? (
                 <></>
             ) : (
