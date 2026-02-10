@@ -34,13 +34,15 @@ const getAvailableTimeSlots = asyncHandler(async (req, res) => {
     try {
         const { courseId, startDate } = req.params;
         const booking = await Booking.findOne({ course: courseId }, { _id: 1, officeHours: 1, timeSlotDuration: 1 });
-        //Get all appointments sorted by increasing date/time
-        const appointments = await Appointment.find({ booking: booking._id }, { startTime: 1 }).sort({ startTime: 1 });
-
         if (!booking) {
             console.log("No booking exists")
             return res.status(404)
         }
+        //console.log(booking)
+        //Get all appointments sorted by increasing date/time
+        const appointments = await Appointment.find({ booking: booking._id }, { startTime: 1 }).sort({ startTime: 1 });
+
+
         const timeSlots = {}; //Dictionary with key = date and value = list of timeslots
         let cur = new Date(startDate);
         const endDate = new Date(startDate);
@@ -54,6 +56,7 @@ const getAvailableTimeSlots = asyncHandler(async (req, res) => {
             const dayOfWeek = cur.getDay();
             const key = dayNames[dayOfWeek] + "-" + monthNames[cur.getMonth()] + "-" + String(cur.getDate()).padStart(2, "0")
             if (availableDays.some(item => item.day === dayOfWeek)) { //Check if the day of the week is included in the booking
+
                 for (const interval of availableDays.find(item => item.day === dayOfWeek).timeIntervals) {
 
                     // Combine date of cur with times of the interval to get accurate time slot dates

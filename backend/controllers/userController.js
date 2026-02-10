@@ -97,6 +97,7 @@ const getUser = asyncHandler(async (req, res) => {
     }
 })
 
+/*
 // @desc Get names and emails given an array of ids
 // @route  /api/users/getStudents
 const getStudents = asyncHandler(async (req, res) => {
@@ -113,6 +114,7 @@ const getStudents = asyncHandler(async (req, res) => {
         console.log("Failed to retrieve students: ", err);
     }
 })
+*/
 
 // @desc Edit name
 // @router /api/users/changeName
@@ -204,7 +206,6 @@ module.exports = {
     registerUser,
     loginUser,
     getUser,
-    getStudents,
     changeName,
     changePassword,
     deleteAccount
