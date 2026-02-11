@@ -29,6 +29,10 @@ const eventSchema = mongoose.Schema({
     students: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     description: {
         type: String
+    },
+    completed: {
+        type: Boolean,
+        default: false
     }
 
 })

@@ -12,7 +12,7 @@ const CourseLayout = () => {
         <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(33, 33, 33, 1)" }}>
             <MaterialTopTabs>
                 <MaterialTopTabs.Screen name="(detailsAndBookings)" options={{ title: 'Booking' }} />
-                <MaterialTopTabs.Screen name="(event)" options={{ title: 'Events' }} />
+                <MaterialTopTabs.Screen name="(event)" options={{ title: "Events" }} />
                 <MaterialTopTabs.Screen name="(poll)" options={{ title: 'Polls' }} />
             </MaterialTopTabs>
         </SafeAreaView>
