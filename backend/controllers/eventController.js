@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler')
 const Event = require('../models/eventModel');
 const { json } = require('express');
+const User = require('../models/userModel');
+const mongoose = require("mongoose");
 
 // @desc Get all events pertaining to a course given the courseId
 // @router /api/events/getAllEvents/:courseId
@@ -21,13 +23,18 @@ const getAllEvents = asyncHandler(async (req, res) => {
 // @router /api/events/getAllJoinedEvents
 const getAllJoinedEvents = asyncHandler(async (req, res) => {
     try {
-        const { userId, courses } = req.body;
+        const { userId } = req.body;
+        const courses = await User.findById(userId, "courses");
+        const userObjectId = new mongoose.Types.ObjectId(userId);
+        const courseObjectIds = courses.courses.map(
+            (id) => new mongoose.Types.ObjectId(id)
+        );
+
         const events = await Event.aggregate([
-            { $match: { course: { $in: courses } } },
-            { $match: { students: userId } },
+            { $match: { course: { $in: courseObjectIds } } },
+            { $match: { students: userObjectId } },
             { $sort: { startTime: 1 } },
         ]);
-
         return res.status(200).json(events);
     } catch (err) {
         console.log(err);

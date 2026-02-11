@@ -1,26 +1,34 @@
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import AppointmentCard from '../../../components/AppointmentCard';
 import BackgroundSlotlyLogo from '../../../components/BackgroundSlotlyLogo';
 import DashboardHeader from '../../../components/DashboardHeader';
+import EventCard from '../../../components/EventCard';
 import { useUser } from '../../../contexts/UserContext';
 
 export default function HomeScreen() {
     const { user } = useUser();
     const router = useRouter();
-
+    const [events, setEvents] = useState([]);
     const [appointments, setAppointments] = useState([]);
     const [modalIsVisible, setModalVisibility] = useState(false);
     const [selectedAppt, setSelectedAppt] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState(null);
     const [modalType, setModalType] = useState(null);
+    // Variables for filter
+    const [typeFilter, setTypeFilter] = useState("all"); // "all" | "appointment" | "event"
+    const [completedFilter, setCompletedFilter] = useState("incomplete"); // "all" | "completed" | "incomplete"
+    const insets = useSafeAreaInsets();
 
     const API_URL =
         Platform.OS === 'web'
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
+    // Fetch all appointments and events when the screen is focused
     useFocusEffect(useCallback(() => {
         const fetchAppointments = async () => {
             try {
@@ -35,16 +43,73 @@ export default function HomeScreen() {
                 if (response.ok) {
                     const data = await response.json();
                     setAppointments(data);
-                    console.log(data);
                 }
             } catch (err) {
                 console.log("Failed to retrieve appointments: ", err);
             }
         }
 
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch(`${API_URL}/api/events/getAllJoinedEvents`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        userId: user._id,
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setEvents(data);
+                }
+            } catch (err) {
+                console.log("Failed to retrieve events: ", err);
+            }
+        }
+
         fetchAppointments();
+        fetchEvents();
     }, [])
     );
+
+    // Return data according to filters when they're changed
+    const filteredData = useMemo(() => {
+        let data = [];
+        if (typeFilter === "appointment") {
+            data = appointments;
+        } else if (typeFilter === "event") {
+            data = events;
+        } else if (typeFilter === "all") {
+            // Merge appointments and events sorted by date
+            let apptPtr = 0;
+            let eventPtr = 0;
+
+            while (apptPtr < appointments.length && eventPtr < events.length) {
+                if (new Date(appointments[apptPtr].startTime) <= new Date(events[eventPtr].startTime)) {
+                    data.push(appointments[apptPtr]);
+                    apptPtr++;
+                } else {
+                    data.push(events[eventPtr]);
+                    eventPtr++;
+                }
+            }
+            if (apptPtr < appointments.length) {
+                let slice = appointments.slice(apptPtr);
+                data.push(...slice);
+            } else if (eventPtr < events.length) {
+                let slice = events.slice(eventPtr);
+                data.push(...slice);
+            }
+        }
+
+        if (completedFilter !== "all") {
+            data = data.filter((x) =>
+                completedFilter === "completed" ? x.completed : !x.completed);
+        }
+        console.log("data: ", data)
+        return data;
+    }, [completedFilter, typeFilter, events, appointments]);
 
     const handlePressDetails = (appt) => {
         setModalVisibility(true);
@@ -56,6 +121,17 @@ export default function HomeScreen() {
         setModalVisibility(true);
         setSelectedAppt(appt);
         setModalType("cancel");
+    }
+
+    const handlePressFilters = () => {
+        setModalVisibility(true);
+        setModalType("filter");
+    }
+
+    const handleEventDetails = (event) => {
+        setModalVisibility(true);
+        setSelectedEvent(event);
+        setModalType("event");
     }
 
     const getDateString = (appt) => {
@@ -83,7 +159,7 @@ export default function HomeScreen() {
     return (
         <SafeAreaView style={styles.screenContainer}>
             <DashboardHeader page={0} />
-            {appointments.length === 0 ? (
+            {appointments.length === 0 && events.length === 0 ? (
                 <View style={styles.emptyScreen}>
                     <BackgroundSlotlyLogo />
                     <Text style={styles.text1}>You don't have any meetings yet</Text>
@@ -91,11 +167,23 @@ export default function HomeScreen() {
                 </View>
             ) : (
                 <View style={{ flex: 1, }}>
+                    <View style={styles.filterContainer}>
+                        <Pressable onPress={handlePressFilters}>
+                            <Ionicons size={30} color="white" name="options" />
+                        </Pressable>
+                    </View>
                     <FlatList
                         contentContainerStyle={{ gap: 20, alignItems: "center" }}
-                        data={appointments}
+                        data={filteredData}
                         keyExtractor={item => item._id}
-                        renderItem={({ item }) => <AppointmentCard appointment={item} onDetailPress={handlePressDetails} onCancelPress={handlePressCancel} />}
+                        renderItem={({ item }) => {
+                            if (item.booking) {
+                                return <AppointmentCard appointment={item} onDetailPress={handlePressDetails} onCancelPress={handlePressCancel} />
+                            } else {
+                                return <EventCard event={item} homeScreen={true} onDetailsPress={handleEventDetails} />
+
+                            }
+                        }}
                     />
                 </View>
             )}
@@ -104,7 +192,14 @@ export default function HomeScreen() {
                 animationType='slide'
                 transparent
             >
-                <View style={styles.modal}>
+                <View style={[styles.modal,
+                {
+                    paddingTop: insets.top,
+                    paddingBottom: insets.bottom,
+                    paddingLeft: insets.left,
+                    paddingRight: insets.right,
+                },
+                ]}>
                     <View style={styles.modalContent}>
                         <View style={styles.closeButtonContainer}>
                             <Pressable onPress={() => setModalVisibility(false)}>
@@ -113,12 +208,17 @@ export default function HomeScreen() {
                         </View>
                         {modalType === "details" && (
                             <>
-                                <Text style={styles.modalTitle}> Machine Learning {selectedAppt.booking.course.courseName} </Text>
+                                <Text style={styles.modalTitle}> {selectedAppt.booking.course.courseName} </Text>
                                 <Text> {selectedAppt.prof.firstName} {selectedAppt.prof.lastName}</Text>
                                 <Text> Date and Time: </Text>
                                 <Text> Location: {selectedAppt.location} </Text>
                                 <Text> Additional details:</Text>
                                 <Text> {selectedAppt.message}</Text>
+                            </>
+                        )}
+                        {modalType === "event" && (
+                            <>
+                                <Text style={styles.modalTitle}> {selectedEvent.title}</Text>
                             </>
                         )}
                         {modalType === "cancel" && (
@@ -136,6 +236,31 @@ export default function HomeScreen() {
                                         <Text style={{ color: "red" }}> Cancel Appointment</Text>
                                     </Pressable>
                                 </View>
+                            </>
+                        )}
+                        {modalType === "filter" && (
+                            <>
+                                <Text style={styles.modalTitle}> Filters </Text>
+                                <Text> Type of Meetings </Text>
+                                <Pressable onPress={() => setTypeFilter("all")}>
+                                    <Text> All </Text>
+                                </Pressable>
+                                <Pressable onPress={() => setTypeFilter("appointment")}>
+                                    <Text> Appointment </Text>
+                                </Pressable>
+                                <Pressable onPress={() => setTypeFilter("event")}>
+                                    <Text> Event </Text>
+                                </Pressable>
+                                <Text> State </Text>
+                                <Pressable onPress={() => setCompletedFilter("all")}>
+                                    <Text> All </Text>
+                                </Pressable>
+                                <Pressable onPress={() => setCompletedFilter("completed")}>
+                                    <Text> Completed </Text>
+                                </Pressable>
+                                <Pressable onPress={() => setCompletedFilter("incomplete")}>
+                                    <Text> Incomplete</Text>
+                                </Pressable>
                             </>
                         )}
                     </View>
@@ -236,6 +361,12 @@ const styles = StyleSheet.create({
     time: {
         marginTop: 8,
         color: "rgba(217, 217, 217, 0.5)"
+    },
+    filterContainer: {
+        marginBottom: 5,
+        marginRight: 20,
+        alignItems: "flex-end",
+        justifyContent: "center"
     }
 
 

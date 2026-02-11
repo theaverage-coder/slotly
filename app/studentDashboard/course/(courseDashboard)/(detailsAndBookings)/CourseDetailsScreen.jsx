@@ -117,7 +117,10 @@ export default function CourseDetailsScreen() {
                             <Text> Your professor hasn't set any office hours yet</Text>
                         )}
                     </View>
-                    <MyButton2 onPress={() => router.push("studentDashboard/course/BookAppointmentScreen")} style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}>
+                    <MyButton2
+                        onPress={() => router.push("studentDashboard/course/BookAppointmentScreen")}
+                        style={booking ? { backgroundColor: "rgba(217, 217, 217, 1)" } : { backgroundColor: "rgba(217, 217, 217, 0.2)" }}
+                        disabled={!booking}>
                         <Text> Book an Appointment</Text>
                     </MyButton2>
                     <MyButton2 onPress={() => router.push("studentDashboard/course/BookAppointmentScreen")} style={{ backgroundColor: "rgb(77, 77, 77)" }}>
