@@ -80,7 +80,7 @@ export default function CreateEventScreenThree() {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)"
+        backgroundColor: "rgb(17, 21, 28)",
     },
     header: {
         gap: 15,

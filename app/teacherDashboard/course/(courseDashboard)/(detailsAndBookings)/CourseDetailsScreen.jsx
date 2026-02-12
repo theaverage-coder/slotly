@@ -363,7 +363,7 @@ export default function CourseDetailsScreen() {
 
 
                     {!booking || booking.length === 0 && (
-                        <MyButton2 style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }} onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenOne")}>
+                        <MyButton2 style={{ backgroundColor: "rgba(217, 217, 217, 1)" }} onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenOne")}>
                             <Text> Set Booking Hours </Text>
                         </MyButton2>
                     )
@@ -402,7 +402,7 @@ export default function CourseDetailsScreen() {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         alignItems: "center"
     },
     courseTitleContainer: {
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
     },
     modalContent: {
         paddingLeft: 20,

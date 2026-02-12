@@ -33,7 +33,7 @@ export default function OnboardingStepTwoScreen({ }) {
 
 const styles = StyleSheet.create({
     screenContainer: {
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
     },
     inputEmail: {
         alignSelf: "stretch",

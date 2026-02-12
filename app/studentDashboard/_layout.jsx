@@ -7,7 +7,7 @@ export default function StudentLayout() {
             screenOptions={{
                 headerShown: false,
                 tabBarStyle: {
-                    backgroundColor: "rgba(33, 33, 33, 1)",
+                    backgroundColor: "rgb(17, 21, 28)",
                     paddingVertical: 10,
                     paddingHorizontal: 20,
                     color: "rgba(255, 255, 255, 1)",

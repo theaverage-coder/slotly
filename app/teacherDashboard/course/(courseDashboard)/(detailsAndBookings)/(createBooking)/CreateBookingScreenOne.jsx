@@ -64,7 +64,7 @@ export default function CreateBookingScreenOne() {
 
             <MyButton2
                 disabled={isDisabledButton}
-                onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenTwo")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+                onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenTwo")} style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}>
                 <Text> Next </Text>
             </MyButton2>
         </SafeAreaView>
@@ -74,7 +74,7 @@ export default function CreateBookingScreenOne() {
 
 const styles = StyleSheet.create({
     screenContainer: {
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         flex: 1,
         rowGap: 20,
     },

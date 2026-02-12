@@ -167,7 +167,7 @@ export default function CreatePollScreenTwo() {
 
                 <MyButton2
                     disabled={isDisabledButton}
-                    style={[{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }, isDisabledButton && styles.disabledButton]}
+                    style={[{ backgroundColor: "rgba(217, 217, 217, 1)" }, isDisabledButton && styles.disabledButton]}
                     onPress={handleCreatePoll}>
                     <Text> Create Poll </Text>
                 </MyButton2>
@@ -179,7 +179,7 @@ export default function CreatePollScreenTwo() {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         paddingTop: 20
     },
     title: {
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         height: "40%",
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         padding: 15

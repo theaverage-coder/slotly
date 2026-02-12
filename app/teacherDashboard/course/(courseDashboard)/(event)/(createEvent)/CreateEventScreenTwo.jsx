@@ -91,7 +91,7 @@ export default function CreateEventScreenTwo() {
                     </View>
                 </View>
                 <MyButton2
-                    style={[{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }, isDisabledButton && styles.disabledButton]}
+                    style={[{ backgroundColor: "rgba(217, 217, 217, 1)" }, isDisabledButton && styles.disabledButton]}
                     disabled={isDisabledButton}
                     onPress={handleContinue}
                 >
@@ -105,7 +105,7 @@ export default function CreateEventScreenTwo() {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)"
+        backgroundColor: "rgb(17, 21, 28)",
     },
     header: {
         gap: 15,

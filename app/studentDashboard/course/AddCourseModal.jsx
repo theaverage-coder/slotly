@@ -72,7 +72,7 @@ export default function AddCourseModal({ visible, onClose }) {
 
 const styles = StyleSheet.create({
     modalContainer: {
-        backgroundColor: "rgba(41, 41, 41, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         flexDirection: "column",
         flex: 1
     },

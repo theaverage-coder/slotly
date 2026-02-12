@@ -284,7 +284,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
     screenContainer: {
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         flex: 1
     },
     emptyScreen: {
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         height: "50%",
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         padding: 15,

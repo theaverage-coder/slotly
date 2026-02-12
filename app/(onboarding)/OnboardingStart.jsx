@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     screenContainer: {
         position: "relative",
         flexShrink: 0,
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

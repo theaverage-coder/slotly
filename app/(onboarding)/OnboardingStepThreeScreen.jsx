@@ -36,7 +36,7 @@ export default function OnboardingStepThreeScreen({ }) {
 
 const styles = StyleSheet.create({
     screenContainer: {
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
     },
     inputPassword: {
         alignSelf: "stretch",
