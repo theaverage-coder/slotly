@@ -21,6 +21,7 @@ export default function CourseDetailsScreen() {
         const fetchCourse = async () => {
             try {
                 const response = await fetch(`${API_URL}/api/courses/getCourseById/${courseId}`)
+
                 if (response.ok) {
                     const data = await response.json();
                     setCourse(data);
@@ -33,7 +34,6 @@ export default function CourseDetailsScreen() {
         const fetchBooking = async () => {
             try {
                 const response = await fetch(`${API_URL}/api/bookings/getBooking/${courseId}`);
-
                 if (response.ok) {
                     const data = await response.json();
                     setBooking(data);
@@ -43,7 +43,6 @@ export default function CourseDetailsScreen() {
                 console.log(err);
             }
         }
-
         fetchCourse();
         fetchBooking();
     }, []));
@@ -76,10 +75,10 @@ export default function CourseDetailsScreen() {
                                 {course.prof.email}
                             </Text>
                         </View>
+                        <Text style={styles.headingText}>Office Hours </Text>
                         {booking ? (
                             <>
-                                <Text style={styles.headingText}>Office Hours </Text>
-                                <View>
+                                <View style={{ flex: 1 }}>
                                     <FlatList
                                         data={booking.officeHours}
                                         keyExtractor={item => item.day}
@@ -114,7 +113,9 @@ export default function CourseDetailsScreen() {
                                 </View>
                             </>
                         ) : (
-                            <Text> Your professor hasn't set any office hours yet</Text>
+                            <View style={styles.noOfficeHoursContainer}>
+                                <Text style={styles.noOfficeHoursText}> Your professor hasn't set any office hours yet</Text>
+                            </View>
                         )}
                     </View>
                     <MyButton2
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
         flex: 1,
         rowGap: 15,
         width: "100%",
-        paddingLeft: 20,
+        paddingHorizontal: 20,
         paddingTop: 20
     },
     timeContainer: {
@@ -200,4 +201,14 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 20
     },
+    noOfficeHoursContainer: {
+        justifyContent: "center",
+        flex: 1,
+        alignItems: "center"
+    },
+    noOfficeHoursText: {
+        color: "white",
+        fontSize: 15,
+
+    }
 })

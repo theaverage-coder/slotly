@@ -1,3 +1,4 @@
+import Ionicons from "@react-native-vector-icons/ionicons";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useUser } from "../contexts/UserContext";
@@ -45,11 +46,9 @@ export default function PollCard({ poll }) {
                 </Text>
             </View>
             <View style={styles.rightContainer}>
-                <Text style={styles.timeLeft}>
+                {getTimeLeft() && <Ionicons size={20} color="white" name="time" />}
+                <Text style={[styles.timeLeft]}>
                     {getTimeLeft()}
-                </Text>
-                <Text style={styles.votedCheckbox}>
-                    o
                 </Text>
             </View>
         </Pressable>
@@ -64,7 +63,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: "rgb(51, 51, 51)",
         flexDirection: "row",
-        borderLeftWidth: 3,
+        borderLeftWidth: 7,
     },
     titleContainer: {
         width: "70%",
@@ -83,8 +82,9 @@ const styles = StyleSheet.create({
     },
     rightContainer: {
         width: "30%",
-        alignItems: "flex-end",
-        paddingRight: 10
+        gap: 5,
+        justifyContent: "flex-end",
+        flexDirection: "row",
     },
     timeLeft: {
         color: "white",

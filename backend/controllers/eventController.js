@@ -50,7 +50,7 @@ const getEvent = asyncHandler(async (req, res) => {
         const event = await Event.findById(eventId);
 
         if (!event) {
-            return res.status(404);
+            return res.sendStatus(404);
         }
         return res.json(event);
     } catch (err) {
@@ -84,12 +84,12 @@ const createEvent = asyncHandler(async (req, res) => {
         const createdEvent = await Event.create(eventObj);
 
         if (createdEvent) {
-            res.status(201)
             console.log("Event created")
+            return res.sendStatus(201);
         }
     } catch (err) {
         console.log(err)
-        res.status(400).json({ error: err })
+        return res.status(400).json({ error: err })
     }
 })
 

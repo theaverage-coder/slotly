@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     barFill: {
         height: 50,
         position: 'absolute',
-        backgroundColor: "rgba(222, 117, 82, 1)",
+        backgroundColor: "rgb(125, 78, 87)",
         borderTopLeftRadius: 16,
         borderBottomLeftRadius: 16
     },
