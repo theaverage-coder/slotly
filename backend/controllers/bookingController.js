@@ -23,11 +23,11 @@ const createBooking = asyncHandler(async (req, res) => {
         })
 
         if (booking) {
-            res.sendStatus(201)
             console.log("Booking created")
+            return res.sendStatus(201)
         } else {
-            res.status(400)
-            throw new Error('Failed to create booking')
+            console.log("Failed to create booking")
+            return res.sendStatus(400)
         }
     } catch (err) {
         console.log(err);
@@ -42,7 +42,7 @@ const getAvailableTimeSlots = asyncHandler(async (req, res) => {
         const booking = await Booking.findOne({ course: courseId }, { _id: 1, officeHours: 1, timeSlotDuration: 1 });
         if (!booking) {
             console.log("No booking exists")
-            return res.status(404)
+            return res.sendStatus(404)
         }
         //console.log(booking)
         //Get all appointments sorted by increasing date/time
@@ -126,7 +126,7 @@ const getBooking = asyncHandler(async (req, res) => {
 
         if (!booking) {
             console.log("No booking exists")
-            return res.status(404)
+            return res.sendStatus(404);
         }
         return res.status(200).json(booking);
     } catch (err) {

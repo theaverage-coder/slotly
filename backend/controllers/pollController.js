@@ -42,12 +42,12 @@ const createPoll = asyncHandler(async (req, res) => {
         })
 
         if (newPoll) {
-            res.sendStatus(201);
             console.log("Poll created")
+            return res.sendStatus(201);
         }
     } catch (err) {
         console.log(err)
-        res.status(400).json({ error: err })
+        return res.status(400).json({ error: err })
     }
 })
 
@@ -105,7 +105,7 @@ const deletePoll = async (req, res) => {
     try {
         const result = await Poll.deleteOne({ _id: ObjectId(pollId) })
         if (result.acknowledged) {
-            return res.status(200)
+            return res.sendStatus(200)
         }
     } catch (err) {
         console.log(err);

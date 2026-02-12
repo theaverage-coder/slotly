@@ -6,7 +6,8 @@ export default function EventCard({ event, homeScreen = false, onDetailsPress })
     const router = useRouter();
     const { user } = useUser();
     const start = new Date(event.startTime);
-
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thurday", "Friday", "Saturday"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]
     const getDateString = () => {
         return start.toLocaleDateString();
     }
@@ -52,11 +53,15 @@ export default function EventCard({ event, homeScreen = false, onDetailsPress })
             ) : (
                 <Pressable onPress={handlePress} style={styles.cardContainer}>
                     <View style={styles.date}>
-                        <Text style={styles.time}> {getDateString()} | {getTimeString()} </Text>
-
+                        <Text
+                            style={styles.dayText}
+                            numberOfLines={1}
+                            adjustsFontSizeToFit
+                        > {dayNames[start.getDay()]}</Text>
+                        <Text style={styles.dateText}> {monthNames[start.getMonth()]} {start.getDate()}</Text>
                     </View>
-                    <View style={styles.title}>
-                        <Text style={styles.titleText}> {event.title}</Text>
+                    <View style={styles.title2Container}>
+                        <Text style={[styles.title,]}> {event.title}</Text>
                     </View>
                 </Pressable>
             )
@@ -78,11 +83,13 @@ const styles = StyleSheet.create({
     cardContainer: {
         flexDirection: "row",
         columnGap: 15,
-        backgroundColor: "white",
+        backgroundColor: "rgb(51, 51, 51)",
         height: 100,
-        borderRadius: 16,
+        borderRadius: 8,
         padding: 10,
-        width: 300
+        width: 300,
+        alignItems: "center",
+
     },
     detailsContainer: {
         flexDirection: "column",
@@ -93,12 +100,17 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     date: {
-        width: 82,
+        width: 90,
         height: 82,
-        backgroundColor: "rgba(217, 217, 217, 1)",
-        borderRadius: 12,
+        borderRadius: 8,
+        borderWidth: 1,
         alignItems: "center",
-        paddingTop: 7
+        paddingTop: 15,
+        borderColor: "rgb(54, 65, 86)",
+        gap: 5
+    },
+    title2Container: {
+        justifyContent: "center"
     },
     title: {
         fontWeight: "bold",
@@ -109,9 +121,6 @@ const styles = StyleSheet.create({
     time: {
         marginTop: 8,
         color: "rgba(217, 217, 217, 0.5)"
-    },
-    titleText: {
-        fontSize: 25
     },
     line: {
         width: "90%",
@@ -147,5 +156,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: "white",
         letterSpacing: 2
+    },
+    dayText: {
+        fontWeight: "bold",
+        fontSize: 17,
+        color: "white"
+    },
+    dateText: {
+        color: "rgba(217, 217, 217, 0.5)",
+        fontSize: 15
     }
 })

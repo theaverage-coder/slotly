@@ -10,8 +10,8 @@ const addCourse = asyncHandler(async (req, res) => {
         const prof = req.user;
 
         if (!courseCode || !courseName || !semester) {
-            res.status(400);
-            throw new Error('Missing fields');
+            console.log("Missing fields")
+            return res.sendStatus(400);
         }
 
         // Create unique sign up code
@@ -39,12 +39,12 @@ const addCourse = asyncHandler(async (req, res) => {
                 { _id: prof },
                 { $addToSet: { courses: course._id } }
             );
-            res.status(201).json({
+            return res.status(201).json({
                 signUpLink: course.signUpLink,
             })
         } else {
-            res.status(400);
-            throw new Error('Invalid data');
+            console.log("Invalid data")
+            return res.sendStatus(400);
         }
     } catch (err) {
         console.log(err)

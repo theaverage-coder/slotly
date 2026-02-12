@@ -6,21 +6,20 @@ const User = require('../models/userModel')
 // @desc Register new user
 // @route POST /api/users/register
 const registerUser = asyncHandler(async (req, res) => {
-    console.log("Received body:", req.body); // Make sure body exists
     try {
         const { firstName, lastName, email, password, role } = req.body
 
         if (!firstName || !lastName || !email || !password || !role) {
-            res.status(400)
-            throw new Error('Please add all fields')
+            console.log('Please add all fields')
+            return res.sendStatus(400)
         }
 
         // Check if user exists
         const userExists = await User.findOne({ email })
 
         if (userExists) {
-            res.status(400)
-            throw new Error('User already exists')
+            console.log('User already exists')
+            return res.sendStatus(400)
         }
 
         // Hash password
@@ -38,15 +37,15 @@ const registerUser = asyncHandler(async (req, res) => {
         console.log("User saved:", user);
 
         if (user) {
-            res.status(201).json({
+            return res.status(201).json({
                 _id: user.id,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 token: generateToken(user._id)
             })
         } else {
-            res.status(400)
-            throw new Error('Invalid user data')
+            console.log('Invalid user data')
+            return res.sendStatus(400)
         }
     } catch (err) {
         console.log(err)
@@ -64,7 +63,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
         // Check password matches
         if (user && (await bcrypt.compare(password, user.password))) {
-            res.status(200).json({
+            return res.status(200).json({
                 _id: user._id,
                 firstName: user.firstName,
                 lastName: user.lastName,
@@ -73,8 +72,8 @@ const loginUser = asyncHandler(async (req, res) => {
                 token: generateToken(user._id)
             })
         } else {
-            res.status(400)
-            throw new Error('Invalid credentials')
+            console.log('Invalid credentials')
+            return res.status(400)
         }
     } catch (err) {
         console.log(err);
@@ -87,7 +86,7 @@ const getUser = asyncHandler(async (req, res) => {
     try {
         const { _id, firstName, lastName } = await User.findById(req.user.id)
 
-        res.status(200).json({
+        return res.status(200).json({
             id: _id,
             firstName,
             lastName,

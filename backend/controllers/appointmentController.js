@@ -22,11 +22,11 @@ const bookAppointment = asyncHandler(async (req, res) => {
         })
 
         if (appointment) {
-            res.sendStatus(201)
             console.log("Appointment booked")
+            return res.sendStatus(201)
         } else {
-            res.sendStatus(400)
-            throw new Error("Failed to book appointment")
+            console.log("Failed to book appointment")
+            return res.sendStatus(400)
         }
     } catch (err) {
         console.log(err)
@@ -93,7 +93,7 @@ const cancelAppointment = asyncHandler(async (req, res) => {
             return res.sendStatus(404);
         }
 
-        res.sendStatus(200);
+        return res.sendStatus(200);
     } catch (err) {
         console.log("Failed to cancel appointment: ", err);
     }
