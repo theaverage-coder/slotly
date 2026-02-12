@@ -31,7 +31,7 @@ export default function CreateEventScreenOne() {
                 </View>
                 <MyButton2
                     disabled={isDisabledButton}
-                    style={[{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }, isDisabledButton && styles.disabledButton]}
+                    style={[{ backgroundColor: "rgba(217, 217, 217, 1)" }, isDisabledButton && styles.disabledButton]}
                     onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenTwo")}
                 >
                     <Text> Continue </Text>
@@ -44,7 +44,7 @@ export default function CreateEventScreenOne() {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)"
+        backgroundColor: "rgb(17, 21, 28)",
     },
     inputFields: {
         flex: 1,

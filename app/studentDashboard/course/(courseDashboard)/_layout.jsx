@@ -9,7 +9,7 @@ export const MaterialTopTabs = withLayoutContext(Navigator);
 
 const CourseLayout = () => {
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: "rgba(33, 33, 33, 1)" }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: "rgb(17, 21, 28)" }}>
             <MaterialTopTabs>
                 <MaterialTopTabs.Screen name="(detailsAndBookings)" options={{ title: 'Booking' }} />
                 <MaterialTopTabs.Screen name="(event)" options={{ title: "Events" }} />

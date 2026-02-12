@@ -280,7 +280,7 @@ export default function CreateBookingScreen() {
 
             </View>
 
-            <MyButton2 onPress={handleCreateBooking} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+            <MyButton2 onPress={handleCreateBooking} style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}>
                 <Text> Create Booking </Text>
             </MyButton2>
         </SafeAreaView>
@@ -289,7 +289,7 @@ export default function CreateBookingScreen() {
 
 const styles = StyleSheet.create({
     screenContainer: {
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         flex: 1,
         rowGap: 20,
     },
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         height: "40%",
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         padding: 15

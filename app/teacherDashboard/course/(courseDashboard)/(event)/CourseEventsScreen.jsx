@@ -52,7 +52,7 @@ export default function CourseEventsScreen() {
                 )}
             </View>
 
-            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenOne")} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
+            <MyButton2 onPress={() => router.navigate("teacherDashboard/course/CreateEventScreenOne")} style={{ backgroundColor: "rgba(217, 217, 217, 1)" }}>
                 <Text> Create Event </Text>
             </MyButton2>
         </View>
@@ -62,7 +62,7 @@ export default function CourseEventsScreen() {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         paddingTop: 20
 
     },

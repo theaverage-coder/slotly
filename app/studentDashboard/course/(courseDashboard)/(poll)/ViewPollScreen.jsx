@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -57,36 +58,6 @@ export default function ViewPollScreen() {
             console.log(err);
         }
     }
-    /*
-    useFocusEffect(useCallback(() => {
-        let sum = 0;
-        poll.options.forEach((item, index) => {
-            sum += item.numVotes;
-        })
-        setTotalVotes(sum);
-
-        getVote();
-    }, [])
-    );
-
-    const getVote = async () => {
-        try {
-            const response = await fetch(`${API_URL}/api/polls/getVote/${poll._id}`, {
-                method: "POST",
-                headers: { 'Content-Type': "application/json" },
-                body: JSON.stringify({
-                    studentId: user._id,
-                })
-            })
-
-            if (response.ok) {
-                const data = await response.json();
-                setUserVote(data.optionId);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }*/
 
     const handleCloseModal = () => {
         fetchVotes();
@@ -146,7 +117,10 @@ export default function ViewPollScreen() {
         if (!poll.expirationDate) {
             return "Open";
         }
-        return `Open until ${new Date(poll.expirationDate)}`
+        return `Open until ${new Date(poll.expirationDate).toLocaleDateString()} at ${new Date(poll.expirationDate).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        })}`
     }
 
     return (
@@ -166,25 +140,31 @@ export default function ViewPollScreen() {
                                 <View style={{ height: 20 }} />
                             )}
                             renderItem={({ item }) => {
-                                const width = totalVotes === 0 ? 0 : (optionsMap.get(item._id) / totalVotes) * 100;
+                                const numVotes = optionsMap.get(item._id);
+                                const width = totalVotes === 0 ? 0 : (numVotes / totalVotes) * 100;
+                                const myVote = userVote.includes(item._id);
 
                                 return (
-                                    <View style={[item._id === userVote && styles.prevVotedOption, styles.optionBarContainer]}>
-                                        <View style={[styles.barFill, { width: `${width}%` }]} />
+                                    <View style={[styles.optionBarContainer, myVote && styles.myVote]}>
+                                        <View style={[styles.barFill, { width: `${width}% ` }, width === 100 && styles.fullBarFill]} />
                                         <Text style={styles.optionLabel}>
                                             {item.text}
                                         </Text>
+                                        {numVotes > 0 && <Text style={[styles.white, { marginRight: 15 }]}>
+                                            {numVotes} {numVotes === 1 ? "vote" : "votes"}
+                                        </Text>}
                                     </View>
                                 )
                             }}
                         />
-                        <Text> Total Votes: {totalVotes} </Text>
+                        <Text style={styles.white}> Total Votes: {totalVotes} </Text>
                     </View>
                 </View>
             </View>
             <Modal
                 visible={modalVisibility}
-                animationType="slide">
+                animationType="slide"
+                transparent>
                 <View style={[
                     styles.modalContainer,
                     {
@@ -195,30 +175,44 @@ export default function ViewPollScreen() {
                     },
                 ]}>
                     <Pressable onPress={() => setModalVisibility(false)}>
-                        <Text> Close </Text>
+                        <Text style={styles.closeBtn}> Close </Text>
                     </Pressable>
-                    <FlatList
-                        data={poll.options}
-                        keyExtractor={item => item._id}
-                        renderItem={({ item, index }) =>
-                            <Pressable
-                                onPress={() => handleVote(item._id)}
-                                //disabled={index === userVote}
-                                style={[styles.option,]}
-                            >
-                                <Text>
-                                    {item.text}
-                                </Text>
-                                <Text>
-                                    {optionsMap.get(item._id)}
-                                </Text>
-                            </Pressable>
-                        }
-                    />
-                    <Text> {selectedOptions} </Text>
+                    <Text style={styles.selectText}>
+                        {poll.multipleVotes ? "Select one or more answers" : "Select an answer"}
+                    </Text>
+                    <View style={styles.flatlistAnswerContainer}>
+                        <FlatList
+                            data={poll.options}
+                            keyExtractor={item => item._id}
+                            contentContainerStyle={{ gap: 20, paddingHorizontal: 30 }}
+                            renderItem={({ item, index }) => {
+                                let selected = selectedOptions.includes(item._id);
+
+                                return (
+                                    <Pressable
+                                        onPress={() => handleVote(item._id)}
+                                        //disabled={index === userVote}
+                                        style={[styles.answerContainer, selected && styles.selectedAnswer]}
+                                    >
+                                        <Text style={styles.answerText}>
+                                            {item.text}
+                                        </Text>
+                                        {selected ? (
+                                            <Ionicons size={25} color="rgb(125, 78, 87)" name="checkbox" />
+                                        ) : (
+                                            <Ionicons size={25} color="white" name="square-outline" />
+
+                                        )}
+
+                                    </Pressable>
+                                )
+                            }}
+                        />
+                    </View>
                     <MyButton2
                         onPress={handleVoteInPoll}
-                        disabled={selectedOptions.length === 0}>
+                        disabled={selectedOptions.length === 0}
+                        style={{ backgroundColor: "rgb(125, 78, 87)", }}>
                         <Text>
                             Send Vote
                         </Text>
@@ -227,7 +221,7 @@ export default function ViewPollScreen() {
             </Modal>
 
             <MyButton2 onPress={() => setModalVisibility(true)} style={{
-                backgroundColor: "rgba(217, 217, 217, 0.51)", textColor: "rgba(33, 33, 33, 1)"
+                backgroundColor: "white", textColor: "rgba(33, 33, 33, 1)"
             }}>
                 {userVote.length !== 0 ? (
                     <Text> Change Vote </Text>
@@ -244,12 +238,11 @@ export default function ViewPollScreen() {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)",
-        paddingTop: 20
-
+        backgroundColor: "rgb(17, 21, 28)",
     },
     titleContainer: {
-        alignItems: "center"
+        alignItems: "center",
+        marginTop: 20
     },
     title: {
         color: "rgba(255, 255, 255, 1)",
@@ -270,7 +263,7 @@ const styles = StyleSheet.create({
     innerResultContainer: {
         border: 1,
         borderRadius: 16,
-        backgroundColor: "rgb(105, 105, 105)",
+        backgroundColor: "rgb(33, 45, 64)",
         flex: 1,
         padding: 10,
         paddingVertical: 20
@@ -278,24 +271,70 @@ const styles = StyleSheet.create({
     optionBarContainer: {
         height: 50,
         width: "100%",
-        borderWidth: 1,
         borderRadius: 16,
+        alignItems: "center",
+        backgroundColor: "rgb(54, 65, 86)",
         position: 'relative',
-        justifyContent: "center",
-
+        flexDirection: "row",
     },
     barFill: {
         height: 50,
         position: 'absolute',
-        backgroundColor: "rgb(125, 78, 87)",
+        backgroundColor: "rgba(125, 78, 87, 0.6)",
         borderTopLeftRadius: 16,
         borderBottomLeftRadius: 16
     },
+    fullBarFill: {
+        borderBottomRightRadius: 16,
+        borderTopRightRadius: 16
+    },
     optionLabel: {
         zIndex: 1,
+        color: "white",
+        flex: 1,
         marginLeft: 15
+    },
+    myVote: {
+        borderWidth: 1,
+        borderColor: "rgb(125, 78, 87)"
     },
     modalContainer: {
         flex: 1,
+        backgroundColor: "rgb(17, 21, 28)",
+    },
+    closeBtn: {
+        color: "white",
+        paddingTop: 20,
+        paddingLeft: 20
+    },
+    flatlistAnswerContainer: {
+        maxHeight: 600,
+        marginVertical: 20
+    },
+    answerContainer: {
+        borderRadius: 16,
+        height: 70,
+        alignItems: "center",
+        paddingHorizontal: 20,
+        width: "100%",
+        flexDirection: "row",
+        borderWidth: 1
+    },
+    selectedAnswer: {
+        borderWidth: 1,
+        borderColor: "rgb(125, 78, 87)"
+    },
+    answerText: {
+        color: "white",
+        flex: 1
+    },
+    selectText: {
+        color: "white",
+        fontWeight: "bold",
+        marginTop: 20,
+        marginLeft: 20
+    },
+    white: {
+        color: "white"
     }
 })

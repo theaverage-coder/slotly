@@ -88,7 +88,7 @@ export default function ViewPollScreen() {
             </View>
             {!poll.isClosed && (
                 <MyButton2 onPress={handleClosePoll} style={{
-                    backgroundColor: "rgba(217, 217, 217, 0.51)", textColor: "rgba(33, 33, 33, 1)"
+                    backgroundColor: "rgba(217, 217, 217, 0.51)"
                 }}>
                     <Text>
                         Close Poll
@@ -102,7 +102,7 @@ export default function ViewPollScreen() {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         paddingTop: 20
     },
     titleContainer: {

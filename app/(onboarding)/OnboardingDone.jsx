@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         flexShrink: 0,
         height: height,
         width: width,
-        backgroundColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "rgb(17, 21, 28)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
