@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +17,8 @@ export default function CreateEventScreenThree() {
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleCreateEvent = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         const newEvent = {
             course: courseId,
             title: event.title,
@@ -29,7 +32,10 @@ export default function CreateEventScreenThree() {
         try {
             const response = await fetch(`${API_URL}/api/events/createEvent`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(newEvent),
             });
 

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
@@ -111,13 +112,17 @@ export default function ViewPollScreen() {
     }
 
     const handleVoteInPoll = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             const response = await fetch(`${API_URL}/api/polls/voteInPoll`, {
                 method: "POST",
-                headers: { 'Content-Type': "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     pollId: poll,
-                    studentId: user._id,
                     optionsId: selectedOptions
                 })
             })

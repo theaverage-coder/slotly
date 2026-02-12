@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -59,8 +60,16 @@ export default function CourseDetailsScreen() {
     }, []));
 
     const handleGetStudents = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
-            const response = await fetch(`${API_URL}/api/courses/getAllStudents/${courseId}`);
+            const response = await fetch(`${API_URL}/api/courses/getAllStudents/${courseId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+            });
 
             if (response.ok) {
                 const data = await response.json();
@@ -72,9 +81,15 @@ export default function CourseDetailsScreen() {
     }
 
     const handleDeleteCourse = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             const response = await fetch(`${API_URL}/api/courses/deleteCourse/${courseId}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
             })
 
             if (response.ok) {
@@ -98,10 +113,15 @@ export default function CourseDetailsScreen() {
     }
 
     const handleSubmitCourseChanges = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             const response = await fetch(`${API_URL}/api/courses/editCourse/${courseId}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(newCourse),
             })
 

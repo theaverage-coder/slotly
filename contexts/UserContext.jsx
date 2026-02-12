@@ -1,6 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { createContext, useContext, useState } from "react";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
+
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
@@ -27,10 +29,11 @@ export function UserProvider({ children }) {
             });
 
             const data = await response.json();
-            console.log(data);
 
             if (response.ok) {
                 setUser(data);
+                await AsyncStorage.setItem("token", data.token);
+
                 if (data.role == "s") {
                     router.replace("/studentDashboard/HomeScreen");
                 } else {
@@ -47,7 +50,15 @@ export function UserProvider({ children }) {
     }
 
     async function logout() {
+        try {
+            setUser(null);
+            await AsyncStorage.removeItem("token");
+            router.replace("/OnboardingStart");
 
+        } catch (err) {
+            Alert.alert("Logout Failed", "Please try again.");
+            console.error(err);
+        }
     }
 
     return (

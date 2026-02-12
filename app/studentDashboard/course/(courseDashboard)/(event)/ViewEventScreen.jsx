@@ -1,7 +1,7 @@
 // shows details of event eg. title, location, signedUp/capacity,
 // if not signed up -> button at bottom to sign up which pulls up a modal to confirm
 // if signed up -> tells you that you have already joined the event, gives an option to deregister
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -22,12 +22,6 @@ export default function ViewEventScreen() {
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
-    /*
-    const fetchEvent = async () => {
-        const res = await fetch(`${API_URL}/api/events/getEvent/${event._id}`);
-        const data = await res.json();
-        setEvent(data);
-    };*/
     const fetchCourse = async () => {
         try {
             const response = await fetch(`${API_URL}/api/courses/getCourseById/${event.course}`);
@@ -49,13 +43,15 @@ export default function ViewEventScreen() {
     const isJoined = event?.students?.includes(user._id);
 
     const handleJoinEvent = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             const response = await fetch(`${API_URL}/api/events/joinEvent/${event._id}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userId: user._id
-                }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
             });
 
             const updatedEvent = await response.json();
@@ -70,13 +66,15 @@ export default function ViewEventScreen() {
     }
 
     const handleLeaveEvent = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             const response = await fetch(`${API_URL}/api/events/leaveEvent/${event._id}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userId: user._id
-                }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
             });
 
             const updatedEvent = await response.json();

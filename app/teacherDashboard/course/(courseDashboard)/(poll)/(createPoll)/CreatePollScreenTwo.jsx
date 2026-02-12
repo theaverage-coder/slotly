@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -66,11 +67,15 @@ export default function CreatePollScreenTwo() {
             ...poll,
             course: courseId
         }
+        const token = await AsyncStorage.getItem("token");
 
         try {
             const response = await fetch(`${API_URL}/api/polls/createPoll`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(pollData),
             })
 

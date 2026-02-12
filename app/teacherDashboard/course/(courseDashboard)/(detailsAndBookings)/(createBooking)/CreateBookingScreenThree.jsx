@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -19,6 +20,7 @@ export default function CreateBookingScreenThree() {
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleCreateBooking = async () => {
+        const token = await AsyncStorage.getItem("token");
         let officeHours = [];
 
         officeHours = Object.entries(daysAvailable).filter(([key, value]) =>
@@ -27,9 +29,12 @@ export default function CreateBookingScreenThree() {
         try {
             const response = await fetch(`${API_URL}/api/bookings/createBooking`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({
-                    course: courseId,
+                    courseId: courseId,
                     officeHours: officeHours,
                     timeSlotDuration: timeSlotDuration,
                 }),

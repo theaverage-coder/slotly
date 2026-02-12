@@ -6,7 +6,8 @@ const Appointment = require('../models/appointmentModel')
 // @router /api/appointments/bookAppointment
 const bookAppointment = asyncHandler(async (req, res) => {
     try {
-        const { selectedTimeSlot, bookingId, studentId, timeSlotDuration, message } = req.body;
+        const { selectedTimeSlot, bookingId, timeSlotDuration, message } = req.body;
+        const studentId = req.user;
         const startDateUTC = new Date(selectedTimeSlot);
         const endDateUTC = new Date(new Date(selectedTimeSlot).getTime() + timeSlotDuration * 60000);
         const prof = await Booking.findOne({ _id: bookingId }, { course: 1 }).populate('course', 'prof');
@@ -36,8 +37,8 @@ const bookAppointment = asyncHandler(async (req, res) => {
 // @router /api/appointments/getAppointments
 const getAppointments = asyncHandler(async (req, res) => {
     try {
-        //console.log("here")
-        const { userId, isStudent } = req.body;
+        const userId = req.user;
+        const { isStudent } = req.body;
         let appointments = [];
 
         //Retrieve professor/student first and last names AND the course code
@@ -77,11 +78,19 @@ const getAppointments = asyncHandler(async (req, res) => {
 // @router /api/appointments/cancelAppointment/:appointmentId
 const cancelAppointment = asyncHandler(async (req, res) => {
     try {
+        const userId = req.user;
         const { appointmentId } = req.params;
-        const deletedAppt = await Appointment.findByIdAndDelete(appointmentId);
+        //Ensure that whoever sent the request is one of the attendees
+        const deletedAppt = await Appointment.findOneAndDelete({
+            _id: appointmentId,
+            $or: [
+                { student: userId },
+                { prof: userId }
+            ]
+        });
 
         if (!deletedAppt) {
-            return res.status(404);
+            return res.sendStatus(404);
         }
 
         res.sendStatus(200);

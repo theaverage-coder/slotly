@@ -8,12 +8,12 @@ const {
     changePassword,
     deleteAccount
 } = require('../controllers/userController')
-const { protect } = require('../middleware/authMiddleware')
+const protect = require('../middleware/authMiddleware')
 
 router.post('/register', registerUser)
 router.post('/login', loginUser)
-router.get('/me', protect, getUser)
-router.patch("/changeName", changeName);
-router.patch("/changePassword", changePassword);
-router.delete("/deleteAccount/:userId", deleteAccount);
+//router.get('/me', protect, getUser)
+router.patch("/changeName", protect, changeName);
+router.patch("/changePassword", protect, changePassword);
+router.delete("/deleteAccount", protect, deleteAccount);
 module.exports = router
