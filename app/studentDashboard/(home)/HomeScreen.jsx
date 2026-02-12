@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
@@ -18,6 +19,7 @@ export default function HomeScreen() {
     const [selectedAppt, setSelectedAppt] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [modalType, setModalType] = useState(null);
+
     // Variables for filter
     const [typeFilter, setTypeFilter] = useState("all"); // "all" | "appointment" | "event"
     const [completedFilter, setCompletedFilter] = useState("incomplete"); // "all" | "completed" | "incomplete"
@@ -31,12 +33,16 @@ export default function HomeScreen() {
     // Fetch all appointments and events when the screen is focused
     useFocusEffect(useCallback(() => {
         const fetchAppointments = async () => {
+            const token = await AsyncStorage.getItem("token");
+
             try {
                 const response = await fetch(`${API_URL}/api/appointments/getAppointments`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
                     body: JSON.stringify({
-                        userId: user._id,
                         isStudent: true,
                     }),
                 });
@@ -50,13 +56,15 @@ export default function HomeScreen() {
         }
 
         const fetchEvents = async () => {
+            const token = await AsyncStorage.getItem("token");
+
             try {
                 const response = await fetch(`${API_URL}/api/events/getAllJoinedEvents`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        userId: user._id,
-                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
                 });
 
                 if (response.ok) {
@@ -107,7 +115,6 @@ export default function HomeScreen() {
             data = data.filter((x) =>
                 completedFilter === "completed" ? x.completed : !x.completed);
         }
-        console.log("data: ", data)
         return data;
     }, [completedFilter, typeFilter, events, appointments]);
 
@@ -143,9 +150,14 @@ export default function HomeScreen() {
     }
 
     const handleCancelAppointment = async () => {
+        const token = await AsyncStorage.getItem("token");
         try {
             const response = await fetch(`${API_URL}/api/appointments/cancelAppointment/${selectedAppt._id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
             })
             if (response.ok) {
                 router.push("/studentDashboard/HomeScreen")

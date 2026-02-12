@@ -97,30 +97,11 @@ const getUser = asyncHandler(async (req, res) => {
     }
 })
 
-/*
-// @desc Get names and emails given an array of ids
-// @route  /api/users/getStudents
-const getStudents = asyncHandler(async (req, res) => {
-    try {
-        const { ids } = req.body;
-
-        const students = await User.find(
-            { _id: { $in: ids } },
-            "firstName lastName email"
-        );
-
-        res.json(students);
-    } catch (err) {
-        console.log("Failed to retrieve students: ", err);
-    }
-})
-*/
-
 // @desc Edit name
 // @router /api/users/changeName
 const changeName = asyncHandler(async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.user;
         const allowedFieldChanges = ["firstName", "lastName"];
         const updates = {};
 
@@ -152,8 +133,9 @@ const changeName = asyncHandler(async (req, res) => {
 // @router /api/users/changePassword
 const changePassword = asyncHandler(async (req, res) => {
     try {
-        console.log("here")
-        const { userId, oldPassword, newPassword } = req.body;
+        const userId = req.user;
+
+        const { oldPassword, newPassword } = req.body;
 
         const user = await User.findById(userId, { password: 1 });
 
@@ -184,7 +166,7 @@ const changePassword = asyncHandler(async (req, res) => {
 // @router /api/users/deleteAccount/:userId
 const deleteAccount = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId = req.user;
         const deleted = await User.findByIdAndDelete(userId);
 
         if (!deleted) {

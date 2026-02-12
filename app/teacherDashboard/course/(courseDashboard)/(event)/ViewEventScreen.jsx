@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -37,9 +38,15 @@ export default function ViewEventScreen() {
     }, [])
 
     const handleDeleteEvent = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             await fetch(`${API_URL}/api/events/deleteEvent/${event._id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
             })
         } catch (err) {
             console.log(err)
@@ -47,8 +54,16 @@ export default function ViewEventScreen() {
     }
 
     const handleGetStudents = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
-            const response = await fetch(`${API_URL}/api/events/getStudents/${event._id}`);
+            const response = await fetch(`${API_URL}/api/events/getStudents/${event._id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+            });
 
             if (response.ok) {
                 const data = await response.json();

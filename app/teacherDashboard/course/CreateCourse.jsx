@@ -1,9 +1,9 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
-import { useUser } from '../../../contexts/UserContext';
-
 import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../components/MyButton2";
+import { useUser } from '../../../contexts/UserContext';
 
 export default function CreateCourse() {
     const { user } = useUser();
@@ -11,7 +11,6 @@ export default function CreateCourse() {
         courseCode: "",
         courseName: "",
         semester: "",
-        prof: user._id,
     });
 
     const API_URL =
@@ -20,10 +19,15 @@ export default function CreateCourse() {
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleCreateCourse = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             const response = await fetch(`${API_URL}/api/courses/addCourse`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify(courseData),
             });
 

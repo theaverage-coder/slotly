@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
@@ -32,9 +33,15 @@ export default function ViewPollScreen() {
     }
 
     const handleClosePoll = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             const response = await fetch(`${API_URL}/api/polls/closePoll/${poll._id}`, {
                 method: 'PATCH',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
             });
 
             if (response.ok) {

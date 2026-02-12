@@ -1,10 +1,10 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
 import { useUser } from "../../../../../contexts/UserContext";
-
 export default function BookAppointmentScreen() {
     const { courseId } = useCourseContext();
     const [availableSlots, setAvailableSlots] = useState(null);
@@ -24,6 +24,7 @@ export default function BookAppointmentScreen() {
 
 
     const fetchAvailableTimeslots = async () => {
+
         try {
             const response = await fetch(`${API_URL}/api/bookings/getAvailableTimeSlots/${courseId}/${startDate}`)
             const data = await response.json();
@@ -42,14 +43,18 @@ export default function BookAppointmentScreen() {
     );
 
     const handleBookAppointment = async () => {
+        const token = await AsyncStorage.getItem("token");
+
         try {
             const response = await fetch(`${API_URL}/api/appointments/bookAppointment`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     selectedTimeSlot: selectedTimeSlot,
                     bookingId: bookingId,
-                    studentId: user._id,
                     timeSlotDuration: timeSlotDuration,
                     message: message
                 })

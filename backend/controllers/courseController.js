@@ -6,7 +6,8 @@ const User = require('../models/userModel')
 // @route /api/courses/addCourse
 const addCourse = asyncHandler(async (req, res) => {
     try {
-        const { courseCode, courseName, semester, prof } = req.body;
+        const { courseCode, courseName, semester } = req.body;
+        const prof = req.user;
 
         if (!courseCode || !courseName || !semester) {
             res.status(400);
@@ -53,7 +54,8 @@ const addCourse = asyncHandler(async (req, res) => {
 // @router /api/courses/joinCourse
 const joinCourse = asyncHandler(async (req, res) => {
     try {
-        const { studentId, signUpLink } = req.body;
+        const { signUpLink } = req.body;
+        const studentId = req.user;
 
         // Check if a course with that sign up link exists
         const course = await Course.findOne({ signUpLink });
@@ -95,16 +97,15 @@ const joinCourse = asyncHandler(async (req, res) => {
 // @router /api/courses/getCourses
 const getCourses = asyncHandler(async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.user;
 
         // Find user & populate the classes field with full course docs
         const user = await User.findById(userId).populate("courses");
-
         if (!user) {
             console.log("User not found")
             return res.status(404).json({ success: false, message: "Student not found" });
         }
-        return res.json({
+        return res.status(200).json({
             success: true,
             courses: user.courses
         });
@@ -136,6 +137,13 @@ const getCourseById = asyncHandler(async (req, res) => {
 const getAllStudents = asyncHandler(async (req, res) => {
     try {
         const { courseId } = req.params;
+        const userId = req.user;
+        const course = await Course.find({ _id: courseId, prof: userId });
+
+        if (!course) {
+            console.log("Authentication error")
+            return res.sendStatus(400);
+        }
         const students = await User.find({ courses: courseId, role: "s" }, 'firstName lastName email');
 
         return res.status(200).json(students);
@@ -150,7 +158,12 @@ const getAllStudents = asyncHandler(async (req, res) => {
 const deleteCourse = async (req, res) => {
     try {
         const { courseId } = req.params;
-        const deleted = await Course.findByIdAndDelete(courseId);
+        const userId = req.user;
+
+        const deleted = await Course.findOneAndDelete({
+            _id: courseId,
+            prof: userId
+        });
 
         if (!deleted) {
             return res.sendStatus(404);
@@ -167,6 +180,7 @@ const deleteCourse = async (req, res) => {
 const editCourse = async (req, res) => {
     try {
         const { courseId } = req.params;
+        const userId = req.user;
         const allowedFieldChanges = ["courseCode", "courseName", "semester"];
         const updates = {};
 
@@ -180,8 +194,10 @@ const editCourse = async (req, res) => {
             return res.status(400).json({ error: "No fields to update" });
         }
 
-        const updatedCourse = await Course.findByIdAndUpdate(
-            courseId,
+        const updatedCourse = await Course.findOneAndUpdate({
+            _id: courseId,
+            prof: userId
+        },
             { $set: updates },
             { new: true }
         );

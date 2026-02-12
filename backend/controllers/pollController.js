@@ -3,14 +3,25 @@ const Poll = require('../models/pollModel');
 const Vote = require('../models/voteModel')
 const { json } = require('express');
 const { getCourseById } = require('./courseController');
+const Course = require('../models/courseModel');
 
 // @desc Create a poll
 // @router /api/polls/createPoll
 const createPoll = asyncHandler(async (req, res) => {
     const poll = req.body;
+    const userId = req.user;
 
     try {
+        // Check to see user making request is the prof of course
+        const course = await Course.findOne({
+            _id: poll.course,
+            prof: userId
+        });
 
+        if (!course) {
+            console.log("Unauthorized request");
+            return res.sendStatus(404);
+        }
         // Logic checks
         if (poll.title === "" || poll.options.length < 2) {
             throw new Error("Invalid Input");
@@ -59,9 +70,22 @@ const getAllPolls = asyncHandler(async (req, res) => {
 // @router /api/polls/closePoll/:pollId
 const closePoll = asyncHandler(async (req, res) => {
     const { pollId } = req.params;
+    const userId = req.user;
 
     try {
-        const updatedPoll = await Poll.findByIdAndUpdate(
+        // Find poll and populate course
+        const poll = await Poll.findById(pollId).populate({
+            path: 'course',
+            select: 'prof'
+        })
+
+        // Make sure the prof of course is the one making the request
+        if (poll.course.prof !== userId) {
+            console.log("Unauthorized request");
+            return res.sendStatus(404);
+        }
+
+        const updatedPoll = await Poll.findById(
             pollId,
             { $set: { isClosed: true } },
             { new: true }
@@ -92,7 +116,8 @@ const deletePoll = async (req, res) => {
 // @desc Vote in a poll
 // @router /api/polls/voteInPoll
 const voteInPoll = asyncHandler(async (req, res) => {
-    const { pollId, studentId, optionsId } = req.body;
+    const { pollId, optionsId } = req.body;
+    const studentId = req.user;
     try {
         const poll = await Poll.findById(pollId);
 

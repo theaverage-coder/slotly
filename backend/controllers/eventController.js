@@ -3,6 +3,7 @@ const Event = require('../models/eventModel');
 const { json } = require('express');
 const User = require('../models/userModel');
 const mongoose = require("mongoose");
+const Course = require('../models/courseModel');
 
 // @desc Get all events pertaining to a course given the courseId
 // @router /api/events/getAllEvents/:courseId
@@ -23,7 +24,7 @@ const getAllEvents = asyncHandler(async (req, res) => {
 // @router /api/events/getAllJoinedEvents
 const getAllJoinedEvents = asyncHandler(async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.user;
         const courses = await User.findById(userId, "courses");
         const userObjectId = new mongoose.Types.ObjectId(userId);
         const courseObjectIds = courses.courses.map(
@@ -61,7 +62,19 @@ const getEvent = asyncHandler(async (req, res) => {
 // @router /api/events/createEvent
 const createEvent = asyncHandler(async (req, res) => {
     const eventObj = req.body;
+    const userId = req.user;
+
     try {
+        // Check to see user making request is the prof of course
+        const course = await Course.findOne({
+            _id: eventObj.course,
+            prof: userId
+        });
+
+        if (!course) {
+            console.log("Unauthorized request");
+            return res.sendStatus(400);
+        }
 
         // Logic checks
         if (eventObj.endTime < eventObj.startTime || eventObj.endTime < new Date() || eventObj.location === "" || eventObj.title === "" || eventObj.capacity === "") {
@@ -85,8 +98,7 @@ const createEvent = asyncHandler(async (req, res) => {
 const leaveEvent = asyncHandler(async (req, res) => {
     try {
         const { eventId } = req.params;
-        const { userId } = req.body;
-        //const updatedEvent = Event.findById(eventId);
+        const userId = req.user;
 
         const updatedEvent = await Event.findOneAndUpdate(
             {
@@ -111,7 +123,7 @@ const leaveEvent = asyncHandler(async (req, res) => {
 const joinEvent = asyncHandler(async (req, res) => {
     try {
         const { eventId } = req.params;
-        const { userId } = req.body;
+        const userId = req.user;
         const updatedEvent = await Event.findOneAndUpdate(
             {
                 _id: eventId,
@@ -135,7 +147,20 @@ const joinEvent = asyncHandler(async (req, res) => {
 // @router /api/events/deleteEvent/:eventId
 const deleteEvent = async (req, res) => {
     try {
+        const userId = req.user;
         const { eventId } = req.params;
+
+        // Find event and populate course
+        const event = await Event.findById(eventId).populate({
+            path: 'course',
+            select: 'prof'
+        });
+
+        // Make sure the prof of course is the one making the request
+        if (event.course.prof !== userId) {
+            console.log("Unauthorized request");
+            return res.sendStatus(404);
+        }
         const deleted = await Event.findByIdAndDelete(eventId);
 
         if (!deleted) {
@@ -152,7 +177,21 @@ const deleteEvent = async (req, res) => {
 // @router /api/events/getStudents/:eventId
 const getStudents = async (req, res) => {
     try {
+        const userId = req.user;
         const { eventId } = req.params;
+
+        // Find event and populate course
+        const event = await Event.findById(eventId).populate({
+            path: 'course',
+            select: 'prof'
+        });
+
+        // Make sure the prof of course is the one making the request
+        if (event.course.prof !== userId) {
+            console.log("Unauthorized request");
+            return res.sendStatus(404);
+        }
+
         const students = await Event.findById(eventId, "students").populate("students", "firstName lastName email ");
         return res.status(200).json(students);
     } catch (err) {

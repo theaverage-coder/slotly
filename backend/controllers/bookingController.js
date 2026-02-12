@@ -7,11 +7,17 @@ const Appointment = require('../models/appointmentModel')
 // @route POST /api/bookings/createBooking
 const createBooking = asyncHandler(async (req, res) => {
     try {
-        const { course, officeHours, timeSlotDuration } = req.body
+        const { courseId, officeHours, timeSlotDuration } = req.body
+        const userId = req.user;
+        const course = await Course.findOne({ _id: courseId, prof: userId });
 
+        if (!course) {
+            console.log("Prof must create booking");
+            return res.sendStatus(400);
+        }
         // Create booking
         const booking = await Booking.create({
-            course,
+            courseId,
             officeHours,
             timeSlotDuration
         })
