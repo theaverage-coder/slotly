@@ -1,12 +1,14 @@
-import { Keyboard, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MyButton from '../../components/MyButton';
+import MyButton2 from '../../components/MyButton2';
 import OnboardingStep from '../../components/OnboardingStep';
 import { useForm } from './FormProvider';
 
 
-export default function OnboardingStepOneScreen({ }) {
+export default function OnboardingStepOneScreen() {
     const { formData, setFormData } = useForm();
+    const router = useRouter();
 
     return (
         <SafeAreaView style={styles.screenContainer}>
@@ -30,7 +32,9 @@ export default function OnboardingStepOneScreen({ }) {
                         />
                     </View>
                 </View>
-                <MyButton nextScreen="/(onboarding)/OnboardingStepTwoScreen" text="Continue" backgroundColor="white" textColor="black" borderWidth={0} borderColor="white"></MyButton>
+                <MyButton2 onPress={() => router.navigate("/OnboardingStepTwoScreen")} style={{ backgroundColor: "white" }} >
+                    <Text> Continue </Text>
+                </MyButton2>
             </Pressable>
         </SafeAreaView>
 
@@ -44,28 +48,21 @@ const styles = StyleSheet.create({
         flex: 1
     },
     inputNames: {
-        alignSelf: "stretch",
-        flexShrink: 0,
-        flexDirection: "column",
+        flex: 1,
         alignItems: "center",
         paddingTop: 50,
         rowGap: 24,
-        height: "50%"
     },
     textField: {
         width: "95%",
-        flexShrink: 0,
         height: 60,
-        backgroundColor: "rgba(50, 50, 50, 1)",
+        backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
         paddingLeft: 20
     },
     inputText: {
-        flex: 1,
-        flexShrink: 0,
         color: "rgba(117, 117, 117, 1)",
-        fontFamily: "Urbanist",
         fontSize: 16,
         fontWeight: 500,
     },
