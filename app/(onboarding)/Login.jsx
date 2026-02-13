@@ -80,10 +80,8 @@ const styles = StyleSheet.create({
     },
     textField: {
         width: "95%",
-        flexShrink: 0,
         height: 60,
         backgroundColor: "rgb(33, 45, 64)",
-        display: "flex",
         justifyContent: "center",
         borderRadius: 16,
         paddingLeft: 20

@@ -26,6 +26,13 @@ export default function OnboardingDone() {
 
             if (response.ok) {
                 console.log("Succesfully registered user ", data.firstName);
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    password: '',
+                    role: '',
+                })
                 router.replace("/(onboarding)/OnboardingStart");
             }
 
