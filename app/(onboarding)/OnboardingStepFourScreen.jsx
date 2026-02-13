@@ -1,47 +1,46 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Circle, Svg } from 'react-native-svg';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ContinueButton from '../../components/ContinueButton';
+import MyButton2 from '../../components/MyButton2';
 import OnboardingStep from '../../components/OnboardingStep';
 import { useForm } from './FormProvider';
 
-
-export default function OnboardingStepFourScreen({ }) {
+export default function OnboardingStepFourScreen() {
     const { formData, setFormData } = useForm();
+    const router = useRouter();
 
     return (
         <SafeAreaView style={styles.screenContainer}>
             <OnboardingStep number={4} header="Choose Your Role!" description="We’ll personalize your experience based on your role."></OnboardingStep>
             <View style={styles.inputRole}>
                 <Pressable onPress={() => setFormData({ ...formData, role: "s" })} style={[styles.roleOption, (formData.role === "s") && styles.clickedRoleOption]}>
-                    <Text style={styles.roleEmoji}>
-                        {`🧑‍🎓`}
-                    </Text>
                     <View style={styles.inputTextBox}>
-                        <Text style={styles.inputText}>
-                            {`Student`}
+                        <Text style={styles.roleEmoji}>
+                            {`🧑‍🎓`}
                         </Text>
-                        <Svg style={styles.circle} width="20" height="21" viewBox="0 0 20 21" fill={formData.role === "s" ? 'white' : 'none'} >
-                            <Circle cx="10" cy="10.2305" r="9.5" stroke="white" />
-                        </Svg>
+                        <Text style={styles.label}>
+                            Student
+                        </Text>
+                        <Ionicons size={25} color="white" name={formData.role === "s" ? "checkmark-circle" : "checkmark-circle-outline"} />
                     </View>
                 </Pressable>
                 <Pressable onPress={() => setFormData({ ...formData, role: "t" })} style={[styles.roleOption, (formData.role === "t") && styles.clickedRoleOption]}>
-                    <Text style={styles.roleEmoji}>
-                        {`🧑‍🏫`}
-                    </Text>
                     <View style={styles.inputTextBox}>
-                        <Text style={styles.inputText}>
-                            {`Teacher`}
+
+                        <Text style={styles.roleEmoji}>
+                            {`🧑‍🏫`}
                         </Text>
-                        <Svg style={styles.circle} width="20" height="21" viewBox="0 0 20 21" fill={formData.role === "t" ? 'white' : 'none'}>
-                            <Circle cx="10" cy="10.2305" r="9.5" stroke="white" />
-                        </Svg>
+                        <Text style={styles.label}>
+                            Teacher
+                        </Text>
+                        <Ionicons size={25} color="white" name={formData.role === "t" ? "checkmark-circle" : "checkmark-circle-outline"} />
                     </View>
                 </Pressable>
             </View>
-            <ContinueButton nextScreen="/(onboarding)/OnboardingDone" text="Continue" oppositeColours={false}></ContinueButton>
+            <MyButton2 onPress={() => router.navigate("/OnboardingDone")} style={{ backgroundColor: "white" }} >
+                <Text> Continue </Text>
+            </MyButton2>
         </SafeAreaView>
     );
 }
@@ -49,53 +48,39 @@ export default function OnboardingStepFourScreen({ }) {
 const styles = StyleSheet.create({
     screenContainer: {
         backgroundColor: "rgb(17, 21, 28)",
+        flex: 1
     },
     inputRole: {
-        alignSelf: "stretch",
-        flexShrink: 0,
-        display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         paddingTop: 50,
         rowGap: 24,
-        height: "50%",
+        flex: 1
     },
     roleOption: {
         width: "95%",
-        flexShrink: 0,
         height: 60,
-        backgroundColor: "rgba(50, 50, 50, 1)",
-        display: "flex",
+        backgroundColor: "rgb(33, 45, 64)",
         flexDirection: "row",
         alignItems: "center",
         borderRadius: 16,
-        paddingLeft: 20
+        paddingHorizontal: 20
     },
     clickedRoleOption: {
         borderWidth: 1,
         borderColor: "white"
     },
     inputTextBox: {
-        display: "flex",
         flexDirection: "row",
         flex: 1,
+        alignItems: "center",
     },
     roleEmoji: {
-        textAlign: "left",
-        color: "rgba(255, 255, 255, 1)",
-        fontFamily: "Urbanist",
         fontSize: 36,
-        fontWeight: 400,
     },
-    inputText: {
-        flexShrink: 0,
-        flex: 1,
+    label: {
         color: "rgba(255, 255, 255, 1)",
-        fontFamily: "Urbanist",
         fontSize: 18,
-        fontWeight: 400
+        fontWeight: 400,
+        flex: 1
     },
-    circle: {
-        paddingRight: 20
-    }
 })

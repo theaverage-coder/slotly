@@ -1,10 +1,12 @@
+import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Circle, Path, Svg } from 'react-native-svg';
-import ContinueButton from "../../components/ContinueButton";
+import MyButton2 from '../../components/MyButton2';
 import SlotlyLogo from "../../components/SlotlyLogo";
 
 export default function OnboardingDefault({ }) {
+    const router = useRouter();
 
     return (
         <SafeAreaView style={styles.screenContainer}>
@@ -100,42 +102,31 @@ export default function OnboardingDefault({ }) {
                     </View>
                 </View>
             </View>
-            <View style={styles.createAccountLogin}>
-                <ContinueButton nextScreen="/(onboarding)/OnboardingStepOneScreen" text="Continue" oppositeColours={false}></ContinueButton>
-                <ContinueButton nextScreen="/(onboarding)/Login" text="Login" oppositeColours={true}></ContinueButton>
-            </View>
+            <MyButton2 onPress={() => router.push("OnboardingStepOneScreen")} style={{ backgroundColor: "white" }}>
+                <Text> Continue</Text>
+            </MyButton2>
+            <MyButton2 onPress={() => router.push("Login")} style={{ borderWidth: 1, borderColor: "white" }}>
+                <Text style={{ color: "white" }}> Login</Text>
+            </MyButton2>
         </SafeAreaView>)
 }
 const styles = StyleSheet.create({
     screenContainer: {
-        position: "relative",
-        flexShrink: 0,
         backgroundColor: "rgb(17, 21, 28)",
-        display: "flex",
-        flexDirection: "column",
         alignItems: "center",
-        rowGap: 0,
-        columnGap: 0,
         paddingHorizontal: 5
     },
     slotlyMascot: {
         position: "absolute",
-        flexShrink: 0,
         height: '10%'
     },
     topTextContainer: {
-        flexShrink: 1,
-        display: "flex",
-        flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "center",
-        rowGap: '0%',
         height: '50%',
     },
     frame121: {
         position: "relative",
-        flexShrink: 0,
-        display: "flex",
         alignItems: "center",
         justifyContent: "center",
         columnGap: 8,
@@ -186,12 +177,8 @@ const styles = StyleSheet.create({
         letterSpacing: "-2.8"
     },
     slotlymakesiteasytoschedulemeetingswithoutthechaos: {
-        position: "relative",
-        alignSelf: "stretch",
-        flexShrink: 0,
         textAlign: "left",
         color: "rgba(188, 188, 188, 1)",
-        fontFamily: "Urbanist",
         fontSize: 28,
         fontWeight: 400
     },
@@ -357,12 +344,5 @@ const styles = StyleSheet.create({
         height: 131,
         width: 131
     },
-    createAccountLogin: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: '20%',
-        width: "100%"
-    },
+
 });
