@@ -8,6 +8,7 @@ import { useForm } from './FormProvider';
 export default function OnboardingStepThreeScreen() {
     const { formData, setFormData } = useForm();
     const router = useRouter();
+    const disabledBtn = !formData.password;
 
     return (
         <SafeAreaView style={styles.screenContainer}>
@@ -24,7 +25,10 @@ export default function OnboardingStepThreeScreen() {
                         />
                     </View>
                 </View>
-                <MyButton2 onPress={() => router.navigate("/OnboardingStepFourScreen")} style={{ backgroundColor: "white" }} >
+                <MyButton2
+                    onPress={() => router.navigate("/OnboardingStepFourScreen")}
+                    disabled={disabledBtn}
+                    style={[{ backgroundColor: "white" }, disabledBtn && { opacity: 0.3 }]} >
                     <Text> Continue </Text>
                 </MyButton2>
             </Pressable>
