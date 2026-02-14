@@ -2,8 +2,8 @@ import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import { useCourseContext } from "../contexts/CourseContext";
-import PollCard from "./components/PollCard";
-
+import BackgroundSlotlyLogo from "./BackgroundSlotlyLogo";
+import PollCard from "./PollCard";
 
 export default function CoursePollsBase() {
     const [polls, setPolls] = useState([]);
@@ -35,6 +35,7 @@ export default function CoursePollsBase() {
         <View style={{ flex: 1 }}>
             {polls.length === 0 ? (
                 <View style={styles.noPollsTextContainer}>
+                    <BackgroundSlotlyLogo />
                     <Text style={styles.noPollsText}>
                         No ongoing polls
                     </Text>

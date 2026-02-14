@@ -3,7 +3,8 @@ import { useCallback, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import { useCourseContext } from "../contexts/CourseContext";
 import { useUser } from "../contexts/UserContext";
-import EventCard from "./components/EventCard";
+import BackgroundSlotlyLogo from "./BackgroundSlotlyLogo";
+import EventCard from "./EventCard";
 
 export default function CourseEventsBase() {
     const router = useRouter();

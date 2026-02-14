@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import ViewPollBase from "../../../../../components/ViewPollBase";
@@ -7,6 +7,7 @@ import ViewPollBase from "../../../../../components/ViewPollBase";
 export default function ViewPollScreen() {
     const { pollObj } = useLocalSearchParams();
     const poll = JSON.parse(pollObj);
+    const router = useRouter();
 
     const API_URL =
         Platform.OS === 'web'
@@ -37,13 +38,18 @@ export default function ViewPollScreen() {
         const token = await AsyncStorage.getItem("token");
 
         try {
-            await fetch(`${API_URL}/api/events/deleteEvent/${poll._id}`, {
+            const response = await fetch(`${API_URL}/api/polls/deletePoll/${poll._id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
             })
+
+            if (response.ok) {
+                console.log("Deleted Poll")
+                router.back();
+            }
         } catch (err) {
             console.log(err)
         }
@@ -60,7 +66,8 @@ export default function ViewPollScreen() {
                     />
                     {!poll.isClosed && (
                         <MyButton2 onPress={handleClosePoll} style={{
-                            backgroundColor: "rgba(217, 217, 217, 0.51)"
+                            backgroundColor: "rgba(217, 217, 217, 0.51)",
+                            borderRadius: 10
                         }}>
                             <Text>
                                 Close Poll
@@ -69,7 +76,7 @@ export default function ViewPollScreen() {
                     )}
                     <MyButton2 onPress={handleDeletePoll}
                         style={{ backgroundColor: "rgba(217, 217, 217, 0.49)", borderRadius: 10 }}>
-                        <Text style={{ color: "red" }}> Delete Event </Text>
+                        <Text style={{ color: "red" }}> Delete Poll </Text>
                     </MyButton2>
                 </>
             )}

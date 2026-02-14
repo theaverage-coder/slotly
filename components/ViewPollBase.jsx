@@ -1,4 +1,5 @@
-import { useCallback, useFocusEffect, useState } from "react";
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import { useUser } from "../contexts/UserContext";
 

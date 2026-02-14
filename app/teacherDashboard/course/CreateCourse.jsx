@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,6 +14,8 @@ export default function CreateCourse() {
         courseName: "",
         semester: "",
     });
+    const router = useRouter();
+
 
     const API_URL =
         Platform.OS === 'web'
@@ -45,6 +49,9 @@ export default function CreateCourse() {
     return (
         <SafeAreaView style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+                <Pressable onPress={() => router.back()} style={styles.backButton}>
+                    <Ionicons size={40} color="white" name="arrow-back-circle" />
+                </Pressable>
                 <View style={styles.topText}>
                     <Text style={styles.header}>
                         New Course
@@ -85,6 +92,7 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgb(17, 21, 28)",
+        paddingTop: 20
     },
     inputFields: {
         flex: 1,
@@ -95,7 +103,7 @@ const styles = StyleSheet.create({
     textField: {
         width: "95%",
         height: 60,
-        backgroundColor: "rgba(50, 50, 50, 1)",
+        backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
         paddingLeft: 20,
@@ -117,6 +125,11 @@ const styles = StyleSheet.create({
         fontFamily: "Urbanist",
         fontSize: 18,
         fontWeight: 500
+    },
+    backButton: {
+        justifyContent: "center",
+        marginBottom: 20,
+        paddingLeft: 15
     },
 
 })

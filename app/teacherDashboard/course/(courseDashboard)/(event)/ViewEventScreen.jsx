@@ -1,25 +1,25 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
-import { useLocalSearchParams } from "expo-router";
-import { useCallback, useFocusffect, useState } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 import ViewEventBase from "../../../../../components/ViewEventBase";
-
 export default function ViewEventScreen() {
     const { eventObj } = useLocalSearchParams();
     const event = JSON.parse(eventObj);
     const [isModalVisible, setModalVisibility] = useState(false);
     const [students, setStudents] = useState([]);
     const insets = useSafeAreaInsets();
+    const router = useRouter();
 
     const API_URL =
         Platform.OS === 'web'
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
-    useFocusffect(useCallback(() => {
+    useFocusEffect(useCallback(() => {
         handleGetStudents();
     }, [])
     );
@@ -28,13 +28,18 @@ export default function ViewEventScreen() {
         const token = await AsyncStorage.getItem("token");
 
         try {
-            await fetch(`${API_URL}/api/events/deleteEvent/${event._id}`, {
+            const response = await fetch(`${API_URL}/api/events/deleteEvent/${event._id}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
             })
+
+            if (response.ok) {
+                console.log("Deleted event");
+                router.back();
+            }
         } catch (err) {
             console.log(err)
         }
@@ -71,6 +76,7 @@ export default function ViewEventScreen() {
                     <Modal
                         visible={isModalVisible}
                         animationType="slide"
+                        transparent
                     >
                         <View style={[
                             {

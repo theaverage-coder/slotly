@@ -156,8 +156,10 @@ const deleteEvent = async (req, res) => {
             select: 'prof'
         });
 
+        console.log(userId);
+        console.log(event.course.prof);
         // Make sure the prof of course is the one making the request
-        if (event.course.prof !== userId) {
+        if (event.course.prof.toString() !== userId) {
             console.log("Unauthorized request");
             return res.sendStatus(404);
         }
@@ -167,6 +169,7 @@ const deleteEvent = async (req, res) => {
             return res.sendStatus(404);
         }
 
+        console.log("Deleted event")
         return res.sendStatus(200);
     } catch (err) {
         console.log("Failed to delete event: ", err);
@@ -187,7 +190,7 @@ const getStudents = async (req, res) => {
         });
 
         // Make sure the prof of course is the one making the request
-        if (event.course.prof !== userId) {
+        if (event.course.prof.toString() !== userId) {
             console.log("Unauthorized request");
             return res.sendStatus(404);
         }

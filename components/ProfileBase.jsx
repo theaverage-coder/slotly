@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useState } from "react";
 import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import DashboardHeader from "../../components/DashboardHeader";
-import { useUser } from "../../contexts/UserContext";
+import { useUser } from "../contexts/UserContext";
+import DashboardHeader from "./DashboardHeader";
 
 export default function ProfileBase() {
     const { user, setUser, logout } = useUser();

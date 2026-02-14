@@ -1,5 +1,6 @@
-import Ionicons from "@react-native-vector-icons/ionicons";
-import { useCallback, useFocusEffect, useState } from "react";
+import Ionicons from '@react-native-vector-icons/ionicons';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { useUser } from "../contexts/UserContext";
 
@@ -67,9 +68,11 @@ export default function ViewEventBase({ event }) {
                         </View>
                         <View style={styles.horizontalContainer}>
                             <Ionicons size={15} color="white" name="people" />
-                            <Text style={styles.detailsText}> {event.capacity === -1
-                                ? `${event.students.length}`
-                                : `${event.students.length} / ${event.capacity}`} students signed up</Text>
+                            <Text style={styles.detailsText}>
+                                {event.capacity === -1
+                                    ? `${event.students.length}`
+                                    : `${event.students.length} / ${event.capacity}`} students signed up
+                            </Text>
 
                         </View>
                         <View style={styles.descriptionContainer}>

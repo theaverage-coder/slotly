@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
         padding: 20
     },
     optionsContainer: {
-        backgroundColor: "rgba(92, 92, 92, 0.5)",
+        backgroundColor: "rgb(33, 45, 64)",
         borderRadius: 16,
         marginTop: 7,
         alignItems: "center"
