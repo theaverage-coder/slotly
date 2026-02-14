@@ -116,34 +116,35 @@ export default function BookAppointmentScreen() {
                     </View>
                 </>
             )}
-            {(!selectedDate) ? (
-                <Text> Select a date to view available times </Text>
-            ) : (
-                <View style={styles.timeSlotsContainer}>
-                    <Text> Available Times </Text>
-                    <FlatList
-                        data={availableSlots[selectedDate]}
-                        keyExtractor={item => item}
-                        numColumns={4}
-                        contentContainerStyle={{
-                            alignItems: 'center',
-                        }}
-                        renderItem={({ item }) =>
-                            <Pressable
-                                style={[styles.timeSlotCard, item === selectedTimeSlot && styles.selectedTimeSlot]}
-                                onPress={() => setSelectedTimeSlot(item)}>
-                                <Text> {getTimeString(item)} </Text>
-                            </Pressable>
-                        }
-                    >
-                    </FlatList>
-                </View>
-            )}
+            <View style={styles.timeSlotsContainer}>
+                {(!selectedDate) ? (
+                    <Text style={styles.header}> Select a date to view available times </Text>
+                ) : (
+                    <>
+                        <Text style={styles.header}> Available Times </Text>
+                        <FlatList
+                            data={availableSlots[selectedDate]}
+                            keyExtractor={item => item}
+                            numColumns={4}
+                            contentContainerStyle={{
+                                alignItems: 'center',
+                            }}
+                            renderItem={({ item }) =>
+                                <Pressable
+                                    style={[styles.timeSlotCard, item === selectedTimeSlot && styles.selectedTimeSlot]}
+                                    onPress={() => setSelectedTimeSlot(item)}>
+                                    <Text> {getTimeString(item)} </Text>
+                                </Pressable>
+                            }
+                        >
+                        </FlatList>
+                    </>
+                )}
+            </View>
             {(!selectedTimeSlot) ? (
                 <></>
             ) : (
                 <>
-                    <Text> selected date: {selectedDate} ; selected time slot: {new Date(selectedTimeSlot).toLocaleString()} </Text>
                     <View style={styles.messageContainer}>
                         <TextInput
                             style={styles.textField}
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     availableDate: {
-        backgroundColor: "rgb(88, 85, 85)"
+        backgroundColor: "rgb(33, 45, 64)",
     },
     selectedDate: {
         borderWidth: 3,
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 7,
         marginVertical: 10,
-        backgroundColor: "rgb(88, 85, 85)"
+        backgroundColor: "rgb(33, 45, 64)",
     },
     selectedTimeSlot: {
         backgroundColor: "rgb(165, 104, 115)",
@@ -219,13 +220,17 @@ const styles = StyleSheet.create({
     textField: {
         width: "95%",
         height: 130,
-        backgroundColor: "rgba(50, 50, 50, 1)",
-        //justifyContent: "center",
+        backgroundColor: "rgb(33, 45, 64)",
         borderRadius: 16,
         padding: 20,
         color: "rgba(255, 255, 255, 1)",
     },
     messageContainer: {
         alignItems: "center",
+    },
+    header: {
+        color: "white",
+        fontWeight: "bold",
+        marginLeft: 15
     }
 })

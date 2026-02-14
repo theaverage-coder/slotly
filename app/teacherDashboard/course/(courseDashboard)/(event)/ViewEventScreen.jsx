@@ -1,17 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useFocusffect, useState } from "react";
 import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
+import ViewEventBase from "../../../../../components/ViewEventBase";
 
 export default function ViewEventScreen() {
     const { eventObj } = useLocalSearchParams();
     const event = JSON.parse(eventObj);
     const [isModalVisible, setModalVisibility] = useState(false);
     const [students, setStudents] = useState([]);
-    const [course, setCourse] = useState(null);
     const insets = useSafeAreaInsets();
 
     const API_URL =
@@ -19,23 +19,10 @@ export default function ViewEventScreen() {
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
-    const fetchCourse = async () => {
-        try {
-            const response = await fetch(`${API_URL}/api/courses/getCourseById/${event.course}`);
-
-            if (response.ok) {
-                const data = await response.json();
-                setCourse(data);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    useEffect(() => {
-        fetchCourse();
+    useFocusffect(useCallback(() => {
         handleGetStudents();
     }, [])
+    );
 
     const handleDeleteEvent = async () => {
         const token = await AsyncStorage.getItem("token");
@@ -76,53 +63,11 @@ export default function ViewEventScreen() {
 
     return (
         <View style={styles.screenContainer}>
-            {!event || !course ? (
+            {!event ? (
                 <></>
             ) : (
                 <>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}> {event.title} </Text>
-                    </View>
-                    <View style={styles.detailsContainer}>
-                        <Text style={styles.courseText}> {course.courseCode}: {course.courseName} </Text>
-
-                        <Text style={styles.sectionHeader}> Details </Text>
-                        <View style={styles.horizontalContainer}>
-                            <Ionicons size={15} color="white" name="calendar" />
-                            <Text style={styles.detailsText}>{new Date(event.startTime).toDateString()} </Text>
-                        </View>
-                        <View style={styles.horizontalContainer}>
-                            <Ionicons size={15} color="white" name="time" />
-                            <Text style={styles.detailsText}>
-                                {new Date(event.startTime).toLocaleTimeString([], {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                })} -
-                                {new Date(event.endTime).toLocaleTimeString([], {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                })}
-                            </Text>
-                        </View>
-                        <View style={styles.horizontalContainer}>
-                            <Ionicons size={15} color="white" name="location" />
-                            <Text style={styles.detailsText}> {event.location} </Text>
-                        </View>
-                        <View style={styles.horizontalContainer}>
-                            <Ionicons size={15} color="white" name="people" />
-                            <Text style={styles.detailsText}> {event.capacity === -1
-                                ? `${event.students.length}`
-                                : `${event.students.length} / ${event.capacity}`} students signed up</Text>
-
-                        </View>
-                        <View style={styles.descriptionContainer}>
-                            <Text style={styles.sectionHeader}> Description </Text>
-                            <View style={styles.descriptionBox}>
-                                <Text style={styles.detailsText}> {event.description} </Text>
-                            </View>
-                        </View>
-                    </View>
-
+                    <ViewEventBase event={event} />
                     <Modal
                         visible={isModalVisible}
                         animationType="slide"
@@ -257,6 +202,5 @@ const styles = StyleSheet.create({
         height: "10%",
         borderRadius: 10,
         backgroundColor: "white"
-
     }
 })
