@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
         height: 180,
         borderRadius: 10,
         alignItems: "center",
-        borderWidth: 1
+        borderWidth: 1,
+        borderColor: "rgb(33, 45, 64)"
     },
     topContainer: {
         flexDirection: "row",
@@ -58,7 +59,8 @@ const styles = StyleSheet.create({
     },
     line: {
         width: "90%",
-        borderWidth: 1
+        borderWidth: 1,
+        borderColor: "white"
     },
     bottomContainer: {
         flexDirection: "column",

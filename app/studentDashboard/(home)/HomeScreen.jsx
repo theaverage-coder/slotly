@@ -207,7 +207,6 @@ export default function HomeScreen() {
                 <View style={[styles.modal,
                 {
                     paddingTop: insets.top,
-                    paddingBottom: insets.bottom,
                     paddingLeft: insets.left,
                     paddingRight: insets.right,
                 },
@@ -215,17 +214,44 @@ export default function HomeScreen() {
                     <View style={styles.modalContent}>
                         <View style={styles.closeButtonContainer}>
                             <Pressable onPress={() => setModalVisibility(false)}>
-                                <Text> Close </Text>
+                                <Ionicons size={30} color="white" name="close-circle" />
                             </Pressable>
                         </View>
                         {modalType === "details" && (
                             <>
-                                <Text style={styles.modalTitle}> {selectedAppt.booking.course.courseName} </Text>
-                                <Text> {selectedAppt.prof.firstName} {selectedAppt.prof.lastName}</Text>
-                                <Text> Date and Time: </Text>
-                                <Text> Location: {selectedAppt.location} </Text>
-                                <Text> Additional details:</Text>
-                                <Text> {selectedAppt.message}</Text>
+                                <Text style={styles.modalTitle}> Appointment Details</Text>
+                                <View>
+                                    <Text style={styles.filterTitle}> {selectedAppt.booking.course.courseCode} : {selectedAppt.booking.course.courseName} </Text>
+                                    <View style={styles.horizontalContainer}>
+                                        <Ionicons size={15} color="white" name="person" />
+                                        <Text style={styles.detailsText}> {selectedAppt.prof.firstName} {selectedAppt.prof.lastName}</Text>
+                                    </View>
+                                    <View style={styles.horizontalContainer}>
+                                        <Ionicons size={15} color="white" name="calendar" />
+                                        <Text style={styles.detailsText}> {new Date(selectedAppt.startTime).toDateString()} </Text>
+                                    </View>
+                                    <View style={styles.horizontalContainer}>
+                                        <Ionicons size={15} color="white" name="time" />
+                                        <Text style={styles.detailsText}>
+                                            {new Date(selectedAppt.startTime).toLocaleTimeString([], {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })} -
+                                            {new Date(selectedAppt.endTime).toLocaleTimeString([], {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
+                                        </Text>
+                                    </View>
+                                    {selectedAppt.location &&
+                                        <View style={styles.horizontalContainer}>
+                                            <Ionicons size={15} color="white" name="location" />
+                                            <Text style={styles.detailsText}> {event.location} </Text>
+                                        </View>
+                                    }
+                                    <Text style={styles.white}> Additional details:</Text>
+                                    <Text style={styles.white}> {selectedAppt.message}</Text>
+                                </View>
                             </>
                         )}
                         {modalType === "event" && (
@@ -253,26 +279,34 @@ export default function HomeScreen() {
                         {modalType === "filter" && (
                             <>
                                 <Text style={styles.modalTitle}> Filters </Text>
-                                <Text> Type of Meetings </Text>
-                                <Pressable onPress={() => setTypeFilter("all")}>
-                                    <Text> All </Text>
-                                </Pressable>
-                                <Pressable onPress={() => setTypeFilter("appointment")}>
-                                    <Text> Appointment </Text>
-                                </Pressable>
-                                <Pressable onPress={() => setTypeFilter("event")}>
-                                    <Text> Event </Text>
-                                </Pressable>
-                                <Text> State </Text>
-                                <Pressable onPress={() => setCompletedFilter("all")}>
-                                    <Text> All </Text>
-                                </Pressable>
-                                <Pressable onPress={() => setCompletedFilter("completed")}>
-                                    <Text> Completed </Text>
-                                </Pressable>
-                                <Pressable onPress={() => setCompletedFilter("incomplete")}>
-                                    <Text> Incomplete</Text>
-                                </Pressable>
+                                <View style={styles.modalFilterBox}>
+                                    <Text style={styles.filterTitle}> Type of Meeting </Text>
+                                    <Pressable style={styles.modalFilter} onPress={() => setTypeFilter("all")}>
+                                        <Ionicons size={20} color="rgb(125, 78, 87)" name={typeFilter === "all" ? "checkbox" : "square-outline"} />
+                                        <Text style={styles.white}> All </Text>
+                                    </Pressable>
+                                    <Pressable style={styles.modalFilter} onPress={() => setTypeFilter("appointment")}>
+                                        <Ionicons size={20} color="rgb(125, 78, 87)" name={typeFilter === "appointment" ? "checkbox" : "square-outline"} />
+                                        <Text style={styles.white}> Appointment </Text>
+                                    </Pressable>
+                                    <Pressable style={styles.modalFilter} onPress={() => setTypeFilter("event")}>
+                                        <Ionicons size={20} color="rgb(125, 78, 87)" name={typeFilter === "event" ? "checkbox" : "square-outline"} />
+                                        <Text style={styles.white}> Event </Text>
+                                    </Pressable>
+                                    <Text style={styles.filterTitle}> State of Meeting </Text>
+                                    <Pressable style={styles.modalFilter} onPress={() => setCompletedFilter("all")}>
+                                        <Ionicons size={20} color="rgb(125, 78, 87)" name={completedFilter === "all" ? "checkbox" : "square-outline"} />
+                                        <Text style={styles.white}> All </Text>
+                                    </Pressable>
+                                    <Pressable style={styles.modalFilter} onPress={() => setCompletedFilter("completed")}>
+                                        <Ionicons size={20} color="rgb(125, 78, 87)" name={completedFilter === "completed" ? "checkbox" : "square-outline"} />
+                                        <Text style={styles.white}> Completed </Text>
+                                    </Pressable>
+                                    <Pressable style={styles.modalFilter} onPress={() => setCompletedFilter("incomplete")}>
+                                        <Ionicons size={20} color="rgb(125, 78, 87)" name={completedFilter === "incomplete" ? "checkbox" : "square-outline"} />
+                                        <Text style={styles.white}> Incomplete</Text>
+                                    </Pressable>
+                                </View>
                             </>
                         )}
                     </View>
@@ -320,6 +354,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         padding: 15,
+        paddingBottom: 30,
         alignItems: "center"
     },
     closeButtonContainer: {
@@ -330,7 +365,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 27,
         textAlign: "center",
-        marginVertical: 20
+        marginVertical: 10
     },
     cancelText: {
         textAlign: "center",
@@ -379,7 +414,34 @@ const styles = StyleSheet.create({
         marginRight: 20,
         alignItems: "flex-end",
         justifyContent: "center"
-    }
+    },
+    filterTitle: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 18,
+        marginVertical: 5,
+        color: "rgb(125, 78, 87)"
+    },
+    modalFilterBox: {
+        width: "100%"
+    },
+    modalFilter: {
+        marginVertical: 5,
+        marginLeft: 35,
+        flexDirection: "row",
+        gap: 5,
+        alignItems: "center"
+    },
+    horizontalContainer: {
+        flexDirection: "row",
+        gap: 10,
+        paddingLeft: 20,
+        alignItems: "center"
+    },
+    detailsText: {
+        color: "white",
+        fontSize: 15
+    },
 
 
 })

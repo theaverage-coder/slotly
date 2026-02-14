@@ -79,11 +79,13 @@ const styles = StyleSheet.create({
         height: 180,
         borderRadius: 10,
         borderWidth: 1,
+        borderColor: "rgb(33, 45, 64)"
+
     },
     cardContainer: {
         flexDirection: "row",
         columnGap: 15,
-        backgroundColor: "rgb(51, 51, 51)",
+        backgroundColor: "rgb(33, 45, 64)",
         height: 100,
         borderRadius: 8,
         padding: 10,
@@ -124,7 +126,8 @@ const styles = StyleSheet.create({
     },
     line: {
         width: "90%",
-        borderWidth: 1
+        borderWidth: 1,
+        borderColor: "white"
     },
     bottomContainer: {
         flexDirection: "column",

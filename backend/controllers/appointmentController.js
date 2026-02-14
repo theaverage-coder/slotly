@@ -50,7 +50,7 @@ const getAppointments = asyncHandler(async (req, res) => {
                     select: 'course -_id',
                     populate: {
                         path: 'course',
-                        select: 'courseCode -_id'
+                        select: 'courseCode courseName-_id'
                     }
                 }).sort({ startTime: 1 });
 
