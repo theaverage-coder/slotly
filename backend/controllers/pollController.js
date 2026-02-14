@@ -80,7 +80,7 @@ const closePoll = asyncHandler(async (req, res) => {
         })
 
         // Make sure the prof of course is the one making the request
-        if (poll.course.prof !== userId) {
+        if (poll.course.prof.toString() !== userId) {
             console.log("Unauthorized request");
             return res.sendStatus(404);
         }
@@ -101,12 +101,28 @@ const closePoll = asyncHandler(async (req, res) => {
 // @router /api/polls/deletePoll/:pollId
 const deletePoll = async (req, res) => {
     const { pollId } = req.params;
+    const userId = req.user;
 
     try {
-        const result = await Poll.deleteOne({ _id: ObjectId(pollId) })
-        if (result.acknowledged) {
-            return res.sendStatus(200)
+        // Find poll and populate course
+        const poll = await Poll.findById(pollId).populate({
+            path: 'course',
+            select: 'prof'
+        });
+
+        // Make sure the prof of course is the one making the request
+        if (poll.course.prof.toString() !== userId) {
+            console.log("Unauthorized request");
+            return res.sendStatus(404);
         }
+
+        const deleted = await Poll.findByIdAndDelete(pollId);
+
+        if (!deleted) {
+            return res.sendStatus(404);
+        }
+
+        return res.sendStatus(200);
     } catch (err) {
         console.log(err);
         return res.status(400).json("Failed to complete vote operation")
