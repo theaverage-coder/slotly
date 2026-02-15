@@ -13,6 +13,14 @@ export default function AppointmentCard({ appointment, onDetailPress, onCancelPr
     const getTimeString = () => {
         return start.toLocaleTimeString();
     }
+
+    const getName = () => {
+        if (user.role === "s") {
+            return `${appointment.prof.firstName} ${appointment.prof.lastName}`;
+        } else if (user.role === "t") {
+            return `${appointment.student.firstName} ${appointment.student.lastName}`
+        }
+    }
     return (
         <View style={styles.cardContainer} >
             <View style={styles.topContainer}>
@@ -20,7 +28,7 @@ export default function AppointmentCard({ appointment, onDetailPress, onCancelPr
                     <View style={styles.picture} />
                 </View>
                 <View style={styles.detailsContainer}>
-                    <Text style={styles.profName}> {appointment.prof.firstName} {appointment.prof.lastName} </Text>
+                    <Text style={styles.profName}> {getName()} </Text>
                     <Text style={styles.courseCode}> {appointment.booking.course.courseCode} </Text>
                     <Text style={styles.time}> {getDateString()} | {getTimeString()} </Text>
                 </View>

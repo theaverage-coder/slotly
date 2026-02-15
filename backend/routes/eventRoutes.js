@@ -11,6 +11,6 @@ router.get("/getAllEvents/:courseId", getAllEvents);
 router.delete("/deleteEvent/:eventId", protect, deleteEvent);
 router.get('/getAllJoinedEvents', protect, getAllJoinedEvents);
 router.get("/getStudents/:eventId", protect, getStudents);
-router.get("/getCreatedEvents/", getCreatedEvents);
+router.get("/getCreatedEvents", protect, getCreatedEvents);
 
 module.exports = router

@@ -6,6 +6,7 @@ import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from "re
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 import ViewEventBase from "../../../../../components/ViewEventBase";
+
 export default function ViewEventScreen() {
     const { eventObj } = useLocalSearchParams();
     const event = JSON.parse(eventObj);
@@ -73,6 +74,7 @@ export default function ViewEventScreen() {
             ) : (
                 <>
                     <ViewEventBase event={event} />
+
                     <Modal
                         visible={isModalVisible}
                         animationType="slide"

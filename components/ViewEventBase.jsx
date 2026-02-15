@@ -73,7 +73,6 @@ export default function ViewEventBase({ event }) {
                                     ? `${event.students.length}`
                                     : `${event.students.length} / ${event.capacity}`} students signed up
                             </Text>
-
                         </View>
                         <View style={styles.descriptionContainer}>
                             <Text style={styles.sectionHeader}> Description </Text>
@@ -84,6 +83,8 @@ export default function ViewEventBase({ event }) {
                     </View>
                 </>
             )}
+
+
         </View>
     )
 }

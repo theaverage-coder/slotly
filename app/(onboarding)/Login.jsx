@@ -30,7 +30,7 @@ export default function Login() {
                 <View style={[StyleSheet.absoluteFillObject, styles.screenContent]}>
                     <SlotlyLogo size={80} />
                     <Text style={{ color: "white", fontSize: 18 }}> Log In to Start Scheduling</Text>
-                    <View style={styles.inputFields}>
+                    <View style={styles.inputFields} behavior='padding'>
                         <View style={styles.textField}>
                             <TextInput
                                 style={styles.inputText}
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        rowGap: 50,
+        rowGap: 30,
     },
     backButton: {
         marginLeft: 15,
@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
     inputFields: {
         rowGap: 10,
         width: "90%",
-        alignItems: "center"
+        alignItems: "center",
+        marginBottom: 30
     },
     textField: {
         width: "95%",
