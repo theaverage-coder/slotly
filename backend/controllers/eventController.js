@@ -47,19 +47,19 @@ const getAllJoinedEvents = asyncHandler(async (req, res) => {
 const getCreatedEvents = async (req, res) => {
     try {
         const userId = req.user;
+        console.log(userId)
         const events = await Event.aggregate([
             {
                 $lookup: {
-                    from: "Course",
+                    from: "courses",
                     localField: "course",
                     foreignField: "_id",
                     as: "course"
                 }
             },
             { $unwind: "$course" },
-            { $match: { "course.prof": new mongoose.Types.ObjectId.createFromHexString(userId) } },
+            { $match: { "course.prof": mongoose.Types.ObjectId.createFromHexString(userId) } },
             { $sort: { startTime: 1 } },
-
         ]);
 
         console.log(events);

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { FlatList, Modal, Platform, Pressable, Text, View } from 'react-native';
+import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useUser } from '../contexts/UserContext';
 import AppointmentCard from './AppointmentCard';
@@ -328,3 +328,131 @@ export default function HomeBase() {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    screenContainer: {
+        backgroundColor: "rgb(17, 21, 28)",
+        flex: 1
+    },
+    emptyScreen: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        rowGap: 15,
+        paddingHorizontal: 15
+    },
+    text1: {
+        color: "rgba(255, 255, 255, 1)",
+        fontFamily: "Urbanist",
+        fontSize: 24,
+        fontWeight: 700,
+        textAlign: "center"
+    },
+    text2: {
+        color: "rgba(173, 170, 170, 1)",
+        fontFamily: "Urbanist",
+        fontSize: 16,
+        fontWeight: 600,
+        textAlign: "center",
+        width: "80%"
+    },
+    modal: {
+        flex: 1,
+        justifyContent: "flex-end",
+        backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContent: {
+        height: "50%",
+        backgroundColor: "rgb(17, 21, 28)",
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        padding: 15,
+        paddingBottom: 30,
+        alignItems: "center"
+    },
+    closeButtonContainer: {
+        width: "100%"
+    },
+    modalTitle: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 27,
+        textAlign: "center",
+        marginVertical: 10
+    },
+    cancelText: {
+        textAlign: "center",
+        fontSize: 18,
+        color: "white",
+    },
+    modalApptBox: {
+        flex: 1,
+        justifyContent: "center",
+    },
+    modalApptText: {
+        width: "60%",
+        height: "35%",
+        paddingHorizontal: 20,
+        paddingVertical: 5,
+        borderRadius: 16,
+        //backgroundColor: "grey",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    cancelButtonContainer: {
+        height: 80,
+        justifyContent: "center",
+        width: "100%",
+        alignItems: "center"
+    },
+    cancelButton: {
+        borderRadius: 16,
+        backgroundColor: "grey",
+        height: 50,
+        width: "80%",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    profName: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 22,
+    },
+    time: {
+        marginTop: 8,
+        color: "rgba(217, 217, 217, 0.5)"
+    },
+    filterContainer: {
+        marginBottom: 5,
+        marginRight: 20,
+        alignItems: "flex-end",
+        justifyContent: "center"
+    },
+    filterTitle: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 18,
+        marginVertical: 5,
+        color: "rgb(125, 78, 87)"
+    },
+    modalFilterBox: {
+        width: "100%"
+    },
+    modalFilter: {
+        marginVertical: 5,
+        marginLeft: 35,
+        flexDirection: "row",
+        gap: 5,
+        alignItems: "center"
+    },
+    horizontalContainer: {
+        flexDirection: "row",
+        gap: 10,
+        paddingLeft: 20,
+        alignItems: "center"
+    },
+    detailsText: {
+        color: "white",
+        fontSize: 15
+    }
+})
