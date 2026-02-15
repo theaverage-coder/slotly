@@ -42,6 +42,34 @@ const getAllJoinedEvents = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Get all events a teacher has created
+// @router /api/events/getCreatedEvents
+const getCreatedEvents = async (req, res) => {
+    try {
+        const userId = req.user;
+        const events = await Event.aggregate([
+            {
+                $lookup: {
+                    from: "Course",
+                    localField: "course",
+                    foreignField: "_id",
+                    as: "course"
+                }
+            },
+            { $unwind: "$course" },
+            { $match: { "course.prof": new mongoose.Types.ObjectId.createFromHexString(userId) } },
+            { $sort: { startTime: 1 } },
+
+        ]);
+
+        console.log(events);
+        return res.status(200).json(events);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // @desc Get an event given the id
 // @router /api/events/getEvent/:eventId
 const getEvent = asyncHandler(async (req, res) => {
@@ -218,5 +246,6 @@ module.exports = {
     getAllEvents,
     deleteEvent,
     getAllJoinedEvents,
-    getStudents
+    getStudents,
+    getCreatedEvents
 }
