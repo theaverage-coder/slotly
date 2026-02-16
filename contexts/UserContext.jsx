@@ -40,7 +40,10 @@ export function UserProvider({ children }) {
                     router.replace("/teacherDashboard")
                 }
             }
+
         } catch (err) {
+            Alert.alert("Invalid credentials", "Please try again.")
+
             console.log(err);
         }
     }
