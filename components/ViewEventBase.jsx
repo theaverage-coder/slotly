@@ -34,7 +34,7 @@ export default function ViewEventBase({ event }) {
     return (
         <View style={{ flex: 1 }}>
             {!course ? (
-                <> </>
+                <></>
             ) : (
                 <>
                     <View style={styles.titleContainer}>
@@ -42,7 +42,6 @@ export default function ViewEventBase({ event }) {
                     </View>
                     <View style={styles.detailsContainer}>
                         <Text style={styles.courseText}> {course.courseCode}: {course.courseName} </Text>
-
                         <Text style={styles.sectionHeader}> Details </Text>
 
                         <View style={styles.horizontalContainer}>
@@ -83,8 +82,6 @@ export default function ViewEventBase({ event }) {
                     </View>
                 </>
             )}
-
-
         </View>
     )
 }

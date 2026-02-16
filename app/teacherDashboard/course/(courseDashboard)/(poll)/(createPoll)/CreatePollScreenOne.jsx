@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     textField: {
         width: "95%",
         height: 60,
-        backgroundColor: "rgba(50, 50, 50, 1)",
+        backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
         paddingLeft: 20,

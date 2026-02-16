@@ -26,20 +26,24 @@ const createPoll = asyncHandler(async (req, res) => {
         if (poll.title === "" || poll.options.length < 2) {
             throw new Error("Invalid Input");
         }
-        const today = new Date();
-        const expirationDate = new Date(today);
-        expirationDate.setDate(expirationDate.getDate() + poll.duration);
-
-        const newPoll = await Poll.create({
+        const pollData = {
             course: poll.course,
             title: poll.title,
             dateCreated: new Date(),
             multipleVotes: poll.multipleVotes,
-            expirationDate: expirationDate,
             options: poll.options.map(option => ({
                 text: option,
             })),
-        })
+        };
+
+        // Add expiration date if poll has one
+        if (poll.duration !== -1) {
+            const today = new Date();
+            const expirationDate = new Date(today);
+            pollData.expirationDate.setDate(expirationDate.getDate() + poll.duration);
+        }
+
+        const newPoll = await Poll.create(pollData);
 
         if (newPoll) {
             console.log("Poll created")

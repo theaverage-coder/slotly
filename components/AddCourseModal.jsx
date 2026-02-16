@@ -40,7 +40,8 @@ export default function AddCourseModal({ visible, onClose }) {
     return (
         <Modal visible={visible}
             animationType='slide'
-            onRequestClose={onClose}>
+            onRequestClose={onClose}
+            transparent>
             <SafeAreaView style={styles.modalContainer}>
                 <View style={styles.header}>
                     <Text style={styles.headerText}>
