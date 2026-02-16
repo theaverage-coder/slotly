@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../../contexts/CourseContext";
 import { useEventContext } from "../../../../../../contexts/EventContext";
@@ -48,7 +47,7 @@ export default function CreateEventScreenThree() {
         }
     }
     return (
-        <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <View style={styles.header}>
                     <Text style={styles.title}>
@@ -63,6 +62,7 @@ export default function CreateEventScreenThree() {
                         style={styles.textField}
                         placeholder="Additional details"
                         value={event.description}
+                        multiline={true}
                         onChangeText={(text) => setEvent(prev => ({ ...prev, description: text }))}
                     />
                 </View>
@@ -73,7 +73,7 @@ export default function CreateEventScreenThree() {
                 </MyButton2>
             </Pressable>
 
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgb(17, 21, 28)",
+        paddingVertical: 20
     },
     header: {
         gap: 15,
@@ -107,10 +108,11 @@ const styles = StyleSheet.create({
     textField: {
         width: "95%",
         height: 60,
-        backgroundColor: "rgba(50, 50, 50, 1)",
+        backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
-        paddingLeft: 20,
+        padding: 20,
         color: "rgba(255, 255, 255, 1)",
+        minHeight: 150,
     },
 })

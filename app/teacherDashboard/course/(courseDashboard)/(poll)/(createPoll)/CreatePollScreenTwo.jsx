@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
@@ -18,10 +19,21 @@ export default function CreatePollScreenTwo() {
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
-    const isDisabledButton = poll.options.length < 2;
+    const hasEmptyOption = () => {
+        for (let i = 0; i < poll.options.length; i++) {
+            if (poll.options[i] === "") {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const isDisabledButton = poll.options.length < 2 || hasEmptyOption();
 
     const handleGetDuration = (num) => {
         switch (num) {
+            case -1:
+                return "No expiration";
             case 1:
                 return "24 hours";
             case 3:
@@ -105,8 +117,8 @@ export default function CreatePollScreenTwo() {
                         <Text style={[styles.description]}> Allow multiple votes</Text>
                         <View>
                             <Switch
-                                trackColor={{ false: '#767577', true: "rgba(222, 117, 82, 0.6)" }}
-                                thumbColor={poll.multipleVotes ? "rgba(222, 117, 82, 1)" : '#f4f3f4'}
+                                trackColor={{ false: '#767577', true: "rgb(125, 78, 87)" }}
+                                thumbColor={'#f4f3f4'}
                                 value={poll.multipleVotes}
                                 onValueChange={toggleMultipleVotes}
                             />
@@ -114,34 +126,39 @@ export default function CreatePollScreenTwo() {
                     </View>
                 </View>
                 <View style={styles.screenContent}>
-                    <ScrollView>
-                        <View style={styles.optionsContainer}>
-                            {poll.options.map((option, index) => (
-                                <View style={styles.individualOptionContainer} key={index}>
-                                    <TextInput
-                                        style={styles.textField}
-                                        placeholder="Option"
-                                        value={option}
-                                        onChangeText={(text) => {
-                                            setPoll(prev => ({
-                                                ...prev,
-                                                options: prev.options.map((item, i) =>
-                                                    index === i ? text : item)
-                                            }))
-                                        }}
-                                    />
+                    <View style={{ maxHeight: 400, flex: 1 }}>
+                        <ScrollView style={{ flex: 1 }}>
+                            <View style={styles.optionsContainer}>
+                                {poll.options.map((option, index) => (
+                                    <View style={styles.individualOptionContainer} key={index}>
+                                        <TextInput
+                                            style={styles.textField}
+                                            placeholder="Option"
+                                            value={option}
+                                            onChangeText={(text) => {
+                                                setPoll(prev => ({
+                                                    ...prev,
+                                                    options: prev.options.map((item, i) =>
+                                                        index === i ? text : item)
+                                                }))
+                                            }}
+                                        />
 
-                                    {index > 1 && (<Pressable style={styles.deleteSignContainer} onPress={() => handleRemoveOption(index)}>
-                                        <Text style={styles.deleteSign}> X </Text>
-                                    </Pressable>)}
+                                        {index > 1 && (
+                                            <Pressable style={styles.deleteSignContainer} onPress={() => handleRemoveOption(index)}>
+                                                <Ionicons size={20} color="white" name="trash" />
+                                            </Pressable>
+                                        )}
+                                    </View>
+                                ))}
+                                <View style={styles.addOptionBox}>
+                                    <Pressable style={[styles.addAnotherOptionButton]} onPress={handleAddOption}>
+                                        <Text style={{ color: "rgba(116, 116, 116, 1)" }}> Add Another Option </Text>
+                                    </Pressable>
                                 </View>
-                            ))}
-
-                        </View>
-                    </ScrollView>
-                    <Pressable style={[styles.addAnotherOptionButton]} onPress={handleAddOption}>
-                        <Text style={{ color: "rgba(116, 116, 116, 1)" }}> Add Another Option </Text>
-                    </Pressable>
+                            </View>
+                        </ScrollView>
+                    </View>
                 </View>
 
                 <Modal visible={modalIsVisible} transparent animationType="slide">
@@ -159,12 +176,11 @@ export default function CreatePollScreenTwo() {
                                 <Picker.Item label="3 days" value={3} />
                                 <Picker.Item label="1 week" value={7} />
                                 <Picker.Item label="2 weeks" value={14} />
-
+                                <Picker.Item label="No expiration" value={-1} />
                             </Picker>
                         </View>
                     </View>
                 </Modal>
-
                 <MyButton2
                     disabled={isDisabledButton}
                     style={[{ backgroundColor: "rgba(217, 217, 217, 1)" }, isDisabledButton && styles.disabledButton]}
@@ -200,38 +216,39 @@ const styles = StyleSheet.create({
     },
     durationTextColor: {
         color: "rgba(117, 117, 117, 1)",
-
     },
     screenContent: {
         flex: 1,
         gap: 20,
-        alignItems: "center"
-
     },
     optionsContainer: {
         paddingTop: 30,
         gap: 20,
-        width: "100%"
     },
     individualOptionContainer: {
-        width: "100%",
         flexDirection: "row",
-        marginLeft: 30
+        paddingLeft: 30,
+        gap: 7,
     },
     textField: {
-        width: "85%",
+        width: 310,
         height: 60,
-        backgroundColor: "rgba(50, 50, 50, 1)",
+        backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
         paddingLeft: 20,
         color: "rgba(255, 255, 255, 1)",
     },
+    addOptionBox: {
+        width: "100%",
+        alignItems: "center"
+    },
     addAnotherOptionButton: {
-        backgroundColor: "rgba(85, 85, 85, 0.5)",
-        width: "40%",
+        backgroundColor: "rgb(33, 45, 64)",
+        width: "50%",
         borderRadius: 16,
         padding: 10,
+        alignItems: "center"
     },
     disabledButton: {
         opacity: 0.3
@@ -239,8 +256,8 @@ const styles = StyleSheet.create({
     verticalBorder: {
         borderBottomWidth: 1,
         borderTopWidth: 1,
-        borderBottomColor: "rgb(88, 88, 88)",
-        borderTopColor: "rgb(88, 88, 88)",
+        borderBottomColor: "rgb(54, 65, 86)",
+        borderTopColor: "rgb(54, 65, 86)",
         flexDirection: "row",
         alignItems: "center",
         height: 60,

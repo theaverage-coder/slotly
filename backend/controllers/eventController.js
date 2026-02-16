@@ -62,7 +62,6 @@ const getCreatedEvents = async (req, res) => {
             { $sort: { startTime: 1 } },
         ]);
 
-        console.log(events);
         return res.status(200).json(events);
 
     } catch (err) {

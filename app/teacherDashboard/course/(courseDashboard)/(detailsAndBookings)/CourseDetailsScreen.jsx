@@ -47,6 +47,7 @@ export default function CourseDetailsScreen() {
                 const response = await fetch(`${API_URL}/api/bookings/getBooking/${courseId}`);
 
                 if (response.ok) {
+                    console.log(data);
                     const data = await response.json();
                     setBooking(data);
                 }
@@ -252,7 +253,7 @@ export default function CourseDetailsScreen() {
                         <Text style={[styles.white, styles.modalTitle]}> Edit Course </Text>
                         <View style={styles.modalContent}>
                             <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}> COURSE CODE</Text>
+                                <Text style={styles.inputLabel}> Course Code </Text>
                                 <TextInput
                                     style={styles.inputField}
                                     placeholder={course.courseCode}
@@ -264,7 +265,7 @@ export default function CourseDetailsScreen() {
                                 />
                             </View>
                             <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}> COURSE NAME </Text>
+                                <Text style={styles.inputLabel}> Course Name </Text>
                                 <TextInput
                                     style={styles.inputField}
                                     placeholder={course.courseName}
@@ -276,7 +277,7 @@ export default function CourseDetailsScreen() {
                                 />
                             </View>
                             <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}> SEMESTER </Text>
+                                <Text style={styles.inputLabel}> Semester </Text>
                                 <TextInput
                                     style={styles.inputField}
                                     placeholder={course.semester}
@@ -287,13 +288,13 @@ export default function CourseDetailsScreen() {
                                     }))}
                                 />
                             </View>
-                            <MyButton2
-                                disabled={disabledEditCourseBtn}
-                                onPress={handleSubmitCourseChanges}
-                                style={[{ backgroundColor: "rgba(217, 217, 217, 1)" }, disabledEditCourseBtn && styles.disabledButton]}>
-                                <Text> Submit Changes</Text>
-                            </MyButton2>
                         </View>
+                        <MyButton2
+                            disabled={disabledEditCourseBtn}
+                            onPress={handleSubmitCourseChanges}
+                            style={[{ backgroundColor: "rgba(217, 217, 217, 1)" }, disabledEditCourseBtn && styles.disabledButton]}>
+                            <Text> Submit Changes</Text>
+                        </MyButton2>
                     </>
                 )
             default:
@@ -362,7 +363,7 @@ export default function CourseDetailsScreen() {
                     </View>
 
 
-                    {!booking || booking.length === 0 && (
+                    {(!booking || booking.length === 0) && (
                         <MyButton2 style={{ backgroundColor: "rgba(217, 217, 217, 1)" }} onPress={() => router.navigate("teacherDashboard/course/CreateBookingScreenOne")}>
                             <Text> Set Booking Hours </Text>
                         </MyButton2>
@@ -372,6 +373,7 @@ export default function CourseDetailsScreen() {
                     <Modal
                         visible={modalIsVisible}
                         animationType="slide"
+                        transparent
                     >
                         <View style={[
                             {
@@ -403,10 +405,11 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgb(17, 21, 28)",
-        alignItems: "center"
+        alignItems: "center",
+        paddingVertical: 20,
     },
     courseTitleContainer: {
-        padding: 20,
+        paddingBottom: 20,
         alignItems: "center",
         paddingBottom: 10
     },
@@ -453,7 +456,9 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     disabledOption: {
-        backgroundColor: "rgba(92, 92, 92, 0.2)"
+        opacity: 0.3,
+        borderBottomEndRadius: 16,
+        borderBottomLeftRadius: 16
     },
     optionLine: {
         borderBottomWidth: 1,
@@ -509,7 +514,7 @@ const styles = StyleSheet.create({
     inputField: {
         width: "95%",
         height: 70,
-        backgroundColor: "rgba(50, 50, 50, 1)",
+        backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
         paddingLeft: 20,

@@ -1,6 +1,5 @@
 import { useRouter } from "expo-router";
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useEventContext } from "../../../../../../contexts/EventContext";
 
@@ -11,7 +10,7 @@ export default function CreateEventScreenOne() {
     const isDisabledButton = event.title === "";
 
     return (
-        <SafeAreaView style={styles.screenContainer}>
+        <View style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
                 <View style={styles.header}>
                     <Text style={styles.title}>
@@ -37,7 +36,7 @@ export default function CreateEventScreenOne() {
                     <Text> Continue </Text>
                 </MyButton2>
             </Pressable>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -45,6 +44,7 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: "rgb(17, 21, 28)",
+        paddingVertical: 20
     },
     inputFields: {
         flex: 1,
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     textField: {
         width: "95%",
         height: 60,
-        backgroundColor: "rgba(50, 50, 50, 1)",
+        backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
         paddingLeft: 20,
