@@ -15,9 +15,10 @@ const createBooking = asyncHandler(async (req, res) => {
             console.log("Prof must create booking");
             return res.sendStatus(400);
         }
+
         // Create booking
         const booking = await Booking.create({
-            courseId,
+            course: courseId,
             officeHours,
             timeSlotDuration
         })
@@ -30,7 +31,8 @@ const createBooking = asyncHandler(async (req, res) => {
             return res.sendStatus(400)
         }
     } catch (err) {
-        console.log(err);
+        console.log("Failed to create booking: ", err);
+        return res.sendStatus(409);
     }
 })
 

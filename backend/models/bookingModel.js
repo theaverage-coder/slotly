@@ -5,10 +5,18 @@ const bookingSchema = mongoose.Schema({
         required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
+        unique: true
     },
     // Each day of the week has its own start time, end time and location
     officeHours: [
-        { day: { type: Number, required: true }, timeIntervals: [{ start: { type: Date, required: true }, end: { type: Date, required: true } }], location: { type: String } }
+        {
+            day: { type: Number, required: true },
+            timeIntervals: [{
+                start: { type: Date, required: true },
+                end: { type: Date, required: true }
+            }],
+            location: { type: String }
+        }
     ],
     // time slots can be either 5, 10, 15, 20, 30 or 60 minutes long
     timeSlotDuration: {

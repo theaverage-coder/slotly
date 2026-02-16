@@ -4,6 +4,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import BackgroundSlotlyLogo from "../../../../../components/BackgroundSlotlyLogo";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
 
@@ -198,9 +199,10 @@ export default function CourseDetailsScreen() {
                         <Text style={[styles.white, styles.modalTitle]}> Booking Details </Text>
                         <View style={styles.modalContent}>
                             {!booking ? (
-                                <View >
-                                    <Text> You haven't set your office hours yet </Text>
-                                    <Text> Create a booking so students can book appointments with you </Text>
+                                <View style={{ flex: 1, justifyContent: "center", paddingRight: 20, gap: 10, alignItems: 'center' }}>
+                                    <BackgroundSlotlyLogo />
+                                    <Text style={{ fontWeight: "bold", color: "white", fontSize: 20, textAlign: "center" }}> You haven't set your office hours yet </Text>
+                                    <Text style={{ color: "rgb(54, 65, 86)", textAlign: "center", fontSize: 16 }}> Create a booking so students can book appointments with you </Text>
                                 </View>
                             ) : (
                                 <View>

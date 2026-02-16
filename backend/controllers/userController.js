@@ -73,7 +73,7 @@ const loginUser = asyncHandler(async (req, res) => {
             })
         } else {
             console.log('Invalid credentials')
-            return res.status(400)
+            return res.sendStatus(400)
         }
     } catch (err) {
         console.log(err);

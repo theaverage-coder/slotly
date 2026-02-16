@@ -21,10 +21,11 @@ export default function CreateBookingScreenThree() {
 
     const handleCreateBooking = async () => {
         const token = await AsyncStorage.getItem("token");
-        let officeHours = [];
 
-        officeHours = Object.entries(daysAvailable).filter(([key, value]) =>
-            value.isAvailable).map(([key, value], index) => ({ day: index, timeIntervals: isSameHours ? sameHours : value.timeIntervals }))
+        const officeHours = Object.entries(daysAvailable).filter(([key, value]) =>
+            value.isAvailable).map(([key, value], index) => ({ day: index, timeIntervals: isSameHours ? sameHours : value.timeIntervals, location: value.location }))
+
+        console.log('officehours: ', officeHours)
 
         try {
             const response = await fetch(`${API_URL}/api/bookings/createBooking`, {
@@ -63,7 +64,6 @@ export default function CreateBookingScreenThree() {
                         {timeSlotDuration} minutes
                     </Text>
                 </Pressable>
-
             </View>
 
             <Modal visible={modalIsVisible} transparent animationType='slide'>
