@@ -13,9 +13,10 @@ const bookingSchema = mongoose.Schema({
             day: { type: Number, required: true },
             timeIntervals: [{
                 start: { type: Date, required: true },
-                end: { type: Date, required: true }
+                end: { type: Date, required: true },
+                location: { type: String }
+
             }],
-            location: { type: String }
         }
     ],
     // time slots can be either 5, 10, 15, 20, 30 or 60 minutes long
