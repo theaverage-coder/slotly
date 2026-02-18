@@ -23,29 +23,36 @@ export default function AppointmentCard({ appointment, onDetailPress, onCancelPr
     }
     return (
         <View style={styles.cardContainer} >
-            <View style={styles.topContainer}>
-                <View style={styles.pictureContainer}>
-                    <View style={styles.picture} />
-                </View>
-                <View style={styles.detailsContainer}>
-                    <Text style={styles.profName}> {getName()} </Text>
-                    <Text style={styles.courseCode}> {appointment.booking.course.courseCode} </Text>
-                    <Text style={styles.time}> {getDateString()} | {getTimeString()} </Text>
-                </View>
-            </View>
-            <View style={styles.line} />
-            <View style={styles.bottomContainer}>
-                <Pressable style={[styles.button]} onPress={() => onDetailPress(appointment)}>
-                    <Text>
-                        Details
-                    </Text>
-                </Pressable>
-                <Pressable style={[styles.button]} onPress={() => onCancelPress(appointment)}>
-                    <Text style={{ color: "red" }}>
-                        Cancel
-                    </Text>
-                </Pressable>
-            </View>
+            {user ? (
+                <>
+                    <View style={styles.topContainer}>
+                        <View style={styles.pictureContainer}>
+                            <View style={styles.picture} />
+                        </View>
+                        <View style={styles.detailsContainer}>
+                            <Text style={styles.profName}> {getName()} </Text>
+                            <Text style={styles.courseCode}> {appointment.booking.course.courseCode} </Text>
+                            <Text style={styles.time}> {getDateString()} | {getTimeString()} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.line} />
+                    <View style={styles.bottomContainer}>
+                        <Pressable style={[styles.button]} onPress={() => onDetailPress(appointment)}>
+                            <Text>
+                                Details
+                            </Text>
+                        </Pressable>
+                        <Pressable style={[styles.button]} onPress={() => onCancelPress(appointment)}>
+                            <Text style={{ color: "red" }}>
+                                Cancel
+                            </Text>
+                        </Pressable>
+                    </View>
+                </>
+            ) : (
+                <>
+                </>
+            )}
         </View>
     )
 }

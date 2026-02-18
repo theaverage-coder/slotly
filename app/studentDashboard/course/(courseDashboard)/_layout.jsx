@@ -1,9 +1,8 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { withLayoutContext } from "expo-router";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 const { Navigator } = createMaterialTopTabNavigator();
-
 export const MaterialTopTabs = withLayoutContext(Navigator);
 
 
@@ -24,8 +23,6 @@ const CourseLayout = () => {
                 <MaterialTopTabs.Screen name="(poll)" options={{ title: 'Polls' }} />
             </MaterialTopTabs>
         </View>
-
-
 
     );
 };

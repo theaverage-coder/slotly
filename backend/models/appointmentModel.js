@@ -25,6 +25,7 @@ const appointmentSchema = mongoose.Schema({
         type: Date
     },
     location: {
+        required: true,
         type: String
     },
     message: {
