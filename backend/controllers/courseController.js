@@ -82,7 +82,6 @@ const joinCourse = asyncHandler(async (req, res) => {
             }
         } else { // No course found
             console.log("No course found");
-
             return res.status(400).json({
                 success: false,
             });

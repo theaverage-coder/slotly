@@ -4,6 +4,7 @@ import Ionicons from "@react-native-vector-icons/ionicons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../../contexts/CourseContext";
 import { usePollContext } from "../../../../../../contexts/PollContext";
@@ -13,6 +14,7 @@ export default function CreatePollScreenTwo() {
     const { courseId } = useCourseContext();
     const [modalIsVisible, setModalVisibility] = useState(false);
     const router = useRouter();
+    const insets = useSafeAreaInsets();
 
     const API_URL =
         Platform.OS === 'web'
@@ -161,8 +163,16 @@ export default function CreatePollScreenTwo() {
                     </View>
                 </View>
 
-                <Modal visible={modalIsVisible} transparent animationType="slide">
-                    <View style={styles.modal}>
+                <Modal
+                    visible={modalIsVisible}
+                    transparent
+                    animationType="slide">
+                    <View style={[styles.modal, {
+                        paddingTop: insets.top,
+                        paddingBottom: insets.bottom,
+                        paddingLeft: insets.left,
+                        paddingRight: insets.right,
+                    },]}>
                         <View style={styles.modalContent}>
                             <Pressable onPress={() => setModalVisibility(false)}>
                                 <Text style={{ color: "white" }}>
