@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Path, Svg } from 'react-native-svg';
-import MyButton from '../../../components/MyButton';
+import MyButton from './MyButton';
 import MyCalendar from './MyCalendar';
 
 export default function ScheduleScreen() {

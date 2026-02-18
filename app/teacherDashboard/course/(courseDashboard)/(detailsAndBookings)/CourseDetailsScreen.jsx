@@ -187,7 +187,11 @@ export default function CourseDetailsScreen() {
                         <View style={[{ alignItems: "center", flex: 1 }]}>
                             <Text style={[styles.white, { marginBottom: 25 }]}> Send your students this invite code so they can sign up </Text>
                             <View style={styles.signUpLinkContainer}>
-                                <Text style={[styles.white, styles.signUpLinkText]}> {course.signUpLink} </Text>
+                                <Text
+                                    selectable={true}
+                                    style={[styles.white, styles.signUpLinkText]}>
+                                    {course.signUpLink}
+                                </Text>
                             </View>
                         </View >
                     </>
