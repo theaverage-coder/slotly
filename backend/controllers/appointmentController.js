@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Booking = require('../models/bookingModel')
 const Appointment = require('../models/appointmentModel')
 
+
 // @desc Book an appointment
 // @router /api/appointments/bookAppointment
 const bookAppointment = asyncHandler(async (req, res) => {
@@ -15,16 +16,23 @@ const bookAppointment = asyncHandler(async (req, res) => {
         const booking = await Booking.findOne({ _id: bookingId }, { officeHours: 1, course: 1 }).populate('course', 'prof');
         console.log("booking: ", booking);
 
+        const toMinutes = (date) => {
+            return date.getHours() * 60 + date.getMinutes();
+        }
+
+        const startMinutes = toMinutes(startDateUTC);
+        const endMinutes = toMinutes(endDateUTC);
+
         const isInInterval = (interval) => {
-            if (startDateUTC >= interval.start && endDateUTC <= interval.end) {
+            const s = toMinutes(interval.start);
+            const e = toMinutes(interval.end);
+
+            if (startMinutes >= s && endMinutes <= e) {
                 return true;
             }
             return false;
         }
-
-        const location = booking.officeHours[selectedDate.getDay()].timeIntervals.find(isInInterval);
-
-        console.log("Location: ", location);
+        const location = booking.officeHours[selectedDate.getDay()].timeIntervals.find(isInInterval).location;
 
         const appointment = await Appointment.create({
             booking: bookingId,

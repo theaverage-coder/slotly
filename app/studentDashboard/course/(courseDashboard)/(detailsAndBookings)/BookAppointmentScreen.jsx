@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, FlatList, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
 import { useUser } from "../../../../../contexts/UserContext";
@@ -61,7 +61,7 @@ export default function BookAppointmentScreen() {
             });
 
             if (response.ok) {
-                console.log("Appointment booked!");
+                Alert.alert("Appointment booked!");
                 router.back();
             } else {
                 console.log("Failed to book appointment");

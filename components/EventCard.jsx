@@ -8,12 +8,15 @@ export default function EventCard({ event, homeScreen = false, onDetailsPress })
     const start = new Date(event.startTime);
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thurday", "Friday", "Saturday"];
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]
+
     const getDateString = () => {
         return start.toLocaleDateString();
     }
 
     const getTimeString = () => {
-        return start.toLocaleTimeString();
+        return start.toLocaleTimeString([], {
+            hour: "2-digit", minute: "2-digit"
+        });
     }
     const handlePress = () => {
         if (user.role === "s") {
@@ -35,7 +38,9 @@ export default function EventCard({ event, homeScreen = false, onDetailsPress })
             {homeScreen ? (
                 <View style={styles.cardContainerHome}>
                     <View style={styles.verticalBar}>
-                        <Text style={styles.verticalText}>Event</Text>
+                        <View style={styles.rotatedView}>
+                            <Text style={styles.verticalText}>Event</Text>
+                        </View>
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <View style={styles.detailsContainer}>
@@ -80,7 +85,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: "rgb(33, 45, 64)"
-
     },
     cardContainer: {
         flexDirection: "row",
@@ -151,10 +155,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "rgb(125, 78, 87)",
         borderBottomLeftRadius: 10,
-        borderTopLeftRadius: 10
+        borderTopLeftRadius: 10,
+        height: 180,
+        width: 60,
+    },
+    rotatedView: {
+        transform: [{ rotate: '270deg' }],
+
     },
     verticalText: {
-        transform: [{ rotate: '90deg' }],
         textAlign: 'center',
         fontSize: 20,
         color: "white",

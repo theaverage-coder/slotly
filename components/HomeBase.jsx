@@ -163,6 +163,14 @@ export default function HomeBase() {
         return new Date(appt.startTime).toLocaleTimeString();
     }
 
+    const getName = () => {
+        if (user.role === "s") {
+            return `${selectedAppt.prof.firstName} ${selectedAppt.prof.lastName}`;
+        } else if (user.role === "t") {
+            return `${selectedAppt.student.firstName} ${selectedAppt.student.lastName}`
+        }
+    }
+
     const handleCancelAppointment = async () => {
         const token = await AsyncStorage.getItem("token");
         try {
@@ -239,7 +247,7 @@ export default function HomeBase() {
                                     <View style={{ flex: 1, paddingLeft: 10, gap: 15, marginVertical: 5 }}>
                                         <View style={styles.horizontalContainer}>
                                             <Ionicons size={15} color="white" name="person" />
-                                            <Text style={styles.detailsText}> {selectedAppt.prof.firstName} {selectedAppt.prof.lastName}</Text>
+                                            <Text style={styles.detailsText}> {getName()} </Text>
                                         </View>
                                         <View style={styles.horizontalContainer}>
                                             <Ionicons size={15} color="white" name="calendar" />
@@ -261,11 +269,15 @@ export default function HomeBase() {
                                         {selectedAppt.location &&
                                             <View style={styles.horizontalContainer}>
                                                 <Ionicons size={15} color="white" name="location" />
-                                                <Text style={styles.detailsText}> {event.location} </Text>
+                                                <Text style={styles.detailsText}> {selectedAppt.location} </Text>
                                             </View>
                                         }
-                                        <Text style={{ color: "grey" }}> Additional details:</Text>
-                                        <Text style={styles.white}> {selectedAppt.message}</Text>
+                                        {selectedAppt.message && (
+                                            <>
+                                                <Text style={{ color: "grey" }}> Additional details:</Text>
+                                                <Text style={styles.white}> {selectedAppt.message}</Text>
+                                            </>
+                                        )}
                                     </View>
                                 </View>
                             </>
@@ -273,6 +285,39 @@ export default function HomeBase() {
                         {modalType === "event" && (
                             <>
                                 <Text style={styles.modalTitle}> {selectedEvent.title}</Text>
+                                <View style={{ flex: 1, width: '100%', paddingLeft: 15 }}>
+                                    <View style={{ flex: 1, paddingLeft: 10, gap: 15, marginVertical: 5 }}>
+                                        <View style={styles.horizontalContainer}>
+                                            <Ionicons size={15} color="white" name="calendar" />
+                                            <Text style={styles.detailsText}> {new Date(selectedEvent.startTime).toDateString()} </Text>
+                                        </View>
+                                        <View style={styles.horizontalContainer}>
+                                            <Ionicons size={15} color="white" name="time" />
+                                            <Text style={styles.detailsText}>
+                                                {new Date(selectedEvent.startTime).toLocaleTimeString([], {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })} -
+                                                {new Date(selectedEvent.endTime).toLocaleTimeString([], {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </Text>
+                                        </View>
+                                        {selectedEvent.location &&
+                                            <View style={styles.horizontalContainer}>
+                                                <Ionicons size={15} color="white" name="location" />
+                                                <Text style={styles.detailsText}> {selectedEvent.location} </Text>
+                                            </View>
+                                        }
+                                        {selectedEvent.description && (
+                                            <>
+                                                <Text style={{ color: "grey" }}> Additional details:</Text>
+                                                <Text style={styles.white}> {selectedEvent.description}</Text>
+                                            </>
+                                        )}
+                                    </View>
+                                </View>
                             </>
                         )}
                         {modalType === "cancel" && (

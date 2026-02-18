@@ -11,7 +11,9 @@ export default function AppointmentCard({ appointment, onDetailPress, onCancelPr
     }
 
     const getTimeString = () => {
-        return start.toLocaleTimeString();
+        return start.toLocaleTimeString([], {
+            hour: "2-digit", minute: "2-digit"
+        });
     }
 
     const getName = () => {
