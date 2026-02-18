@@ -43,7 +43,7 @@ export default function AddCourseModal({ visible, onClose }) {
                 if (data.success) {
                     if (data.added) {
                         Alert.alert("Course Joined!")
-                        router.back();
+                        setSignUpLink("");
                     } else {
                         Alert.alert("Already enrolled in the course.")
                     }

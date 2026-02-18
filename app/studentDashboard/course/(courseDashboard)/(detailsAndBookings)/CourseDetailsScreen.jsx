@@ -1,9 +1,11 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
+
 export default function CourseDetailsScreen() {
     const { courseId } = useCourseContext();
     const [course, setCourse] = useState(null);
@@ -37,7 +39,6 @@ export default function CourseDetailsScreen() {
                 if (response.ok) {
                     const data = await response.json();
                     setBooking(data);
-
                 }
             } catch (err) {
                 console.log(err);
@@ -47,6 +48,29 @@ export default function CourseDetailsScreen() {
         fetchBooking();
     }, []));
 
+    const handleLeaveCourse = async () => {
+        const token = await AsyncStorage.getItem("token");
+
+        try {
+            const response = await fetch(`${API_URL}/api/courses/leaveCourse/${courseId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+            });
+
+            if (response.ok) {
+                console.log("Left course")
+                router.push("studentDashboard/course/CoursesScreen");
+            }
+            else {
+                Alert.alert("Failed to leave course.")
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
     return (
         <View style={styles.screenContainer}>
             {(!course) ? (
@@ -124,7 +148,7 @@ export default function CourseDetailsScreen() {
                         disabled={!booking}>
                         <Text> Book an Appointment</Text>
                     </MyButton2>
-                    <MyButton2 onPress={() => router.push("studentDashboard/course/BookAppointmentScreen")} style={{ backgroundColor: "rgb(77, 77, 77)" }}>
+                    <MyButton2 onPress={handleLeaveCourse} style={{ backgroundColor: "rgb(77, 77, 77)" }}>
                         <Text style={{ color: "red" }}> Leave Course</Text>
                     </MyButton2>
                 </>

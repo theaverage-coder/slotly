@@ -134,6 +134,7 @@ export default function HomeBase() {
     const handlePressDetails = (appt) => {
         setModalVisibility(true);
         setSelectedAppt(appt);
+        console.log(appt)
         setModalType("details");
     }
 
@@ -233,37 +234,39 @@ export default function HomeBase() {
                         {modalType === "details" && (
                             <>
                                 <Text style={styles.modalTitle}> Appointment Details</Text>
-                                <View>
+                                <View style={{ flex: 1, width: '100%', paddingLeft: 15 }}>
                                     <Text style={styles.filterTitle}> {selectedAppt.booking.course.courseCode} : {selectedAppt.booking.course.courseName} </Text>
-                                    <View style={styles.horizontalContainer}>
-                                        <Ionicons size={15} color="white" name="person" />
-                                        <Text style={styles.detailsText}> {selectedAppt.prof.firstName} {selectedAppt.prof.lastName}</Text>
-                                    </View>
-                                    <View style={styles.horizontalContainer}>
-                                        <Ionicons size={15} color="white" name="calendar" />
-                                        <Text style={styles.detailsText}> {new Date(selectedAppt.startTime).toDateString()} </Text>
-                                    </View>
-                                    <View style={styles.horizontalContainer}>
-                                        <Ionicons size={15} color="white" name="time" />
-                                        <Text style={styles.detailsText}>
-                                            {new Date(selectedAppt.startTime).toLocaleTimeString([], {
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })} -
-                                            {new Date(selectedAppt.endTime).toLocaleTimeString([], {
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })}
-                                        </Text>
-                                    </View>
-                                    {selectedAppt.location &&
+                                    <View style={{ flex: 1, paddingLeft: 10, gap: 15, marginVertical: 5 }}>
                                         <View style={styles.horizontalContainer}>
-                                            <Ionicons size={15} color="white" name="location" />
-                                            <Text style={styles.detailsText}> {event.location} </Text>
+                                            <Ionicons size={15} color="white" name="person" />
+                                            <Text style={styles.detailsText}> {selectedAppt.prof.firstName} {selectedAppt.prof.lastName}</Text>
                                         </View>
-                                    }
-                                    <Text style={styles.white}> Additional details:</Text>
-                                    <Text style={styles.white}> {selectedAppt.message}</Text>
+                                        <View style={styles.horizontalContainer}>
+                                            <Ionicons size={15} color="white" name="calendar" />
+                                            <Text style={styles.detailsText}> {new Date(selectedAppt.startTime).toDateString()} </Text>
+                                        </View>
+                                        <View style={styles.horizontalContainer}>
+                                            <Ionicons size={15} color="white" name="time" />
+                                            <Text style={styles.detailsText}>
+                                                {new Date(selectedAppt.startTime).toLocaleTimeString([], {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })} -
+                                                {new Date(selectedAppt.endTime).toLocaleTimeString([], {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </Text>
+                                        </View>
+                                        {selectedAppt.location &&
+                                            <View style={styles.horizontalContainer}>
+                                                <Ionicons size={15} color="white" name="location" />
+                                                <Text style={styles.detailsText}> {event.location} </Text>
+                                            </View>
+                                        }
+                                        <Text style={{ color: "grey" }}> Additional details:</Text>
+                                        <Text style={styles.white}> {selectedAppt.message}</Text>
+                                    </View>
                                 </View>
                             </>
                         )}
@@ -454,5 +457,8 @@ const styles = StyleSheet.create({
     detailsText: {
         color: "white",
         fontSize: 15
+    },
+    white: {
+        color: "white"
     }
 })

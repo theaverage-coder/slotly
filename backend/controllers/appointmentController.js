@@ -7,18 +7,33 @@ const Appointment = require('../models/appointmentModel')
 const bookAppointment = asyncHandler(async (req, res) => {
     try {
         const { selectedTimeSlot, bookingId, timeSlotDuration, message } = req.body;
+        const selectedDate = new Date(selectedTimeSlot);
+
         const studentId = req.user;
-        const startDateUTC = new Date(selectedTimeSlot);
-        const endDateUTC = new Date(new Date(selectedTimeSlot).getTime() + timeSlotDuration * 60000);
-        const prof = await Booking.findOne({ _id: bookingId }, { course: 1 }).populate('course', 'prof');
+        const startDateUTC = new Date(selectedDate);
+        const endDateUTC = new Date(new Date(selectedDate).getTime() + timeSlotDuration * 60000);
+        const booking = await Booking.findOne({ _id: bookingId }, { officeHours: 1, course: 1 }).populate('course', 'prof');
+        console.log("booking: ", booking);
+
+        const isInInterval = (interval) => {
+            if (startDateUTC >= interval.start && endDateUTC <= interval.end) {
+                return true;
+            }
+            return false;
+        }
+
+        const location = booking.officeHours[selectedDate.getDay()].timeIntervals.find(isInInterval);
+
+        console.log("Location: ", location);
 
         const appointment = await Appointment.create({
             booking: bookingId,
             student: studentId,
-            prof: prof.course.prof,
+            prof: booking.course.prof,
             startTime: startDateUTC,
             endTime: endDateUTC,
             message: message,
+            location: location
         })
 
         if (appointment) {

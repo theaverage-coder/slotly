@@ -56,7 +56,7 @@ export default function BookAppointmentScreen() {
                     selectedTimeSlot: selectedTimeSlot,
                     bookingId: bookingId,
                     timeSlotDuration: timeSlotDuration,
-                    message: message
+                    message: message,
                 })
             });
 

@@ -57,7 +57,6 @@ export function UserProvider({ children }) {
             setUser(null);
             await AsyncStorage.removeItem("token");
             //router.dismissAll();
-
             router.replace("/OnboardingStart");
 
         } catch (err) {

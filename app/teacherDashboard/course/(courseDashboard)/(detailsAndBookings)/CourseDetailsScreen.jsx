@@ -95,8 +95,8 @@ export default function CourseDetailsScreen() {
             })
 
             if (response.ok) {
-                console.log("Course delete")
-                router.push("teacherDashboard/CoursesScreen");
+                console.log("Course deleted")
+                router.push("teacherDashboard/course/CoursesScreen");
             } else {
                 console.log("Failed to delete course")
             }

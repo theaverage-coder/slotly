@@ -1,6 +1,11 @@
 const asyncHandler = require('express-async-handler')
 const Course = require('../models/courseModel')
 const User = require('../models/userModel')
+const Appointment = require('../models/appointmentModel');
+const Booking = require('../models/bookingModel');
+const Event = require('../models/eventModel');
+const Poll = require('../models/pollModel');
+const Vote = require('../models/voteModel');
 
 // @desc Add a new course
 // @route /api/courses/addCourse
@@ -50,6 +55,34 @@ const addCourse = asyncHandler(async (req, res) => {
         console.log(err)
     }
 })
+
+// @desc Leave a course
+// @router /api/courses/leaveCourse/:courseId
+const leaveCourse = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const user = req.user;
+
+        //Find booking of course
+        const booking = await Booking.findOne({ course: courseId }, { course: 1 });
+        console.log("booking ", booking);
+
+        const update = await User.updateOne(
+            { _id: user },
+            { $pull: { courses: courseId } }
+        );
+
+        if (update.modifiedCount == 1) {
+            const deleted = await Appointment.deleteMany({ student: user, booking: booking._id })
+            console.log("Deleted appointments: ", deleted.deletedCount);
+            return res.sendStatus(201);
+        }
+        return res.sendStatus(404);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // @desc Register to course
 // @router /api/courses/joinCourse
 const joinCourse = asyncHandler(async (req, res) => {
@@ -159,14 +192,37 @@ const deleteCourse = async (req, res) => {
         const { courseId } = req.params;
         const userId = req.user;
 
-        const deleted = await Course.findOneAndDelete({
+        //Delete course
+        const deletedCourse = await Course.findOneAndDelete({
             _id: courseId,
             prof: userId
         });
 
-        if (!deleted) {
+        // Failed to delete course
+        if (!deletedCourse) {
             return res.sendStatus(404);
         }
+
+        // Delete booking
+        const deletedBooking = await Booking.findOneAndDelete({
+            course: deletedCourse._id
+        })
+
+        // Delete appointments
+        const deletedAppts = await Appointment.deleteMany({ prof: userId, booking: deletedBooking._id })
+        console.log("Deleted appointments: ", deletedAppts.deletedCount);
+
+        // Delete events
+        const deletedEvents = await Event.deleteMany({ course: deletedCourse._id });
+        console.log("Deleted events: ", deletedEvents.deletedCount);
+
+        // Delete polls
+        const deletedPolls = await Poll.deleteMany({ course: deletedCourse._id });
+        console.log("Deleted polls: ", deletedPolls.deletedCount);
+
+        // Delete votes
+        const deletedVotes = await Vote.deleteMany({ poll: deletedPolls._id });
+        console.log("Deleted polvotesls: ", deletedVotes.deletedCount);
 
         return res.sendStatus(200);
     } catch (err) {
@@ -226,5 +282,6 @@ module.exports = {
     getCourseById,
     getAllStudents,
     deleteCourse,
-    editCourse
+    editCourse,
+    leaveCourse
 }
