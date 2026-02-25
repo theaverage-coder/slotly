@@ -126,6 +126,9 @@ const deletePoll = async (req, res) => {
             return res.sendStatus(404);
         }
 
+        // Delete associated votes
+        //const deletedVotes = await Vote.deleteMany({ poll: deletedPolls._id });
+
         return res.sendStatus(200);
     } catch (err) {
         console.log(err);

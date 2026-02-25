@@ -30,6 +30,8 @@ const addCourse = asyncHandler(async (req, res) => {
             }
         }
 
+        const logoColor = getDefaultColor();
+
         // Create course
         const course = await Course.create({
             courseCode,
@@ -37,6 +39,7 @@ const addCourse = asyncHandler(async (req, res) => {
             semester,
             prof,
             signUpLink,
+            logoColor,
         })
 
         if (course) {
@@ -208,10 +211,11 @@ const deleteCourse = async (req, res) => {
             course: deletedCourse._id
         })
 
-        // Delete appointments
-        const deletedAppts = await Appointment.deleteMany({ prof: userId, booking: deletedBooking._id })
-        console.log("Deleted appointments: ", deletedAppts.deletedCount);
-
+        if (deletedBooking) {
+            // Delete appointments
+            const deletedAppts = await Appointment.deleteMany({ prof: userId, booking: deletedBooking._id })
+            console.log("Deleted appointments: ", deletedAppts.deletedCount);
+        }
         // Delete events
         const deletedEvents = await Event.deleteMany({ course: deletedCourse._id });
         console.log("Deleted events: ", deletedEvents.deletedCount);
@@ -220,13 +224,17 @@ const deleteCourse = async (req, res) => {
         const deletedPolls = await Poll.deleteMany({ course: deletedCourse._id });
         console.log("Deleted polls: ", deletedPolls.deletedCount);
 
+        /* 
         // Delete votes
-        const deletedVotes = await Vote.deleteMany({ poll: deletedPolls._id });
-        console.log("Deleted polvotesls: ", deletedVotes.deletedCount);
-
+        if (deletedPolls) {
+            const deletedVotes = await Vote.deleteMany({ poll: deletedPolls._id });
+            console.log("Deleted polvotesls: ", deletedVotes.deletedCount);
+        }
+            */
         return res.sendStatus(200);
     } catch (err) {
         console.log(err);
+        return res.sendStatus(400);
     }
 }
 
@@ -249,10 +257,11 @@ const editCourse = async (req, res) => {
             return res.status(400).json({ error: "No fields to update" });
         }
 
-        const updatedCourse = await Course.findOneAndUpdate({
-            _id: courseId,
-            prof: userId
-        },
+        const updatedCourse = await Course.findOneAndUpdate(
+            {
+                _id: courseId,
+                prof: userId
+            },
             { $set: updates },
             { new: true }
         );
@@ -273,6 +282,13 @@ function generateSignUpLink() {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+function getDefaultColor() {
+    const defaultColors = ["rgb(255, 255, 255)", "rgb(125, 78, 87)", "rgb(90, 59, 114)", "rgb(6, 92, 108)", "rgb(104, 0, 94)"]
+    // Generate random index between 0-3
+    const idx = Math.floor(Math.random() * 5)
+    return defaultColors[idx];
 }
 
 module.exports = {
