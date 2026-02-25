@@ -9,6 +9,5 @@ export default function Index() {
     <SafeAreaProvider>
       <Redirect href="./OnboardingStart" />
     </SafeAreaProvider>
-    //<MainLayout></MainLayout>
   );
 }

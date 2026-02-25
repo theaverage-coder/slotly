@@ -244,7 +244,7 @@ const editCourse = async (req, res) => {
     try {
         const { courseId } = req.params;
         const userId = req.user;
-        const allowedFieldChanges = ["courseCode", "courseName", "semester"];
+        const allowedFieldChanges = ["courseCode", "courseName", "semester", "logoColor"];
         const updates = {};
 
         for (const field of allowedFieldChanges) {
@@ -285,7 +285,7 @@ function generateSignUpLink() {
 }
 
 function getDefaultColor() {
-    const defaultColors = ["rgb(255, 255, 255)", "rgb(125, 78, 87)", "rgb(90, 59, 114)", "rgb(6, 92, 108)", "rgb(104, 0, 94)"]
+    const defaultColors = ["#FFFFFF", "#7D4E57", "#5d5e76", "#59747b", "#3c162f"]
     // Generate random index between 0-3
     const idx = Math.floor(Math.random() * 5)
     return defaultColors[idx];

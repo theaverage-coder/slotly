@@ -3,7 +3,9 @@ import Ionicons from "@react-native-vector-icons/ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Alert, FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { runOnJS } from 'react-native-reanimated';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ColorPicker, { HueSlider, Panel1, Preview, Swatches } from 'reanimated-color-picker';
 import BackgroundSlotlyLogo from "../../../../../components/BackgroundSlotlyLogo";
 import MyButton2 from "../../../../../components/MyButton2";
 import SlotlyLogo from "../../../../../components/SlotlyLogo";
@@ -16,13 +18,15 @@ export default function CourseDetailsScreen() {
     const router = useRouter();
     const [modalIsVisible, setModalVisibility] = useState(false);
     const [modalType, setModalType] = useState("");
+    const [showColorPicker, setShowColorPicker] = useState(false);
     const [students, setStudents] = useState([]);
     const [newCourse, setNewCourse] = useState({
         courseCode: "",
         courseName: "",
         semester: "",
+        logoColor: "#FFFFFF"
     })
-    const disabledEditCourseBtn = !newCourse.courseCode && !newCourse.courseName && !newCourse.semester;
+    const disabledEditCourseBtn = showColorPicker || (!newCourse.courseCode && !newCourse.courseName && !newCourse.semester && (course && (course.logoColor === newCourse.logoColor)));
 
     const insets = useSafeAreaInsets();
 
@@ -38,6 +42,10 @@ export default function CourseDetailsScreen() {
                 if (response.ok) {
                     const data = await response.json();
                     setCourse(data);
+                    setNewCourse(prev => ({
+                        ...prev,
+                        logoColor: data.logoColor
+                    }))
                 }
             } catch (err) {
                 console.log(err);
@@ -117,6 +125,20 @@ export default function CourseDetailsScreen() {
         setModalVisibility(true);
     }
 
+    const updateLogoColor = (hex) => {
+        console.log(hex);
+        setNewCourse(prev => ({
+            ...prev,
+            logoColor: hex
+        }))
+    }
+
+    const handleSetLogoColor = (color) => {
+        'worklet';
+
+        runOnJS(updateLogoColor)(color.hex);
+    }
+
     const handleSubmitCourseChanges = async () => {
         const token = await AsyncStorage.getItem("token");
 
@@ -138,6 +160,7 @@ export default function CourseDetailsScreen() {
                     courseCode: "",
                     courseName: "",
                     semester: "",
+                    logoColor: "#FFFFFF",
                 })
                 setModalVisibility(false);
             }
@@ -261,44 +284,72 @@ export default function CourseDetailsScreen() {
                     <>
                         <Text style={[styles.white, styles.modalTitle]}> Edit Course </Text>
                         <View style={styles.modalContent}>
-                            <SlotlyLogo size={70} color={course.logoColor} />
-                            <View style={styles.inputContainer}>
-                                <Text style={{ color: "white", fontSize: 15 }}> Course Code </Text>
-                                <TextInput
-                                    style={styles.inputField}
-                                    placeholder={course.courseCode}
-                                    value={newCourse.courseCode}
-                                    onChangeText={(text) => setNewCourse(prev => ({
-                                        ...prev,
-                                        courseCode: text
-                                    }))}
-                                />
+                            <View style={styles.logoContainer}>
+                                <View style={styles.logo}>
+                                    <SlotlyLogo size={90} color={newCourse.logoColor} />
+                                    <Pressable
+                                        style={styles.editIconContainer}
+                                        onPress={() => setShowColorPicker(true)}>
+                                        <Ionicons size={15} color="rgb(33, 45, 64)" name="pencil" />
+                                    </Pressable>
+                                </View>
+
                             </View>
-                            <View style={styles.inputContainer}>
-                                <Text style={{ color: "white", fontSize: 15 }}> Course Name </Text>
-                                <TextInput
-                                    style={styles.inputField}
-                                    placeholder={course.courseName}
-                                    value={newCourse.courseName}
-                                    onChangeText={(text) => setNewCourse(prev => ({
-                                        ...prev,
-                                        courseName: text
-                                    }))}
-                                />
+                            <View style={styles.editCourseInputs}>
+                                <View style={styles.inputContainer}>
+                                    <Text style={styles.editCourseLabel}> Code </Text>
+                                    <TextInput
+                                        style={styles.inputField}
+                                        placeholder={course.courseCode}
+                                        value={newCourse.courseCode}
+                                        onChangeText={(text) => setNewCourse(prev => ({
+                                            ...prev,
+                                            courseCode: text
+                                        }))}
+                                    />
+                                </View>
+                                <View style={styles.inputContainer}>
+                                    <Text style={styles.editCourseLabel}> Name </Text>
+                                    <TextInput
+                                        style={styles.inputField}
+                                        placeholder={course.courseName}
+                                        value={newCourse.courseName}
+                                        onChangeText={(text) => setNewCourse(prev => ({
+                                            ...prev,
+                                            courseName: text
+                                        }))}
+                                    />
+                                </View>
+                                <View style={styles.inputContainer}>
+                                    <Text style={styles.editCourseLabel}> Semester </Text>
+                                    <TextInput
+                                        style={styles.inputField}
+                                        placeholder={course.semester}
+                                        value={newCourse.semester}
+                                        onChangeText={(text) => setNewCourse(prev => ({
+                                            ...prev,
+                                            semester: text
+                                        }))}
+                                    />
+                                </View>
                             </View>
-                            <View style={styles.inputContainer}>
-                                <Text style={{ color: "white", fontSize: 15 }}> Semester </Text>
-                                <TextInput
-                                    style={styles.inputField}
-                                    placeholder={course.semester}
-                                    value={newCourse.semester}
-                                    onChangeText={(text) => setNewCourse(prev => ({
-                                        ...prev,
-                                        semester: text
-                                    }))}
-                                />
-                            </View>
+                            {showColorPicker && (
+                                <View style={styles.foregroundContainer} >
+                                    <View style={styles.colorPickerContainer}>
+                                        <ColorPicker style={{ width: '70%', gap: 10 }} value="#FFFFFF" onComplete={handleSetLogoColor}>
+                                            <Preview />
+                                            <Panel1 />
+                                            <HueSlider />
+                                            <Swatches colors={["#416d41", "#7D4E57", "#5d5e76", "#59747b", "#3c162f"]} />
+                                        </ColorPicker>
+                                        <Pressable onPress={() => setShowColorPicker(false)}>
+                                            <Text style={{ color: "white" }}> Done </Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            )}
                         </View>
+
                         <MyButton2
                             disabled={disabledEditCourseBtn}
                             onPress={handleSubmitCourseChanges}
@@ -494,7 +545,10 @@ const styles = StyleSheet.create({
         fontSize: 25,
         textAlign: "center",
         marginVertical: 20,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        borderBottomColor: "rgb(33, 45, 64)",
+        borderBottomWidth: 1,
+        paddingBottom: 20
     },
     white: {
         color: "white"
@@ -513,22 +567,32 @@ const styles = StyleSheet.create({
         color: "rgb(125, 78, 87)",
         fontSize: 18,
     },
+    editCourseInputs: {
+        gap: 30,
+        marginRight: 20
+    },
     inputContainer: {
         gap: 5,
-        marginBottom: 20
+        marginBottom: 20,
+        flexDirection: "row",
+        borderBottomWidth: 1,
+        borderBottomColor: "rgb(54, 65, 86)",
+        alignItems: "center"
     },
     inputLabel: {
         color: "white",
         fontSize: 20
     },
     inputField: {
-        width: "95%",
-        height: 70,
-        backgroundColor: "rgb(33, 45, 64)",
-        justifyContent: "center",
-        borderRadius: 16,
-        paddingLeft: 20,
+        height: 40,
         color: "rgba(255, 255, 255, 1)",
+        width: 250
+    },
+    editCourseLabel: {
+        color: "white",
+        fontSize: 15,
+        width: 90,
+        fontWeight: "bold",
     },
     disabledButton: {
         opacity: 0.3
@@ -550,6 +614,48 @@ const styles = StyleSheet.create({
     locationContainer: {
         flexDirection: "row",
         alignItems: "center"
+    },
+    logoContainer: {
+        marginRight: 20,
+        alignItems: "center",
+        justifyContent: "center",
+        height: "20%",
+        marginBottom: 20
+    },
+    logo: {
+        position: "relative",
+    },
+    editIconContainer: {
+        position: "absolute",
+        bottom: 0,
+        right: -5,
+        backgroundColor: "white",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 8,
+        height: 25,
+        width: 25
+    },
+    foregroundContainer: {
+        //flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+    },
+    colorPickerContainer: {
+        //position: 'absolute',
+        zIndex: 1,
+        width: "90%",
+        borderWidth: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        height: "65%",
+        backgroundColor: "rgb(54, 65, 86)",
+        borderRadius: 16,
     }
-
 })
