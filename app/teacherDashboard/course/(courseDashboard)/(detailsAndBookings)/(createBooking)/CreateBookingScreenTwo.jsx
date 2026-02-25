@@ -79,7 +79,7 @@ export default function CreateBookingScreenTwo() {
 
     const handleAddTimeInterval = (day) => {
         setDaysAvailable(prev => ({
-            ...prev, [day]: { ...prev[day], timeIntervals: [...prev[day].timeIntervals, { start: new Date(), end: new Date() }] }
+            ...prev, [day]: { ...prev[day], timeIntervals: [...prev[day].timeIntervals, { start: new Date(), end: new Date(), location: '' }] }
         }))
     };
 
@@ -104,7 +104,7 @@ export default function CreateBookingScreenTwo() {
 
     const handleSameHoursAddTimeInterval = () => {
         setSameHours(prev =>
-            [...prev, { start: new Date(), end: new Date() }]
+            [...prev, { start: new Date(), end: new Date(), location: '' }]
         )
     }
     return (
@@ -341,11 +341,11 @@ export default function CreateBookingScreenTwo() {
             </Modal>
 
             <MyButton2
-                onPress={handleCreateBooking}
+                onPress={() => router.push("teacherDashboard/course/CreateBookingScreenThree")}
                 style={[isDisabledButton && { opacity: 0.3 }, { backgroundColor: "rgba(217, 217, 217, 1)" }]}
                 disabled={isDisabledButton}
             >
-                <Text> Create Booking </Text>
+                <Text> Next </Text>
             </MyButton2>
         </View >
     )
@@ -365,7 +365,6 @@ const styles = StyleSheet.create({
     header: {
         gap: 15,
         marginLeft: 15
-
     },
     title: {
         color: "rgba(255, 255, 255, 1)",

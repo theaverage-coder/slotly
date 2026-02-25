@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import { Keyboard, Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useBookingContext } from "../../../../../../contexts/BookingContext";
 
@@ -7,29 +7,15 @@ export default function CreateBookingScreenOne() {
     const { daysAvailable, setDaysAvailable, isSameHours, setIsSameHours } = useBookingContext();
     const router = useRouter();
 
-
-    const hasInvalidInput = () => {
-        let availableCount = 0;
-        for (const [key, value] of Object.entries(daysAvailable)) {
-            if (value.isAvailable) {
-                availableCount++;
-                if (value.location === "") {
-                    return true;
-                }
-            }
-        }
-
-        return availableCount === 0;
-    }
-
-
-    const isDisabledButton = hasInvalidInput();
+    const isDisabledButton = Object.entries(daysAvailable).every(([key, val]) => {
+        return !val.isAvailable;
+    });
 
     const changeDayAvailability = (day) => {
         setDaysAvailable(prev => ({
             ...prev, [day]: {
                 ...prev[day], isAvailable: !prev[day].isAvailable,
-                timeIntervals: prev[day].isAvailable ? [] : [{ start: new Date(), end: new Date() }]
+                timeIntervals: prev[day].isAvailable ? [] : [{ start: new Date(), end: new Date(), location: "" }]
             }
         }))
     }
@@ -74,38 +60,6 @@ export default function CreateBookingScreenOne() {
                             <Text style={{ color: daysAvailable.Saturday.isAvailable ? "black" : "rgba(217, 217, 217, 1)" }}> Sat </Text>
                         </Pressable>
                     </View>
-                    <KeyboardAvoidingView style={{ flex: 1 }}
-                        behavior={Platform.OS === "ios" ? "padding" : "height"}
-                        keyboardVerticalOffset={120}
-                    >
-                        <ScrollView
-                            contentContainerStyle={{ gap: 10, marginHorizontal: 20, paddingBottom: 120 }}
-                        >
-                            <Text style={styles.description}>Add meeting locations so students know where to find you </Text>
-                            {Object.entries(daysAvailable).map(([day, val]) => {
-                                if (val.isAvailable) {
-                                    return (
-                                        <View key={day}>
-                                            <Text style={styles.dayHeader}> {day} </Text>
-                                            <TextInput
-                                                style={styles.inputField}
-                                                placeholder="Enter location"
-                                                value={val.location}
-                                                onChangeText={(text) => setDaysAvailable(prev => ({
-                                                    ...prev,
-                                                    [day]: {
-                                                        ...prev[day],
-                                                        location: text
-                                                    }
-                                                }))
-                                                }
-                                            />
-                                        </View>
-                                    )
-                                }
-                            })}
-                        </ScrollView>
-                    </KeyboardAvoidingView>
 
                 </View>
                 <MyButton2

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../components/MyButton2";
 import { useUser } from '../../../contexts/UserContext';
@@ -35,9 +35,11 @@ export default function CreateCourse() {
                 body: JSON.stringify(courseData),
             });
 
-            const signUpCode = await response.json();
+            const data = await response.json();
+
             if (response.ok) {
-                console.log(signUpCode);
+                router.replace("teacherDashboard/course/CoursesScreen");
+                Alert.alert(`Send your students this code so they can join: ${data.signUpLink}`);
             }
         } catch (err) {
             console.log("Failed to create course");
@@ -49,37 +51,46 @@ export default function CreateCourse() {
     return (
         <SafeAreaView style={styles.screenContainer}>
             <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+
                 <Pressable onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons size={40} color="white" name="arrow-back-circle" />
                 </Pressable>
-                <View style={styles.topText}>
-                    <Text style={styles.header}>
-                        New Course
-                    </Text>
-                    <Text style={styles.description}>
-                        Add a new course and have students join using a link
-                    </Text>
-                </View>
-                <View style={styles.inputFields}>
-                    <TextInput
-                        style={styles.textField}
-                        placeholder="Course Name"
-                        value={courseData.courseName}
-                        onChangeText={(text) => setCourseData({ ...courseData, courseName: text })}
-                    />
-                    <TextInput
-                        style={styles.textField}
-                        placeholder="Course Code"
-                        value={courseData.courseCode}
-                        onChangeText={(text) => setCourseData({ ...courseData, courseCode: text })}
-                    />
-                    <TextInput
-                        style={styles.textField}
-                        placeholder="Semester"
-                        value={courseData.semester}
-                        onChangeText={(text) => setCourseData({ ...courseData, semester: text })}
-                    />
-                </View>
+                <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    keyboardVerticalOffset={90}
+                >
+                    <ScrollView contentContainerStyle={{ gap: 50, paddingBottom: 120 }}>
+                        <View style={styles.topText}>
+                            <Text style={styles.header}>
+                                New Course
+                            </Text>
+                            <Text style={styles.description}>
+                                Add a new course and have students join using a link
+                            </Text>
+                        </View>
+                        <View style={styles.inputFields}>
+                            <TextInput
+                                style={styles.textField}
+                                placeholder="Course Name"
+                                value={courseData.courseName}
+                                onChangeText={(text) => setCourseData({ ...courseData, courseName: text })}
+                            />
+                            <TextInput
+                                style={styles.textField}
+                                placeholder="Course Code"
+                                value={courseData.courseCode}
+                                onChangeText={(text) => setCourseData({ ...courseData, courseCode: text })}
+                            />
+                            <TextInput
+                                style={styles.textField}
+                                placeholder="Semester"
+                                value={courseData.semester}
+                                onChangeText={(text) => setCourseData({ ...courseData, semester: text })}
+                            />
+                        </View>
+                    </ScrollView>
+                </KeyboardAvoidingView>
                 <MyButton2 onPress={handleCreateCourse} style={{ backgroundColor: "rgba(217, 217, 217, 1)", textColor: "rgba(33, 33, 33, 1)" }}>
                     <Text> Create Course </Text>
                 </MyButton2>

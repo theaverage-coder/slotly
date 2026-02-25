@@ -2,8 +2,9 @@ import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useCourseContext } from '../contexts/CourseContext';
 import { useUser } from '../contexts/UserContext';
+import SlotlyLogo from './SlotlyLogo';
 
-export default function CourseCard({ courseId, courseCode, courseName }) {
+export default function CourseCard({ courseId, courseCode, courseName, logoColor }) {
     const { setCourseId } = useCourseContext();
     const { user } = useUser();
 
@@ -21,7 +22,7 @@ export default function CourseCard({ courseId, courseCode, courseName }) {
     return (
         <Pressable onPress={handlePress} style={styles.cardContainer}>
             <View style={styles.pictureContainer}>
-                <View style={styles.defaultPicture} />
+                <SlotlyLogo size={70} color={logoColor} />
             </View>
             <View style={styles.cardText}>
                 <Text style={styles.courseCode}>
@@ -41,12 +42,14 @@ const styles = StyleSheet.create({
         columnGap: 15,
     },
     pictureContainer: {
-    },
-    defaultPicture: {
         width: 82,
         height: 82,
-        backgroundColor: "rgba(217, 217, 217, 1)",
         borderRadius: 12
+
+    },
+    defaultPicture: {
+
+        backgroundColor: "rgba(217, 217, 217, 1)",
     },
     cardText: {
         flexDirection: "column",
@@ -57,18 +60,12 @@ const styles = StyleSheet.create({
         color: "rgba(255, 255, 255, 1)",
         fontFamily: "Inter",
         fontSize: 20,
-        fontWeight: 400
+        fontWeight: "bold"
     },
     courseName: {
         color: "rgba(255, 255, 255, 1)",
         fontFamily: "Inter",
         fontSize: 15,
-        fontWeight: 400
     },
-    profName: {
-        color: "rgba(153, 153, 153, 1)",
-        fontFamily: "Inter",
-        fontSize: 14,
-        fontWeight: 400
-    },
+
 })

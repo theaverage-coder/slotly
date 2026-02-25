@@ -77,7 +77,7 @@ export default function CoursesBase() {
                         contentContainerStyle={{ gap: 20 }}
                         data={courses}
                         keyExtractor={item => item._id}
-                        renderItem={({ item }) => <CourseCard courseId={item._id} courseCode={item.courseCode} courseName={item.courseName} />}
+                        renderItem={({ item }) => <CourseCard courseId={item._id} courseCode={item.courseCode} courseName={item.courseName} logoColor={item.logoColor} />}
                     />
                 )}
             <View style={styles.bottomContainer}>

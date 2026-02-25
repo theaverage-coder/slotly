@@ -136,6 +136,51 @@ const getBooking = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Modify an existing booking
+// @router /api/bookings/editBooking/:bookingId
+const editBooking = async (req, res) => {
+    try {
+        const { bookingId } = req.params;
+        const allowedFieldChanges = ["officeHours", "timeSlotDuration"];
+        const userId = req.user;
+        const updates = {};
+
+        // Make sure creator of booking matches userId
+        const bookingProf = await Booking.findOneById(bookingId).populate('course', 'prof');
+
+        if (bookingProf.prof !== new mongoose.Types.ObjectId(userId)) {
+            console.log("Unauthorized request");
+            return res.sendStatus(401);
+        }
+
+
+        // Update fields
+        for (const field of allowedFieldChanges) {
+            if (req.body[field] != undefined && req.body[field] != "") {
+                updates[field] = req.body[field];
+            }
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: "No fields to update" });
+        }
+
+        const updatedBooking = Booking.findOneAndUpdate(
+            {
+                _id: bookingId
+            },
+            { $set: updates },
+            { new: true }
+        )
+
+        if (!updatedBooking) return res.sendStatus(404);
+
+        return res.status(200).json(updatedBooking);
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 module.exports = {
     createBooking,
     getAvailableTimeSlots,

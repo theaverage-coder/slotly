@@ -12,6 +12,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const { login } = useUser();
     const router = useRouter();
+    const [showPassword, setShowPassword] = useState(true);
 
     const handleLogin = async () => {
         try {
@@ -40,13 +41,17 @@ export default function Login() {
                                 onChangeText={(text) => setEmail(text)}
                             />
                         </View>
-                        <View style={styles.textField}>
+                        <View style={[styles.textField, styles.showPassword]}>
                             <TextInput
+                                secureTextEntry={showPassword}
                                 style={styles.inputText}
                                 placeholder="Password"
                                 value={password}
                                 onChangeText={(text) => setPassword(text)}
                             />
+                            <Pressable onPress={() => setShowPassword(!showPassword)}>
+                                <Ionicons size={20} color="rgba(117, 117, 117, 1)" name={showPassword ? "eye-off" : "eye"} />
+                            </Pressable>
                         </View>
                     </View>
                     <MyButton2 style={styles.loginButton} onPress={handleLogin}>
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
-        paddingLeft: 20
+        paddingHorizontal: 20
     },
     inputText: {
         flex: 1,
@@ -94,6 +99,10 @@ const styles = StyleSheet.create({
         fontFamily: "Urbanist",
         fontSize: 16,
         fontWeight: 500,
+    },
+    showPassword: {
+        flexDirection: "row",
+        alignItems: "center"
     },
     loginButton: {
         backgroundColor: "white",

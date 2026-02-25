@@ -2,10 +2,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BackgroundSlotlyLogo from "../../../../../components/BackgroundSlotlyLogo";
 import MyButton2 from "../../../../../components/MyButton2";
+import SlotlyLogo from "../../../../../components/SlotlyLogo";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
 
 export default function CourseDetailsScreen() {
@@ -95,10 +96,12 @@ export default function CourseDetailsScreen() {
             })
 
             if (response.ok) {
-                console.log("Course deleted")
-                router.push("teacherDashboard/course/CoursesScreen");
+                Alert.alert("Course deleted")
+                router.replace("teacherDashboard/course/CoursesScreen");
+                setModalVisibility(false);
+
             } else {
-                console.log("Failed to delete course")
+                Alert.alert("Failed to delete course")
             }
         } catch (err) {
             console.log(err);
@@ -258,8 +261,9 @@ export default function CourseDetailsScreen() {
                     <>
                         <Text style={[styles.white, styles.modalTitle]}> Edit Course </Text>
                         <View style={styles.modalContent}>
+                            <SlotlyLogo size={70} color={course.logoColor} />
                             <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}> Course Code </Text>
+                                <Text style={{ color: "white", fontSize: 15 }}> Course Code </Text>
                                 <TextInput
                                     style={styles.inputField}
                                     placeholder={course.courseCode}
@@ -271,7 +275,7 @@ export default function CourseDetailsScreen() {
                                 />
                             </View>
                             <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}> Course Name </Text>
+                                <Text style={{ color: "white", fontSize: 15 }}> Course Name </Text>
                                 <TextInput
                                     style={styles.inputField}
                                     placeholder={course.courseName}
@@ -283,7 +287,7 @@ export default function CourseDetailsScreen() {
                                 />
                             </View>
                             <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}> Semester </Text>
+                                <Text style={{ color: "white", fontSize: 15 }}> Semester </Text>
                                 <TextInput
                                     style={styles.inputField}
                                     placeholder={course.semester}

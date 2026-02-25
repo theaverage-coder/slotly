@@ -7,6 +7,7 @@ const courseSchema = mongoose.Schema({
     },
     courseName: {
         type: String,
+        required: true
     },
     semester: {
         required: true,
@@ -21,6 +22,9 @@ const courseSchema = mongoose.Schema({
         required: true,
         type: String,
         unique: true,
+    },
+    logoColor: {
+        type: String
     }
 })
 
