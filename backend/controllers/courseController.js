@@ -220,17 +220,38 @@ const deleteCourse = async (req, res) => {
         const deletedEvents = await Event.deleteMany({ course: deletedCourse._id });
         console.log("Deleted events: ", deletedEvents.deletedCount);
 
+        // Delete votes associated to polls
+        const votesToDelete = Vote.aggregate([
+            {
+                $lookup: {
+                    from: "polls",
+                    localField: "poll",
+                    foreignField: "_id",
+                    as: "poll"
+                }
+            },
+            { $unwind: '$poll' },
+            {
+                $match: {
+                    'poll.course': deletedCourse._id
+                }
+            },
+            {
+                $project: {
+                    _id: 1
+                }
+            }
+        ])
+
+        const ids = votesToDelete.map(doc => doc._id);
+        if (ids.length > 0) {
+            const deletedVotes = await Vote.deleteMany({ _id: { $in: ids } });
+            console.log("Deleted votes: ", deletedVotes.deletedCount);
+        }
         // Delete polls
         const deletedPolls = await Poll.deleteMany({ course: deletedCourse._id });
         console.log("Deleted polls: ", deletedPolls.deletedCount);
 
-        /* 
-        // Delete votes
-        if (deletedPolls) {
-            const deletedVotes = await Vote.deleteMany({ poll: deletedPolls._id });
-            console.log("Deleted polvotesls: ", deletedVotes.deletedCount);
-        }
-            */
         return res.sendStatus(200);
     } catch (err) {
         console.log(err);
