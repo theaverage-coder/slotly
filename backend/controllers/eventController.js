@@ -34,9 +34,44 @@ const getAllJoinedEvents = asyncHandler(async (req, res) => {
         const events = await Event.aggregate([
             { $match: { course: { $in: courseObjectIds } } },
             { $match: { students: userObjectId } },
-            { $sort: { startTime: 1 } },
+            {
+                $facet: {
+                    completed: [
+                        {
+                            $match: {
+                                endTime: { $lt: new Date() }
+                            }
+                        },
+                        {
+                            $sort: {
+                                startTime: 1
+                            }
+                        }],
+                    incomplete: [
+                        {
+                            $match: {
+                                endTime: { $gte: new Date() }
+                            }
+                        },
+                        {
+                            $sort: {
+                                startTime: 1
+                            }
+                        }
+                    ]
+                }
+            }
         ]);
-        return res.status(200).json(events);
+
+
+        const { completed, incomplete } = events[0];
+        const completedEvents = completed;
+        const incompleteEvents = incomplete;
+
+        return res.status(200).json({
+            completed: completedEvents,
+            incomplete: incompleteEvents
+        });
     } catch (err) {
         console.log(err);
     }
@@ -47,7 +82,6 @@ const getAllJoinedEvents = asyncHandler(async (req, res) => {
 const getCreatedEvents = async (req, res) => {
     try {
         const userId = req.user;
-        console.log(userId)
         const events = await Event.aggregate([
             {
                 $lookup: {
@@ -59,11 +93,43 @@ const getCreatedEvents = async (req, res) => {
             },
             { $unwind: "$course" },
             { $match: { "course.prof": mongoose.Types.ObjectId.createFromHexString(userId) } },
-            { $sort: { startTime: 1 } },
+            {
+                $facet: {
+                    completed: [
+                        {
+                            $match: {
+                                endTime: { $lt: new Date() }
+                            }
+                        },
+                        {
+                            $sort: {
+                                startTime: 1
+                            }
+                        }],
+                    incomplete: [
+                        {
+                            $match: {
+                                endTime: { $gte: new Date() }
+                            }
+                        },
+                        {
+                            $sort: {
+                                startTime: 1
+                            }
+                        }
+                    ]
+                }
+            }
         ]);
 
-        return res.status(200).json(events);
+        const { completed, incomplete } = events[0];
+        const completedEvents = completed;
+        const incompleteEvents = incomplete;
 
+        return res.status(200).json({
+            completed: completedEvents,
+            incomplete: incompleteEvents
+        });
     } catch (err) {
         console.log(err);
     }
@@ -154,7 +220,12 @@ const joinEvent = asyncHandler(async (req, res) => {
         const updatedEvent = await Event.findOneAndUpdate(
             {
                 _id: eventId,
-                $expr: { $lt: [{ $size: "$students" }, "$capacity"] },
+                $expr: {
+                    $or: [
+                        { $eq: ["$capacity", -1] },
+                        { $lt: [{ $size: "$students" }, "$capacity"] }
+                    ]
+                },
                 students: { $nin: userId } // not already joined
             },
             { $addToSet: { students: userId } },

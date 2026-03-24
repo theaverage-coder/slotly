@@ -13,12 +13,19 @@ import EventCard from './EventCard';
 export default function HomeBase() {
     const { user } = useUser();
     const router = useRouter();
-    const [events, setEvents] = useState([]);
-    const [appointments, setAppointments] = useState([]);
+    const [completedAppointments, setCompletedAppointments] = useState([]);
+    const [incompleteAppointments, setIncompleteAppointments] = useState([]);
+    const [completedEvents, setCompletedEvents] = useState([]);
+    const [incompleteEvents, setIncompleteEvents] = useState([]);
+    const [completedMeetings, setCompletedMeetings] = useState([]);
+    const [incompleteMeetings, setIncompleteMeetings] = useState([]);
     const [modalIsVisible, setModalVisibility] = useState(false);
     const [selectedAppt, setSelectedAppt] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [modalType, setModalType] = useState(null);
+
+    // Variable that checks if the user has any meetings
+
 
     // Variables for filter
     const [typeFilter, setTypeFilter] = useState("all"); // "all" | "appointment" | "event"
@@ -49,7 +56,7 @@ export default function HomeBase() {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    setAppointments(data);
+                    return data;
                 }
             } catch (err) {
                 console.log("Failed to retrieve appointments: ", err);
@@ -82,59 +89,89 @@ export default function HomeBase() {
 
                 if (response.ok) {
                     const data = await response.json();
-                    setEvents(data);
+                    return data;
+                    //setEvents(data);
                 }
             } catch (err) {
                 console.log("Failed to retrieve events: ", err);
             }
         }
 
-        fetchAppointments();
-        fetchEvents();
+        const loadData = async () => {
+            try {
+                const appointments = await fetchAppointments();
+                const events = await fetchEvents();
+
+                setCompletedAppointments(appointments.completed || []);
+                setIncompleteAppointments(appointments.incomplete || []);
+
+                setCompletedEvents(events.completed || []);
+                setIncompleteEvents(events.incomplete || []);
+
+                setCompletedMeetings(merge(appointments.completed || [], events.completed || []));
+                setIncompleteMeetings(merge(appointments.incomplete || [], events.incomplete || []));
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        const merge = (arr1, arr2) => {
+            let ptr1 = 0;
+            let ptr2 = 0;
+            let data = [];
+
+            while (ptr1 < arr1.length && ptr2 < arr2.length) {
+                if (new Date(arr1[ptr1].startTime) <= new Date(arr2[ptr2].startTime)) {
+                    data.push(arr1[ptr1]);
+                    ptr1++;
+                } else {
+                    data.push(arr2[ptr2]);
+                    ptr2++;
+                }
+            }
+            if (ptr1 < arr1.length) {
+                let slice = arr1.slice(ptr1);
+                data.push(...slice);
+            } else if (ptr2 < arr2.length) {
+                let slice = arr2.slice(ptr2);
+                data.push(...slice);
+            }
+
+            return data;
+        }
+
+        loadData();
     }, [])
     );
 
     // Return data according to filters when they're changed
     const filteredData = useMemo(() => {
         let data = [];
-        if (typeFilter === "appointment") {
-            data = appointments;
-        } else if (typeFilter === "event") {
-            data = events;
-        } else if (typeFilter === "all") {
-            // Merge appointments and events sorted by date
-            let apptPtr = 0;
-            let eventPtr = 0;
-
-            while (apptPtr < appointments.length && eventPtr < events.length) {
-                if (new Date(appointments[apptPtr].startTime) <= new Date(events[eventPtr].startTime)) {
-                    data.push(appointments[apptPtr]);
-                    apptPtr++;
-                } else {
-                    data.push(events[eventPtr]);
-                    eventPtr++;
-                }
-            }
-            if (apptPtr < appointments.length) {
-                let slice = appointments.slice(apptPtr);
-                data.push(...slice);
-            } else if (eventPtr < events.length) {
-                let slice = events.slice(eventPtr);
-                data.push(...slice);
-            }
+        if (typeFilter === "all" && completedFilter === "all") {
+            data = [...incompleteMeetings, ...completedMeetings];
+        } else if (typeFilter === "appointment" && completedFilter === "all") {
+            data = [...incompleteAppointments, ...completedAppointments];
+        } else if (typeFilter === "event" && completedFilter === "all") {
+            data = [...incompleteEvents, ...completedEvents];
+        } else if (typeFilter === "all" && completedFilter === "completed") {
+            data = completedMeetings;
+        } else if (typeFilter === "appointment" && completedFilter === "completed") {
+            data = completedAppointments;
+        } else if (typeFilter === "event" && completedFilter === "completed") {
+            data = completedEvents;
+        } else if (typeFilter === "all" && completedFilter === "incomplete") {
+            data = incompleteMeetings;
+        } else if (typeFilter === "appointment" && completedFilter === "incomplete") {
+            data = incompleteAppointments;
+        } else if (typeFilter === "event" && completedFilter === "incomplete") {
+            data = incompleteEvents;
         }
-
-        if (completedFilter !== "all") {
-            data = data.filter((x) =>
-                completedFilter === "completed" ? x.completed : !x.completed);
-        }
-        return data;
-    }, [completedFilter, typeFilter, events, appointments]);
+        return data || [];
+    }, [completedFilter, typeFilter, completedEvents, incompleteEvents, completedAppointments, incompleteAppointments]);
 
     const handlePressDetails = (appt) => {
         setModalVisibility(true);
         setSelectedAppt(appt);
-        console.log(appt)
         setModalType("details");
     }
 
@@ -164,11 +201,7 @@ export default function HomeBase() {
     }
 
     const getName = () => {
-        if (user.role === "s") {
-            return `${selectedAppt.prof.firstName} ${selectedAppt.prof.lastName}`;
-        } else if (user.role === "t") {
-            return `${selectedAppt.student.firstName} ${selectedAppt.student.lastName}`
-        }
+        return `${selectedAppt.appointmentWith.firstName} ${selectedAppt.appointmentWith.lastName}`;
     }
 
     const handleCancelAppointment = async () => {
@@ -193,14 +226,22 @@ export default function HomeBase() {
     return (
         <View style={{ flex: 1 }}>
             <DashboardHeader page={0} />
-            {appointments.length === 0 && events.length === 0 ? (
-                <View style={styles.emptyScreen}>
-                    <BackgroundSlotlyLogo />
-                    <Text style={styles.text1}>You don't have any meetings yet</Text>
-                    <Text style={styles.text2}>Add your courses to find professors and book your first meeting</Text>
+            {!filteredData || filteredData.length === 0 ? (
+                <View style={{ flex: 1 }}>
+                    <View style={styles.filterContainer}>
+                        <Pressable onPress={handlePressFilters}>
+                            <Ionicons size={30} color="white" name="options" />
+                        </Pressable>
+                    </View>
+                    <View style={styles.emptyScreen}>
+
+                        <BackgroundSlotlyLogo />
+                        <Text style={styles.text1}>You don't have any upcoming meetings</Text>
+                        <Text style={styles.text2}>Add your courses to find professors and book appointments</Text>
+                    </View>
                 </View>
             ) : (
-                <View style={{ flex: 1, }}>
+                <View style={{ flex: 1 }}>
                     <View style={styles.filterContainer}>
                         <Pressable onPress={handlePressFilters}>
                             <Ionicons size={30} color="white" name="options" />
@@ -243,7 +284,7 @@ export default function HomeBase() {
                             <>
                                 <Text style={styles.modalTitle}> Appointment Details</Text>
                                 <View style={{ flex: 1, width: '100%', paddingLeft: 15 }}>
-                                    <Text style={styles.filterTitle}> {selectedAppt.booking.course.courseCode} : {selectedAppt.booking.course.courseName} </Text>
+                                    <Text style={styles.filterTitle}> {selectedAppt.course.courseCode} : {selectedAppt.course.courseName} </Text>
                                     <View style={{ flex: 1, paddingLeft: 10, gap: 15, marginVertical: 5 }}>
                                         <View style={styles.horizontalContainer}>
                                             <Ionicons size={15} color="white" name="person" />
@@ -259,7 +300,7 @@ export default function HomeBase() {
                                                 {new Date(selectedAppt.startTime).toLocaleTimeString([], {
                                                     hour: '2-digit',
                                                     minute: '2-digit'
-                                                })} -
+                                                })} -{" "}
                                                 {new Date(selectedAppt.endTime).toLocaleTimeString([], {
                                                     hour: '2-digit',
                                                     minute: '2-digit'

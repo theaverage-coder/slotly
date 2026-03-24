@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useUser } from "../contexts/UserContext";
-
+import SlotlyLogo from "./SlotlyLogo";
 
 export default function AppointmentCard({ appointment, onDetailPress, onCancelPress }) {
     const { user } = useUser();
@@ -17,23 +17,19 @@ export default function AppointmentCard({ appointment, onDetailPress, onCancelPr
     }
 
     const getName = () => {
-        if (user.role === "s") {
-            return `${appointment.prof.firstName} ${appointment.prof.lastName}`;
-        } else if (user.role === "t") {
-            return `${appointment.student.firstName} ${appointment.student.lastName}`
-        }
+        return `${appointment.appointmentWith.firstName} ${appointment.appointmentWith.lastName}`;
     }
     return (
         <View style={styles.cardContainer} >
             {user ? (
                 <>
                     <View style={styles.topContainer}>
-                        <View style={styles.pictureContainer}>
-                            <View style={styles.picture} />
+                        <View style={[styles.pictureContainer, { borderColor: appointment.course.logoColor }]}>
+                            <SlotlyLogo size={80} color={appointment.course.logoColor} />
                         </View>
                         <View style={styles.detailsContainer}>
                             <Text style={styles.profName}> {getName()} </Text>
-                            <Text style={styles.courseCode}> {appointment.booking.course.courseCode} </Text>
+                            <Text style={styles.courseCode}> {appointment.course.courseCode} </Text>
                             <Text style={styles.time}> {getDateString()} | {getTimeString()} </Text>
                         </View>
                     </View>
@@ -44,8 +40,8 @@ export default function AppointmentCard({ appointment, onDetailPress, onCancelPr
                                 Details
                             </Text>
                         </Pressable>
-                        <Pressable style={[styles.button]} onPress={() => onCancelPress(appointment)}>
-                            <Text style={{ color: "red" }}>
+                        <Pressable style={[styles.button, styles.cancelButton]} onPress={() => onCancelPress(appointment)}>
+                            <Text style={{ color: "rgb(125, 78, 87)" }}>
                                 Cancel
                             </Text>
                         </Pressable>
@@ -66,12 +62,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "rgb(33, 45, 64)"
+        borderColor: "rgb(33, 45, 64)",
     },
     topContainer: {
         flexDirection: "row",
         height: "70%",
         width: "100%",
+        paddingBottom: 15,
         padding: 15
     },
     line: {
@@ -85,11 +82,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: "30%",
         flexDirection: "row",
-        columnGap: 15
+        columnGap: 15,
+        paddingBottom: 5
     },
     pictureContainer: {
-        width: "40%",
-        paddingHorizontal: 10
+        marginHorizontal: 10,
+        paddingHorizontal: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        borderWidth: 1,
+        borderRadius: 10
     },
     detailsContainer: {
         //rowGap: 5
@@ -101,8 +103,9 @@ const styles = StyleSheet.create({
     },
     profName: {
         fontWeight: "bold",
-        fontSize: 22,
-        color: "white"
+        fontSize: 24,
+        color: "white",
+        marginBottom: 3
     },
     courseCode: {
         color: "white",
@@ -114,12 +117,17 @@ const styles = StyleSheet.create({
     },
     button: {
         borderRadius: 10,
-        backgroundColor: "rgba(217, 217, 217, 1)",
-        textColor: "rgba(33, 33, 33, 1)",
+        backgroundColor: "white",
         borderRadius: 10,
         width: "40%",
         height: "75%",
         justifyContent: "center",
         alignItems: "center"
+    },
+    cancelButton: {
+        borderWidth: 1,
+        borderColor: "rgb(125, 78, 87)",
+        backgroundColor: "rgba(217, 217, 217, 0)",
+
     }
 })

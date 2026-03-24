@@ -31,10 +31,6 @@ const appointmentSchema = mongoose.Schema({
     message: {
         type: String
     },
-    completed: {
-        type: Boolean,
-        default: false
-    }
 
 })
 

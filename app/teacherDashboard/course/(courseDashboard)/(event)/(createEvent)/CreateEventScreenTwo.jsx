@@ -11,7 +11,7 @@ export default function CreateEventScreenTwo() {
     const router = useRouter();
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const isDisabledButton = event.location === "" || (event.isLimitedCapacity && event.capacity === "") || (event.startTime.getTime() === event.endTime.getTime());
+    const isDisabledButton = event.location === "" || (event.isLimitedCapacity && event.capacity === "") || (event.startTime.getTime() >= event.endTime.getTime());
 
     const handleContinue = () => {
         if (event.endTime < event.startTime) {

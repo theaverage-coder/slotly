@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { useUser } from "../contexts/UserContext";
 
 export default function EventCard({ event, homeScreen = false, onDetailsPress }) {
@@ -44,7 +45,14 @@ export default function EventCard({ event, homeScreen = false, onDetailsPress })
                     </View>
                     <View style={{ flex: 1, alignItems: "center" }}>
                         <View style={styles.detailsContainer}>
-                            <Text style={styles.title}> {event.title} </Text>
+                            <AutoSizeText
+                                fontSize={20}
+                                numberOfLines={1}
+                                mode={ResizeTextMode.max_font_size}
+                                style={[styles.title]}
+                            >
+                                {event.title}
+                            </AutoSizeText>
                             <Text style={styles.time}> {getDateString()} | {getTimeString()} </Text>
                         </View>
                         <View style={styles.line} />
@@ -66,7 +74,14 @@ export default function EventCard({ event, homeScreen = false, onDetailsPress })
                         <Text style={styles.dateText}> {monthNames[start.getMonth()]} {start.getDate()}</Text>
                     </View>
                     <View style={styles.title2Container}>
-                        <Text style={[styles.title,]}> {event.title}</Text>
+                        <AutoSizeText
+                            fontSize={22}
+                            numberOfLines={1}
+                            mode={ResizeTextMode.max_lines}
+                            style={[styles.title]}
+                        >
+                            {event.title}
+                        </AutoSizeText>
                     </View>
                 </Pressable>
             )
@@ -120,7 +135,6 @@ const styles = StyleSheet.create({
     },
     title: {
         fontWeight: "bold",
-        fontSize: 22,
         color: "white",
         marginBottom: 10
     },

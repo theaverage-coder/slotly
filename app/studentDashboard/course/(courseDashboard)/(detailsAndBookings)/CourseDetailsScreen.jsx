@@ -148,8 +148,8 @@ export default function CourseDetailsScreen() {
                         disabled={!booking}>
                         <Text> Book an Appointment</Text>
                     </MyButton2>
-                    <MyButton2 onPress={handleLeaveCourse} style={{ backgroundColor: "rgb(77, 77, 77)" }}>
-                        <Text style={{ color: "red" }}> Leave Course</Text>
+                    <MyButton2 onPress={handleLeaveCourse} style={{ backgroundColor: "rgba(217, 217, 217, 0.2)" }}>
+                        <Text style={{ color: "rgb(218, 33, 33)" }}> Leave Course</Text>
                     </MyButton2>
                 </>
             )}

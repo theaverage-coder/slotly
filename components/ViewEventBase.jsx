@@ -54,7 +54,7 @@ export default function ViewEventBase({ event }) {
                                 {new Date(event.startTime).toLocaleTimeString([], {
                                     hour: '2-digit',
                                     minute: '2-digit'
-                                })} -
+                                })} -{" "}
                                 {new Date(event.endTime).toLocaleTimeString([], {
                                     hour: '2-digit',
                                     minute: '2-digit'
@@ -76,7 +76,7 @@ export default function ViewEventBase({ event }) {
                         <View style={styles.descriptionContainer}>
                             <Text style={styles.sectionHeader}> Description </Text>
                             <View style={styles.descriptionBox}>
-                                <Text style={styles.detailsText}> {event.description} </Text>
+                                <Text style={[styles.detailsText, { lineHeight: 30 }]}> {event.description} </Text>
                             </View>
                         </View>
                     </View>
@@ -126,9 +126,8 @@ const styles = StyleSheet.create({
         gap: 10
     },
     descriptionBox: {
-        paddingHorizontal: 25,
-        width: "60%",
-        justifyContent: "center",
+        marginHorizontal: 25,
+        height: 200,
     },
     horizontalContainer: {
         flexDirection: "row",

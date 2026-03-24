@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Booking = require('../models/bookingModel')
 const Appointment = require('../models/appointmentModel')
+const { ObjectId } = require("mongodb");
 
 
 // @desc Book an appointment
@@ -14,7 +15,7 @@ const bookAppointment = asyncHandler(async (req, res) => {
         const startDateUTC = new Date(selectedDate);
         const endDateUTC = new Date(new Date(selectedDate).getTime() + timeSlotDuration * 60000);
         const booking = await Booking.findOne({ _id: bookingId }, { officeHours: 1, course: 1 }).populate('course', 'prof');
-        console.log("booking: ", booking);
+        //console.log("booking: ", booking);
 
         const toMinutes = (date) => {
             return date.getHours() * 60 + date.getMinutes();
@@ -32,7 +33,7 @@ const bookAppointment = asyncHandler(async (req, res) => {
             }
             return false;
         }
-        const location = booking.officeHours[selectedDate.getDay()].timeIntervals.find(isInInterval).location;
+        const location = booking.officeHours.find((oh) => oh.day === selectedDate.getDay()).timeIntervals.find(isInInterval).location;
 
         const appointment = await Appointment.create({
             booking: bookingId,
@@ -57,40 +58,131 @@ const bookAppointment = asyncHandler(async (req, res) => {
 })
 
 // @desc Get all appointments of a user sorted by start time
+// @desc If user is a prof => fill in student info
+// @desc If user is a student => fill in prof info
 // @router /api/appointments/getAppointments
 const getAppointments = asyncHandler(async (req, res) => {
     try {
-        const userId = req.user;
+        const userId = new ObjectId(req.user);
         const { isStudent } = req.body;
-        let appointments = [];
+
+        const matchField = isStudent ? "student" : "prof";
+        const appointmentWith = isStudent ? "prof" : "student";
 
         //Retrieve professor/student first and last names AND the course code
-        if (isStudent) {
-            appointments = await Appointment.find({ student: userId })
-                .populate('prof', 'firstName lastName -_id')
-                .populate({
-                    path: 'booking',
-                    select: 'course -_id',
-                    populate: {
-                        path: 'course',
-                        select: 'courseCode courseName-_id'
-                    }
-                }).sort({ startTime: 1 });
+        const appointments = await Appointment.aggregate([
+            {
+                $match: {
+                    [matchField]: userId,
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    let: { appointmentWith: `$${appointmentWith}` },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$appointmentWith"] }
+                            }
+                        },
+                        {
+                            $project: {
+                                firstName: 1,
+                                lastName: 1
+                            }
+                        }
+                    ],
+                    as: "appointmentWith"
+                }
+            },
+            {
+                $unwind: "$appointmentWith"
+            },
+            {
+                $lookup: {
+                    from: "bookings",
+                    let: { bookingId: "$booking" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$bookingId"] }
+                            }
+                        },
+                        {
+                            $project: {
+                                course: 1
+                            }
+                        }
+                    ],
+                    as: "booking"
+                }
+            },
+            {
+                $unwind: "$booking"
+            },
+            {
+                $lookup: {
+                    from: "courses",
+                    let: { courseId: "$booking.course" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$courseId"] }
+                            }
+                        },
+                        {
+                            $project: {
+                                courseName: 1,
+                                courseCode: 1,
+                                logoColor: 1
+                            }
+                        }
+                    ],
+                    as: "course"
+                }
+            },
+            {
+                $unwind: "$course"
+            },
+            {
+                $facet: {
+                    completed: [
+                        {
+                            $match: {
+                                endTime: { $lt: new Date() }
+                            }
+                        },
+                        {
+                            $sort: {
+                                startTime: 1
+                            }
+                        }],
+                    incomplete: [
+                        {
+                            $match: {
+                                endTime: { $gte: new Date() }
+                            }
+                        },
+                        {
+                            $sort: {
+                                startTime: 1
+                            }
+                        }
+                    ]
+                }
+            }
+        ]);
 
-        } else {
-            appointments = await Appointment.find({ prof: userId })
-                .populate('student', 'firstName lastName')
-                .populate({
-                    path: 'booking',
-                    select: 'course',
-                    populate: {
-                        path: 'course',
-                        select: 'courseCode courseName'
-                    },
-                }).sort({ startTime: 1 });
-        }
+        const { completed, incomplete } = appointments[0];
+        const completedAppointments = completed;
+        const incompleteAppointments = incomplete;
 
-        return res.status(200).json(appointments);
+
+        return res.status(200).json({
+            completed: completedAppointments,
+            incomplete: incompleteAppointments
+        });
     } catch (err) {
         console.log(err)
         return res.sendStatus(404);
