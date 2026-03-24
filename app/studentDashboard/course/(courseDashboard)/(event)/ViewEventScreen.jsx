@@ -21,8 +21,8 @@ export default function ViewEventScreen() {
             ? process.env.EXPO_PUBLIC_API_URL_WEB
             : process.env.EXPO_PUBLIC_API_URL_MOBILE
 
-    const isFull = event?.students?.length >= event?.capacity;
-    const isJoined = event?.students?.includes(user._id);
+    const isFull = event && event.capacity !== -1 && event.students?.length >= event?.capacity;
+    const isJoined = user && event?.students?.includes(user._id);
 
     const handleJoinEvent = async () => {
         const token = await AsyncStorage.getItem("token");
@@ -92,12 +92,15 @@ export default function ViewEventScreen() {
                                 <Text> Join Event </Text>
                             </MyButton2>
                         ) : (
-                            <Text> Event is full. </Text>
+                            <MyButton2
+                                style={{ borderWidth: 1, borderColor: "rgba(217, 217, 217, 0.5)", borderRadius: 10 }}>
+                                <Text style={{ color: "rgb(217, 217, 217, 0.5)" }}> Event is Full </Text>
+                            </MyButton2>
                         )
                     ) : (
                         <MyButton2 onPress={handleLeaveEvent}
-                            style={{ backgroundColor: "rgba(217, 217, 217, 0.49)", borderRadius: 10 }}>
-                            <Text style={{ color: "red" }}> Leave Event </Text>
+                            style={{ backgroundColor: "rgb(255, 255, 255)", borderRadius: 10 }}>
+                            <Text style={{ color: "rgb(255, 39, 39)" }}> Leave Event </Text>
                         </MyButton2>
 
                     )}

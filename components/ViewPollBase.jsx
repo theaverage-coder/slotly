@@ -19,6 +19,9 @@ export default function ViewPollBase({ poll, userVote, setUserVote, refresh = 0 
     );
 
     const fetchVotes = async () => {
+        if (!user) {
+            return;
+        }
         try {
             const response = await fetch(`${API_URL}/api/polls/getAllVotes/${poll._id}`);
             if (response.ok) {
@@ -29,7 +32,7 @@ export default function ViewPollBase({ poll, userVote, setUserVote, refresh = 0 
 
                 allVotes.forEach((vote) => {
                     // Record user's vote if they're a student
-                    if (user.role === "s" && vote.student === user._id) {
+                    if (user && user.role === "s" && vote.student === user._id) {
                         setUserVote(vote.votes);
                     }
                     sum += vote.votes.length;
@@ -82,7 +85,7 @@ export default function ViewPollBase({ poll, userVote, setUserVote, refresh = 0 
                         renderItem={({ item }) => {
                             const numVotes = optionsMap.get(item._id);
                             const width = totalVotes === 0 ? 0 : (numVotes / totalVotes) * 100;
-                            const myVote = user.role === "s" ? userVote.includes(item._id) : false;
+                            const myVote = user && user.role === "s" ? userVote.includes(item._id) : false;
 
                             return (
                                 <View style={[styles.optionBarContainer, myVote && styles.myVote]}>
@@ -163,4 +166,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "rgb(125, 78, 87)"
     },
+    white: {
+        color: "white"
+    }
 })

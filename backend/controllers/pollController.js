@@ -38,9 +38,10 @@ const createPoll = asyncHandler(async (req, res) => {
 
         // Add expiration date if poll has one
         if (poll.duration !== -1) {
-            const today = new Date();
-            const expirationDate = new Date(today);
-            pollData.expirationDate.setDate(expirationDate.getDate() + poll.duration);
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + poll.duration);
+            expirationDate.setHours(0, 0, 0, 0);
+            pollData.expirationDate = expirationDate;
         }
 
         const newPoll = await Poll.create(pollData);
@@ -127,7 +128,7 @@ const deletePoll = async (req, res) => {
         }
 
         // Delete associated votes
-        //const deletedVotes = await Vote.deleteMany({ poll: deletedPolls._id });
+        const deletedVotes = await Vote.deleteMany({ poll: deleted._id });
 
         return res.sendStatus(200);
     } catch (err) {

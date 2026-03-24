@@ -169,7 +169,7 @@ export default function CreateBookingScreenThree() {
                                 <Text style={styles.dayHeader}> {getDayName(day)} </Text>
                                 {
                                     timeIntervals.map((interval, idx) => (
-                                        <View key={interval}>
+                                        <View style={styles.intervalBox} key={`${day}-${interval.start}-${interval.end}`}>
                                             <Text style={{ color: "white", marginBottom: 10 }}> {getTime(interval.start)} - {getTime(interval.end)}
                                             </Text>
                                             <TextInput
@@ -231,8 +231,8 @@ const styles = StyleSheet.create({
     dayHeader: {
         color: "rgb(125, 78, 87)",
         fontSize: 20,
-        marginVertical: 15,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        marginTop: 15
     },
     inputField: {
         width: "100%",
@@ -252,4 +252,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         alignItems: "center",
     },
+    intervalBox: {
+        marginVertical: 10
+    }
 })

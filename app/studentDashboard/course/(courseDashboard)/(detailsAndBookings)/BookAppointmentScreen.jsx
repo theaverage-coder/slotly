@@ -102,10 +102,10 @@ export default function BookAppointmentScreen() {
                                     <Pressable
                                         style={[styles.dateCard, availableSlots[item].length !== 0 && styles.availableDate, selectedDate === item && styles.selectedDate]}
                                         onPress={() => setSelectedDate(item)}>
-                                        <Text style={styles.dayOfWeekText}>
+                                        <Text style={[styles.dayOfWeekText, availableSlots[item].length !== 0 ? styles.white : styles.grey]}>
                                             {monthAndDay[0]}
                                         </Text>
-                                        <Text>
+                                        <Text style={availableSlots[item].length !== 0 ? styles.white : styles.grey}>
                                             {monthAndDay[1]} {monthAndDay[2]}
                                         </Text>
                                     </Pressable>
@@ -133,7 +133,7 @@ export default function BookAppointmentScreen() {
                                 <Pressable
                                     style={[styles.timeSlotCard, item === selectedTimeSlot && styles.selectedTimeSlot]}
                                     onPress={() => setSelectedTimeSlot(item)}>
-                                    <Text> {getTimeString(item)} </Text>
+                                    <Text style={item !== selectedTimeSlot && styles.white}> {getTimeString(item)} </Text>
                                 </Pressable>
                             }
                         >
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
         width: 60,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "rgba(88, 85, 85, 0.2)",
+        backgroundColor: "rgba(33, 45, 64, 0.2)",
         borderRadius: 10,
     },
     availableDate: {
@@ -219,11 +219,12 @@ const styles = StyleSheet.create({
     },
     textField: {
         width: "95%",
-        height: 130,
+        height: 120,
         backgroundColor: "rgb(33, 45, 64)",
         borderRadius: 16,
         padding: 20,
         color: "rgba(255, 255, 255, 1)",
+        marginBottom: 20
     },
     messageContainer: {
         alignItems: "center",
@@ -232,5 +233,11 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         marginLeft: 15
+    },
+    white: {
+        color: "white"
+    },
+    grey: {
+        color: "grey"
     }
 })

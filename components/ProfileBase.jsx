@@ -239,14 +239,14 @@ const styles = StyleSheet.create({
     inputField: {
         width: "95%",
         height: 50,
-        backgroundColor: "rgba(50, 50, 50, 1)",
+        backgroundColor: "rgb(33, 45, 64)",
         justifyContent: "center",
         borderRadius: 16,
         paddingLeft: 20,
         color: "rgba(255, 255, 255, 1)",
     },
     submitButton: {
-        backgroundColor: "rgb(54, 65, 86)",
+        backgroundColor: "rgb(125, 78, 87)",
         padding: 10,
         borderRadius: 10
     },
