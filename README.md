@@ -67,9 +67,8 @@ The app uses a MongoDB database with collections for:
 ## Screenshots
 
 ### Secure user authentication with role-based access (students vs. professors), using JWT-based session management
-![Onboarding Start](assets/screenshots/Index.png)
-![User Roles](assets/screenshots/onboarding_role.png)
-![Log In](assets/screenshots/login.png)
+<img src="assets/screenshots/Index.png" alt="Onboarding Start" width="50" > <img src="assets/screenshots/onboarding_role.pn" alt="User Roles" width="50" > <img src="assets/screenshots/login.png" alt="Log In" width="50" >
+
 
 ### Students can enroll in courses
 ![Add Course](assets/screenshots/addcourse.png)
