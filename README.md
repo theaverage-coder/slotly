@@ -67,20 +67,17 @@ The app uses a MongoDB database with collections for:
 ## Screenshots
 
 ### Secure user authentication with role-based access (students vs. professors), using JWT-based session management
-<img src="assets/screenshots/Index.png" alt="Onboarding Start" width="50" > <img src="assets/screenshots/onboarding_role.pn" alt="User Roles" width="50" > <img src="assets/screenshots/login.png" alt="Log In" width="50" >
+<img src="assets/screenshots/Index.png" alt="Onboarding Start" width="200" > <img src="assets/screenshots/onboarding_role.png" alt="User Roles" width="200" > <img src="assets/screenshots/login.png" alt="Log In" width="200" >
 
 
 ### Students can enroll in courses
-![Add Course](assets/screenshots/addcourse.png)
-![Courses Home](assets/screenshots/courses.png)
-![Course Details](assets/screenshots/booking_details.png)
+<img src="assets/screenshots/addcourse.png" alt="Add Course" width="200" > <img src="assets/screenshots/courses.png" alt="Courses Home" width="200" > <img src="assets/screenshots/booking_details.png" alt="Course Details" width="200" >
 
 ### Full booking management system allowing users to create, update, and cancel appointments
-![Booking Availabilities](assets/screenshots/booking_availabilities.png)
-![Book Appointment](assets/screenshots/book_appointment.png)
-![Appointments Home](assets/screenshots/appointments.png)
+<img src="assets/screenshots/booking_availabilities.png" alt="Booking Availabilities" width="200" > <img src="assets/screenshots/book_appointment.png" alt="Book Appointment" width="200" > <img src="assets/screenshots/appointments.png" alt="Appointments Home" width="200" >
 
 ### Polling features and event sign ups
+<img src="assets/screenshots/poll.png" alt="Poll" width="200" > <img src="assets/screenshots/poll_vote.png" alt="Vote in Poll" width="200" > <img src="assets/screenshots/event.png" alt="Event" width="200" >
 ![Poll](assets/screenshots/poll.png)
 ![Vote](assets/screenshots/poll_vote.png)
 ![Event](assets/screenshots/event.png)
