@@ -3,11 +3,12 @@ import { Picker } from "@react-native-picker/picker";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Keyboard, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import { Keyboard, Modal, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../../contexts/CourseContext";
 import { usePollContext } from "../../../../../../contexts/PollContext";
+import API_URL from '../../../../../../utils/api';
 
 export default function CreatePollScreenTwo() {
     const { poll, setPoll } = usePollContext();
@@ -15,11 +16,6 @@ export default function CreatePollScreenTwo() {
     const [modalIsVisible, setModalVisibility] = useState(false);
     const router = useRouter();
     const insets = useSafeAreaInsets();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const hasEmptyOption = () => {
         for (let i = 0; i < poll.options.length; i++) {

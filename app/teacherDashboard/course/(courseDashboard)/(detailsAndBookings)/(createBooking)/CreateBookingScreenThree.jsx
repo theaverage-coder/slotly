@@ -5,6 +5,7 @@ import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Switch, 
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useBookingContext } from '../../../../../../contexts/BookingContext';
 import { useCourseContext } from "../../../../../../contexts/CourseContext";
+import API_URL from '../../../../../../utils/api';
 
 export default function CreateBookingScreenThree() {
     const router = useRouter();
@@ -31,11 +32,6 @@ export default function CreateBookingScreenThree() {
 
     }, [])
     );
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
-
 
     const hasInvalidLocation = (intervals) => {
         for (let i = 0; i < intervals.length; i++) {

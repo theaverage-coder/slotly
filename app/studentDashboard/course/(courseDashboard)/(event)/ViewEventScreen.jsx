@@ -1,25 +1,18 @@
-// shows details of event eg. title, location, signedUp/capacity,
-// if not signed up -> button at bottom to sign up which pulls up a modal to confirm
-// if signed up -> tells you that you have already joined the event, gives an option to deregister
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import ViewEventBase from "../../../../../components/ViewEventBase";
 import { useUser } from "../../../../../contexts/UserContext";
+import API_URL from '../../../../../utils/api';
 
 export default function ViewEventScreen() {
     const { initialEventObj } = useLocalSearchParams();
     const initialEvent = JSON.parse(initialEventObj);
     const { user } = useUser();
     const [event, setEvent] = useState(initialEvent);
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE
 
     const isFull = event && event.capacity !== -1 && event.students?.length >= event?.capacity;
     const isJoined = user && event?.students?.includes(user._id);

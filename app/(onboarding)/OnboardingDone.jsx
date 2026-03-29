@@ -1,17 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { Alert, Platform, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { Path, Svg } from 'react-native-svg';
 import MyButton2 from '../../components/MyButton2';
+import API_URL from '../../utils/api';
 import { useForm } from './FormProvider';
-
 
 export default function OnboardingDone() {
     const { formData, setFormData } = useForm();
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleSubmit = async () => {
         try {

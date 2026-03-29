@@ -2,9 +2,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useUser } from '../contexts/UserContext';
+import API_URL from '../utils/api';
 import AppointmentCard from './AppointmentCard';
 import BackgroundSlotlyLogo from './BackgroundSlotlyLogo';
 import DashboardHeader from './DashboardHeader';
@@ -24,18 +25,11 @@ export default function HomeBase() {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [modalType, setModalType] = useState(null);
 
-    // Variable that checks if the user has any meetings
-
 
     // Variables for filter
     const [typeFilter, setTypeFilter] = useState("all"); // "all" | "appointment" | "event"
     const [completedFilter, setCompletedFilter] = useState("incomplete"); // "all" | "completed" | "incomplete"
     const insets = useSafeAreaInsets();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     // Fetch all appointments and events when the screen is focused
     useFocusEffect(useCallback(() => {

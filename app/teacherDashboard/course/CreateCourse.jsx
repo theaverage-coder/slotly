@@ -6,6 +6,7 @@ import { Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView,
 import { SafeAreaView } from "react-native-safe-area-context";
 import MyButton2 from "../../../components/MyButton2";
 import { useUser } from '../../../contexts/UserContext';
+import API_URL from '../../../utils/api';
 
 export default function CreateCourse() {
     const { user } = useUser();
@@ -15,12 +16,6 @@ export default function CreateCourse() {
         semester: "",
     });
     const router = useRouter();
-
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleCreateCourse = async () => {
         const token = await AsyncStorage.getItem("token");

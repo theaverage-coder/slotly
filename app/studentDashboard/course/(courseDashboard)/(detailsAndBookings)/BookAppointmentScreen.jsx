@@ -1,10 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { Alert, FlatList, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, FlatList, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
 import { useUser } from "../../../../../contexts/UserContext";
+import API_URL from '../../../../../utils/api';
+
 export default function BookAppointmentScreen() {
     const { courseId } = useCourseContext();
     const [availableSlots, setAvailableSlots] = useState(null);
@@ -16,12 +18,6 @@ export default function BookAppointmentScreen() {
     const [timeSlotDuration, setTimeSlotDuration] = useState(null);
     const [message, setMessage] = useState("");
     const router = useRouter();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
-
 
     const fetchAvailableTimeslots = async () => {
 

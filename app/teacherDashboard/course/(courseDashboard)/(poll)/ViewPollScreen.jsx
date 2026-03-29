@@ -1,18 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import MyButton2 from "../../../../../components/MyButton2";
 import ViewPollBase from "../../../../../components/ViewPollBase";
+import API_URL from '../../../../../utils/api';
 
 export default function ViewPollScreen() {
     const { pollObj } = useLocalSearchParams();
     const poll = JSON.parse(pollObj);
     const router = useRouter();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleClosePoll = async () => {
         const token = await AsyncStorage.getItem("token");

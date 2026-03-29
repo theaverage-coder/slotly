@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useState } from "react";
-import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useUser } from "../contexts/UserContext";
+import API_URL from '../utils/api';
 import DashboardHeader from "./DashboardHeader";
 
 export default function ProfileBase() {
@@ -15,11 +16,6 @@ export default function ProfileBase() {
     const [oldPassword, setOldPassword] = useState("");
     const disabledNameChangeButton = !newFirstName && !newLastName;
     const disabledPassChangeButton = !oldPassword || !newPassword;
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleChangeName = async () => {
         const token = await AsyncStorage.getItem("token");

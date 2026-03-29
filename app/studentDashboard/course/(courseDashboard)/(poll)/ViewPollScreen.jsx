@@ -2,10 +2,11 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 import ViewPollBase from "../../../../../components/ViewPollBase";
+import API_URL from '../../../../../utils/api';
 
 export default function ViewPollScreen() {
     const { pollObj } = useLocalSearchParams();
@@ -15,11 +16,6 @@ export default function ViewPollScreen() {
     const [userVote, setUserVote] = useState([]);
     const insets = useSafeAreaInsets();
     const [refresh, setRefresh] = useState(0); // To trigger a re-render when a vote is sent
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleCloseModal = () => {
         setRefresh(prev => prev + 1);

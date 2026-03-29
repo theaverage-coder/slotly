@@ -2,10 +2,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MyButton2 from "../../../../../components/MyButton2";
 import ViewEventBase from "../../../../../components/ViewEventBase";
+import API_URL from '../../../../../utils/api';
 
 export default function ViewEventScreen() {
     const { eventObj } = useLocalSearchParams();
@@ -14,11 +15,6 @@ export default function ViewEventScreen() {
     const [students, setStudents] = useState([]);
     const insets = useSafeAreaInsets();
     const router = useRouter();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     useFocusEffect(useCallback(() => {
         handleGetStudents();

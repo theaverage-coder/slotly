@@ -95,6 +95,6 @@ The app uses a MongoDB database with collections for:
 </p>
 
 ## Future Improvements
-- Add email notifications for bookings and events
+- Add email notifications for appointments, events and polls
 - Improve UI/UX for mobile devices
 - Add feature to send alternate meeting requests for more flexibility

@@ -1,21 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@react-native-vector-icons/ionicons';
-import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useUser } from '../contexts/UserContext';
+import API_URL from '../utils/api';
 import MyButton2 from './MyButton2';
 
 export default function AddCourseModal({ visible, onClose }) {
     const [signUpLink, setSignUpLink] = useState('');
     const { user } = useUser();
     const insets = useSafeAreaInsets();
-    const router = useRouter();
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     useEffect(() => {
         if (visible) {

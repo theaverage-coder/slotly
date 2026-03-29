@@ -1,17 +1,11 @@
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import { useUser } from "../contexts/UserContext";
+import { StyleSheet, Text, View } from "react-native";
+import API_URL from '../utils/api';
 
 export default function ViewEventBase({ event }) {
-    const { user } = useUser();
     const [course, setCourse] = useState(null);
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const fetchCourse = async () => {
         try {

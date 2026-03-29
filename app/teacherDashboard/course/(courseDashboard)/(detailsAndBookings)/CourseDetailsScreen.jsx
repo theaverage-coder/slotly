@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { Alert, FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, FlatList, Keyboard, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { runOnJS } from 'react-native-reanimated';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ColorPicker, { HueSlider, Panel1, Preview, Swatches } from 'reanimated-color-picker';
@@ -10,6 +10,7 @@ import BackgroundSlotlyLogo from "../../../../../components/BackgroundSlotlyLogo
 import MyButton2 from "../../../../../components/MyButton2";
 import SlotlyLogo from "../../../../../components/SlotlyLogo";
 import { useCourseContext } from "../../../../../contexts/CourseContext";
+import API_URL from '../../../../../utils/api';
 
 export default function CourseDetailsScreen() {
     const { courseId } = useCourseContext();
@@ -29,11 +30,6 @@ export default function CourseDetailsScreen() {
     const disabledEditCourseBtn = showColorPicker || (!newCourse.courseCode && !newCourse.courseName && !newCourse.semester && (course && (course.logoColor === newCourse.logoColor)));
 
     const insets = useSafeAreaInsets();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     useFocusEffect(useCallback(() => {
         const fetchCourse = async () => {

@@ -1,17 +1,13 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from "react";
-import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useUser } from "../contexts/UserContext";
+import API_URL from '../utils/api';
 
 export default function ViewPollBase({ poll, userVote, setUserVote, refresh = 0 }) {
     const { user } = useUser();
     const [totalVotes, setTotalVotes] = useState(0);
     const [optionsMap, setOptionsMap] = useState(new Map());
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     useFocusEffect(useCallback(() => {
         fetchVotes();

@@ -1,21 +1,14 @@
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useCourseContext } from "../contexts/CourseContext";
-import { useUser } from "../contexts/UserContext";
+import API_URL from '../utils/api';
 import BackgroundSlotlyLogo from "./BackgroundSlotlyLogo";
 import EventCard from "./EventCard";
 
 export default function CourseEventsBase() {
-    const router = useRouter();
     const { courseId } = useCourseContext();
     const [events, setEvents] = useState([]);
-    const { user } = useUser();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     useFocusEffect(useCallback(() => {
         const fetchEvents = async () => {

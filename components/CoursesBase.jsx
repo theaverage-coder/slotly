@@ -2,25 +2,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useUser } from '../contexts/UserContext';
+import API_URL from '../utils/api';
 import AddCourseModal from './AddCourseModal';
 import BackgroundSlotlyLogo from './BackgroundSlotlyLogo';
 import CourseCard from './CourseCard';
 import DashboardHeader from './DashboardHeader';
-
 
 export default function CoursesBase() {
     const { user } = useUser();
     const [modalVisible, setModalVisibility] = useState(false);
     const [courses, setCourses] = useState([]);
     const router = useRouter();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
-
 
     useFocusEffect(useCallback(() => {
         const fetchCourses = async () => {

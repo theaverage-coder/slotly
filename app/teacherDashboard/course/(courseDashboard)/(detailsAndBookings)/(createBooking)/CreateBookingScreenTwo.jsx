@@ -1,10 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useRouter } from "expo-router";
 import { useState } from 'react';
-import { Alert, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MyButton2 from "../../../../../../components/MyButton2";
 import StartEndTimesHeader from '../../../../../../components/StartEndTimesHeader';
@@ -19,44 +18,6 @@ export default function CreateBookingScreenTwo() {
     const { courseId } = useCourseContext();
     const [showDurationModal, setShowDurationModal] = useState(false);
 
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
-
-    const handleCreateBooking = async () => {
-        const token = await AsyncStorage.getItem("token");
-
-        const officeHours = Object.entries(daysAvailable).filter(([key, value]) =>
-            value.isAvailable).map(([key, value], index) => ({ day: index, timeIntervals: isSameHours ? sameHours : value.timeIntervals, location: value.location }))
-
-        console.log('office hours', officeHours)
-        try {
-            const response = await fetch(`${API_URL}/api/bookings/createBooking`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    courseId: courseId,
-                    officeHours: officeHours,
-                    timeSlotDuration: timeSlotDuration,
-                }),
-            });
-
-            if (response.ok) {
-                console.log("Succesfully created booking");
-                router.replace("teacherDashboard/course/CourseDetailsScreen")
-            } else {
-                Alert.alert("A booking already exists for this course.")
-
-            }
-        } catch (err) {
-            console.log("Unsucessful", err);
-            Alert.alert("A booking already exists for this course.")
-        }
-    };
 
     const hasInvalidInterval = (intervals) => {
         for (let i = 0; i < intervals.length; i++) {

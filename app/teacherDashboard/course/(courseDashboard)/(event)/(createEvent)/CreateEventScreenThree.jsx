@@ -1,19 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import MyButton2 from "../../../../../../components/MyButton2";
 import { useCourseContext } from "../../../../../../contexts/CourseContext";
 import { useEventContext } from "../../../../../../contexts/EventContext";
+import API_URL from '../../../../../../utils/api';
 
 export default function CreateEventScreenThree() {
     const { event, setEvent } = useEventContext();
     const { courseId } = useCourseContext();
     const router = useRouter();
-
-    const API_URL =
-        Platform.OS === 'web'
-            ? process.env.EXPO_PUBLIC_API_URL_WEB
-            : process.env.EXPO_PUBLIC_API_URL_MOBILE;
 
     const handleCreateEvent = async () => {
         const token = await AsyncStorage.getItem("token");
