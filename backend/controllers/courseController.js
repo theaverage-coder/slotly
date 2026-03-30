@@ -54,6 +54,7 @@ const addCourse = asyncHandler(async (req, res) => {
             console.log("Invalid data")
             return res.sendStatus(400);
         }
+
     } catch (err) {
         console.log(err)
     }

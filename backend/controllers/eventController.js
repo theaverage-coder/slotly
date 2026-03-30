@@ -271,6 +271,7 @@ const deleteEvent = async (req, res) => {
         return res.sendStatus(200);
     } catch (err) {
         console.log("Failed to delete event: ", err);
+        return res.sendStatus(400);
     }
 }
 

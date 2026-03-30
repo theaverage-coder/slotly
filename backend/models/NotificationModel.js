@@ -19,7 +19,6 @@ const notificationSchema = mongoose.Schema({
         type: Date,
         required: true,
     },
-    linkToPage: {
-        type: String
-    }
-})
+});
+
+module.exports = mongoose.model('Notification', notificationSchema);

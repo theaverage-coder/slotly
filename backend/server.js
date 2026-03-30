@@ -21,11 +21,13 @@ app.use((req, res, next) => {
 //app.use(express.json())
 //app.use(express.urlencoded({ extended: false }))
 
-//app.use(errorHandler)
+// API routes
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/appointments', require('./routes/appointmentRoutes'));
 app.use('/api/events', require('./routes/eventRoutes'));
-app.use('/api/polls', require('./routes/pollRoutes'))
+app.use('/api/polls', require('./routes/pollRoutes'));
+app.use('/api/notifications', require('./routes/notificationRoutes'));
+
 app.listen(port, () => console.log(`Server started on port ${port}`));
