@@ -54,6 +54,7 @@ EXPO_PUBLIC_API_URL_MOBILE=http://localhost:5000
 ```
 
 4. Run the server & app
+
 Start server
 ```bash
 cd backend
