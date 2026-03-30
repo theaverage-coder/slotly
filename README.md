@@ -53,7 +53,14 @@ EXPO_PUBLIC_API_URL_WEB=https://your-backend-url
 EXPO_PUBLIC_API_URL_MOBILE=http://localhost:5000
 ```
 
-4. Run the app
+4. Run the server & app
+Start server
+```bash
+cd backend
+npm start
+```
+
+Start app and open on Expo Go
 ```bash
 npm run dev
 ```
