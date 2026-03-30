@@ -39,9 +39,19 @@ npm install
 ```
 
 3. Create a .env file with your environment variables
+
+### Backend (`/backend/.env`)
+
 ```bash
 MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret
+JWT_SECRET=your_jwt_secret
+PORT=5000
+```
+
+### Frontned ('/.env')
+```bash
+EXPO_PUBLIC_API_URL_WEB=https://your-backend-url
+EXPO_PUBLIC_API_URL_MOBILE=http://localhost:5000
 ```
 
 4. Run the app
